@@ -26,6 +26,9 @@ async def assist(document, review, request):
               'All interpretation requires attorney review. Return an empty issues list when no concern is supported.')
     try:
         async with httpx.AsyncClient(timeout=40, follow_redirects=False, trust_env=False) as client:
+            auth = await client.get("https://openrouter.ai/api/v1/auth/key", headers={"Authorization": f"Bearer {key}"})
+            if auth.status_code != 200:
+                raise AIError(f"OpenRouter authentication failed (HTTP {auth.status_code}). No contract was sent.")
             # Fetch pricing without document text. Provider-only routing forbids silent fallback.
             r = await client.get(f"https://openrouter.ai/api/v1/models/{request.model}/endpoints", headers={"Authorization": f"Bearer {key}"})
             if r.status_code != 200:

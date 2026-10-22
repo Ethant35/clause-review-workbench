@@ -1,5 +1,8 @@
 """Conservative condition evaluation with validated source spans."""
 import uuid
+import time
+from contextvars import ContextVar
+DEADLINE = ContextVar("review_deadline", default=float("inf"))
 import regex
 from .models import Playbook
 
@@ -10,6 +13,8 @@ def normalized(text):
     return text
 
 def matches(pattern, text):
+    if time.monotonic() > DEADLINE.get():
+        raise TimeoutError("Analysis time limit")
     text = normalized(text)
     return bool(regex.search(pattern, text, regex.I | regex.S, timeout=0.025))
 
@@ -33,6 +38,7 @@ def make_issue(rule, block, explanation, confidence="OBJECTIVE"):
                 confidence=confidence, origin="deterministic")
 
 def analyze(document, playbook: Playbook):
+    DEADLINE.set(time.monotonic() + 5)
     issues, checks = [], []
     for rule in playbook.rules:
         blocks = [b for b in document["blocks"] if any_match(rule.presence, b["text"])]
