@@ -1,0 +1,35 @@
+Each party that receives the other party’s Confidential Information will protect it using at least reasonable care and will use it only to perform this agreement.
+
+Confidential Information does not include information that becomes public without breach, was already known without a duty of confidence, is independently developed without use of the information, or is lawfully received from a third party without a duty of confidence.
+
+A party may disclose Confidential Information when law requires it, provided it gives advance notice when legally permitted and reasonably cooperates with efforts to limit the disclosure.
+
+This agreement begins on the effective date and continues for twelve months unless ended earlier under this agreement.
+
+This agreement expires at the end of its stated term and does not renew automatically.
+
+Either party may terminate this agreement for convenience on thirty days’ written notice to the other party.
+
+Either party may terminate for the other party’s material breach if the breach remains uncured thirty days after written notice.
+
+Each party’s aggregate liability arising out of or related to this agreement will not exceed the fees paid in the twelve months before the event giving rise to liability.
+
+The liability cap does not apply to fraud or willful misconduct.
+
+Each party will indemnify the other against third-party claims to the extent caused by its own breach of this agreement, subject to the liability cap.
+
+Each party retains ownership of its pre-existing materials and intellectual property; no ownership transfers except as expressly stated in this agreement.
+
+Customer will pay invoices within thirty days after receipt. Provider may change prices at any time without notice to Customer or Customer’s consent.
+
+An amendment is effective only if both parties agree to it in a writing signed by their authorized representatives.
+
+Provider will process personal data only on Customer’s documented instructions and under the data processing addendum agreed by the parties.
+
+Provider may engage a subprocessor only with Customer’s prior written consent and will require each approved subprocessor to provide equivalent data-protection obligations.
+
+Either party may audit the other party’s relevant records once per year on reasonable advance notice, subject to reasonable safeguards.
+
+Oregon law governs this agreement, without regard to its conflict-of-law rules.
+
+Neither party may assign this agreement without the other party’s prior written consent.

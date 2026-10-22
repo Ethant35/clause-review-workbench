@@ -1,0 +1,404 @@
+schema_version: 1
+name: Commercial contracts
+version: 1.0.0
+description: Illustrative buyer-side commercial positions. Rule matches are narrow
+  screening results, not legal advice. Tailor required rules and jurisdiction before
+  use.
+rules:
+- id: confidentiality-mutual
+  category: Confidentiality
+  description: Assess confidentiality against the selected commercial position.
+  preferred_position: Both parties protect confidential information received from
+    the other.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Both parties protect confidential
+    information received from the other.'
+  fallback_language: null
+  presence:
+  - confidential.{0,140}(?:protect|reasonable care)|protect.{0,80}confidential
+  acceptable_all:
+  - - (?:each|either|both) part(?:y|ies)
+  - - (?:protect|keep confidential|not disclose)
+  unacceptable_any:
+  - provider (?:has|owes) no (?:duty|obligation)|only (?:the )?customer
+- id: confidentiality-exclusions
+  category: Confidentiality exclusions
+  description: Assess confidentiality exclusions against the selected commercial position.
+  preferred_position: Exclude public information, prior knowledge, independent development,
+    and lawful third-party receipt.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Exclude public information,
+    prior knowledge, independent development, and lawful third-party receipt.'
+  fallback_language: null
+  presence:
+  - confidential information does not include|confidentiality exclusions|public without
+    breach|independently developed
+  acceptable_all:
+  - - public(?:ly available| knowledge| domain| without breach)
+  - - prior knowledge|previously known|already known
+  - - independent(?:ly)? develop
+  - - lawful.{0,50}third.party|third.party.{0,50}lawful
+  unacceptable_any:
+  - no exclusions|without (?:any )?exclusions
+- id: permitted-disclosures
+  category: Permitted disclosures
+  description: Assess permitted disclosures against the selected commercial position.
+  preferred_position: Allow legally compelled disclosure with advance notice where
+    lawful.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Allow legally compelled
+    disclosure with advance notice where lawful.'
+  fallback_language: null
+  presence:
+  - compelled|disclos.{0,60}(?:law|court)|permitted disclosures
+  acceptable_all:
+  - - compelled|required by law|court order|law requires
+  - - (?:advance|prior|prompt) (?:written )?notice
+  unacceptable_any:
+  - without (?:any )?(?:notice|restriction)
+- id: term-expiration
+  category: Term and expiration
+  description: Assess term and expiration against the selected commercial position.
+  preferred_position: State a definite contract term or expiration date.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: State a definite contract
+    term or expiration date.'
+  fallback_language: null
+  presence:
+  - (?:begins|initial term|continues for|term is|contract term).{0,150}(?:months|years|perpetual)
+  acceptable_all:
+  - - \b\d+ (?:months|years)\b|expir(?:es|ation).{0,40}\d{4}
+  unacceptable_any:
+  - perpetual|never expires
+- id: automatic-renewal
+  category: Automatic renewal
+  description: Assess automatic renewal against the selected commercial position.
+  preferred_position: No automatic renewal, or either party can prevent renewal with
+    at most 60 days notice.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: No automatic renewal, or
+    either party can prevent renewal with at most 60 days notice.'
+  fallback_language: null
+  presence:
+  - renew
+  acceptable_all:
+  - - (?:no|not|does not|without) automatic(?:ally)? renew|does not renew automatically|renew.{0,180}(?:either
+      party|each party).{0,120}(?:30|60).{0,20}(?:days|day)
+  unacceptable_any:
+  - non.?cancel(?:able|lable)|no.{0,40}(?:cancel|opt.out|terminat)|(?:90|120|180).{0,12}days.{0,30}notice
+- id: termination-convenience
+  category: Termination for convenience
+  description: Assess termination for convenience against the selected commercial
+    position.
+  preferred_position: Either party may terminate for convenience with 30 days notice.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Either party may terminate
+    for convenience with 30 days notice.'
+  fallback_language: null
+  presence:
+  - convenience
+  acceptable_all:
+  - - (?:either|each) party
+  - - 30.{0,12}days?.{0,30}notice|30.day.{0,20}notice
+  unacceptable_any:
+  - only (?:the )?provider|customer may not|no right
+- id: termination-breach
+  category: Termination for breach
+  description: Assess termination for breach against the selected commercial position.
+  preferred_position: Allow termination for material breach after a 30-day opportunity
+    to cure.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Allow termination for material
+    breach after a 30-day opportunity to cure.'
+  fallback_language: null
+  presence:
+  - terminat.{0,80}material breach|termination for breach
+  acceptable_all:
+  - - material breach
+  - - 30.{0,45}cur|cur.{0,45}30
+  unacceptable_any:
+  - without.{0,25}(?:cure|notice)|no.{0,15}cure
+- id: liability-cap
+  category: Limitation of liability
+  description: Assess limitation of liability against the selected commercial position.
+  preferred_position: Express aggregate cap based on fees paid or payable in the preceding
+    12 months.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: high
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Express aggregate cap based
+    on fees paid or payable in the preceding 12 months.'
+  fallback_language: null
+  presence:
+  - ^(?!.*(?:indemn|cap does not apply|exception)).*liability.{0,120}(?:cap|limit|exceed)
+  acceptable_all:
+  - - (?:capped|not exceed|limited to).{0,100}(?:the )?fees (?:paid|payable)
+  - - (?:preceding|prior|previous|last) 12 months|12 months before
+  unacceptable_any:
+  - liability (?:is |shall be )?(?:unlimited|uncapped)|no (?:liability )?cap
+- id: liability-exceptions
+  category: Liability cap exceptions
+  description: Assess liability cap exceptions against the selected commercial position.
+  preferred_position: Enumerate narrow cap exceptions for fraud and willful misconduct;
+    review other carve-outs.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: high
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Enumerate narrow cap exceptions
+    for fraud and willful misconduct; review other carve-outs.'
+  fallback_language: null
+  presence:
+  - (?:cap |liability )?exceptions|cap does not apply|excluded from.{0,20}cap
+  acceptable_all:
+  - - fraud
+  - - willful misconduct
+  unacceptable_any:
+  - indemn.{0,80}(?:uncapped|unlimited)|(?:uncapped|unlimited).{0,80}indemn|all (?:claims|obligations)
+- id: indemnification
+  category: Indemnification
+  description: Assess indemnification against the selected commercial position.
+  preferred_position: Mutual indemnity limited to third-party claims and subject to
+    the liability cap.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: high
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Mutual indemnity limited
+    to third-party claims and subject to the liability cap.'
+  fallback_language: null
+  presence:
+  - indemn
+  acceptable_all:
+  - - mutual|(?:each|either) party
+  - - third.party claims
+  - - subject to.{0,30}(?:liability )?cap
+  unacceptable_any:
+  - uncapped|unlimited|all losses|any and all
+- id: ip-ownership
+  category: Intellectual property ownership
+  description: Assess intellectual property ownership against the selected commercial
+    position.
+  preferred_position: Each party retains its pre-existing intellectual property.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: high
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Each party retains its
+    pre-existing intellectual property.'
+  fallback_language: null
+  presence:
+  - intellectual property|\bIP\b|pre.existing (?:materials|technology)
+  acceptable_all:
+  - - each party retains
+  - - pre.existing
+  unacceptable_any:
+  - assigns?.{0,30}all.{0,80}(?:IP|intellectual property)|assigns?.{0,120}including.{0,50}pre.existing
+- id: payment-terms
+  category: Payment terms
+  description: Assess payment terms against the selected commercial position.
+  preferred_position: Invoices due in 30 days; price changes require mutual written
+    agreement.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Invoices due in 30 days;
+    price changes require mutual written agreement.'
+  fallback_language: null
+  presence:
+  - invoices?|payment terms|(?:price|pricing|prices).{0,50}(?:change|increase|any
+    time)
+  acceptable_all:
+  - - (?:due|payable|paid|within).{0,15}30.{0,10}days|30.day payment
+  unacceptable_any:
+  - (?:price|prices|pricing).{0,120}(?:unilateral|without.{0,20}(?:notice|consent)|at
+    any time)
+- id: unilateral-amendment
+  category: Unilateral amendment
+  description: Assess unilateral amendment against the selected commercial position.
+  preferred_position: Amendments require both parties' written agreement.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: high
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Amendments require both
+    parties'' written agreement.'
+  fallback_language: null
+  presence:
+  - amend|modif(?:y|ication)
+  acceptable_all:
+  - - (?:both parties|mutual|each party).{0,50}(?:written|writing)|written.{0,40}(?:both
+      parties|mutual|each party)
+  unacceptable_any:
+  - unilateral|without.{0,40}consent
+- id: data-protection
+  category: Data protection
+  description: Assess data protection against the selected commercial position.
+  preferred_position: Process personal data only on documented instructions under
+    a DPA.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: high
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Process personal data only
+    on documented instructions under a DPA.'
+  fallback_language: null
+  presence:
+  - personal data|data process|\bDPA\b
+  acceptable_all:
+  - - documented instructions
+  - - \bDPA\b|data processing (?:agreement|addendum)
+  unacceptable_any:
+  - own purposes|sell personal data|no DPA
+- id: subprocessors
+  category: Subprocessor controls
+  description: Assess subprocessor controls against the selected commercial position.
+  preferred_position: Require prior written consent and equivalent protections for
+    subprocessors.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Require prior written consent
+    and equivalent protections for subprocessors.'
+  fallback_language: null
+  presence:
+  - sub.?processor
+  acceptable_all:
+  - - prior written consent
+  - - equivalent (?:data.protection obligations|data protections|protections)|same
+      obligations
+  unacceptable_any:
+  - without.{0,30}consent|any subprocessors|unrestricted
+- id: audit-rights
+  category: Audit rights
+  description: Assess audit rights against the selected commercial position.
+  preferred_position: Reciprocal audits at most annually on reasonable notice.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Reciprocal audits at most
+    annually on reasonable notice.'
+  fallback_language: null
+  presence:
+  - audit
+  acceptable_all:
+  - - (?:either|each) party
+  - - annually|once per year
+  - - reasonable (?:prior |advance )?notice
+  unacceptable_any:
+  - at any time|without.{0,20}(?:notice|reciprocal)|only (?:the )?provider
+- id: governing-law
+  category: Governing law
+  description: Assess governing law against the selected commercial position.
+  preferred_position: Expressly select Oregon law, subject to counsel's jurisdiction
+    review.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Expressly select Oregon
+    law, subject to counsel''s jurisdiction review.'
+  fallback_language: null
+  presence:
+  - govern.{0,40}law|laws? of|law governs
+  acceptable_all:
+  - - Oregon
+  unacceptable_any:
+  - (?:laws? of|law of) (?:California|New York|England)
+- id: assignment
+  category: Assignment
+  description: Assess assignment against the selected commercial position.
+  preferred_position: Assignment requires the other party's written consent.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Assignment requires the
+    other party''s written consent.'
+  fallback_language: null
+  presence:
+  - assignment|assign this (?:agreement|contract)|assign.{0,30}consent
+  acceptable_all:
+  - - (?:other party|mutual).{0,30}(?:prior )?written consent|written consent.{0,30}other
+      party
+  unacceptable_any:
+  - may assign.{0,60}without.{0,30}consent|freely assign

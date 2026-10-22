@@ -1,0 +1,13 @@
+Acceptable Mutual Confidentiality Agreement
+
+Each party that receives the other party’s Confidential Information will protect it using at least reasonable care and will use it only to evaluate and discuss a potential business relationship.
+
+Confidential Information does not include information that becomes public without breach, was already known without a duty of confidence, is independently developed without use of the information, or is lawfully received from a third party without a duty of confidence.
+
+A party may disclose Confidential Information when law requires it, provided it gives advance notice when legally permitted and reasonably cooperates with efforts to limit the disclosure.
+
+This agreement begins on the effective date and continues for twelve months, then expires without automatic renewal.
+
+Oregon law governs this agreement, without regard to its conflict-of-law rules.
+
+Neither party may assign this agreement without the other party’s prior written consent.
