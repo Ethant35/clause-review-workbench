@@ -2,9 +2,14 @@
 
 Repository: https://github.com/Ethant35/clause-review-workbench
 Local path: /Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench
-Feature branch: codex/build-workbench
+Release branch: main (implementation merged through PR #1). Final handoff update uses codex/release-handoff.
 Application acceptance commit: 2c11357d4e2d9d4dffe9a2ce3a814301dfcb5523
-Goal: Core implementation and all applicable local acceptance gates passed. Release publication is the remaining operational step at this checkpoint. Do not infer publication from this file; verify the release command below.
+Outcome: DONE for the core offline release, under the specification's explicit CR-18 exception. All applicable completion gates passed; release published and uploaded archive checksum verified.
+Release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.0.0
+Tag: v1.0.0
+Release commit: b9c359ab96ed92bfc9d496fc0f99998412e7c520
+Release archive SHA-256: db86d3f044b25731940f6ca2961fa3daff1e6738d9fba1fd10b811a49f1a57a1
+Remaining external gate: CR-18 successful real AI interpretation, explicitly UNVERIFIED. No other mandatory gate remains.
 
 ## Completed
 - FastAPI/SQLite backend; React/TypeScript UI; DOCX/PDF/text source-preserving ingestion; 18-category commercial and six-category NDA playbooks.
@@ -18,8 +23,8 @@ Goal: Core implementation and all applicable local acceptance gates passed. Rele
 ## Processes and usage
 - No active Luna workers; both completed workers were interrupted/marked done.
 - E2E and package smoke tests stop their servers in finally. Check artifacts/processes.json and, if necessary, run .venv/bin/python scripts/stop_processes.py.
-- The session-local supported usage checker runs every 55 seconds in functions cell 11. It uses get_usage_limits, writes artifacts/usage-check.json, and stops registered process groups on exhaustion. It is not a persistent automation and must be stopped when this project run ends.
-- Latest checkpoint: 13% used, 87% remaining. Recheck live on resume. Stop all work at 100% used in an applicable window; do not use credits/resets/providers to bypass exhaustion.
+- The session-local supported usage checker ran every 55 seconds in functions cell 11 during project work and is to be terminated at finalization. It uses get_usage_limits, writes artifacts/usage-check.json, and stops registered process groups on exhaustion. It is not a persistent automation and must be stopped when this project run ends.
+- Latest checkpoint: 15% used, 85% remaining. Recheck live on resume. Stop all work at 100% used in an applicable window; do not use credits/resets/providers to bypass exhaustion.
 - Local ignored artifacts include clean-install logs, synthetic reports, renders, package, screenshots, and test databases. Temporary clean checkouts and archive extraction directories are recorded under artifacts; they contain only synthetic data.
 
 ## Exact next-session commands
@@ -34,4 +39,6 @@ cat artifacts/usage-check.json
 cat artifacts/processes.json
 ```
 
-If release exists, inspect its tag/commit and assets before doing new work. If not, commit only remaining acceptance/release documentation, push the feature branch with Actions disabled, create/attach a PR, merge after acceptance, tag v1.0.0, and publish the core offline release with the deployment archive and AI-unverified label. Build final archive using ./scripts/package.sh. Read ACCEPTANCE.md and evidence/*.json for exact outcomes. Run ./scripts/clean_acceptance.sh only after application changes; documentation-only release edits do not require repeating unchanged application tests.
+The release exists and is public. The uploaded archive was downloaded again, compared byte-for-byte with the tested archive, and passed its published SHA256SUMS check. GitHub Actions remains disabled with zero workflow runs. PR #1 merged the implementation. Final handoff documentation is a separate docs-only PR and does not change release behavior.
+
+For normal use run ./scripts/start.sh and open http://127.0.0.1:8765. No application server is intentionally left running. If resuming AI verification, supply authorized OPENROUTER_API_KEY, OPENROUTER_MODEL, and OPENROUTER_PROVIDER in the test environment and run .venv/bin/python tests/e2e.py. Do not claim production-verified AI until CR-18 passes. Existing tests and local logs remain under artifacts for inspection. No external analytics or GitHub Actions were used.
