@@ -4,6 +4,7 @@ cd "$(dirname "$0")/.."
 root_dir="$PWD"
 clean_dir="$(mktemp -d "${TMPDIR:-/tmp}/crw-clean.XXXXXX")"
 printf '%s\n' "$clean_dir" > artifacts/clean-checkout-path.txt
+export CRW_PROCESS_REGISTRY="$root_dir/artifacts/processes.json"
 git clone --no-local "$root_dir" "$clean_dir/repo"
 cd "$clean_dir/repo"
 uv sync --frozen --python 3.12

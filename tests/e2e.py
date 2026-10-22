@@ -36,12 +36,13 @@ NETWORK.touch()
 results=[]
 process=None
 pids=[]
+REGISTRY=Path(os.environ.get('CRW_PROCESS_REGISTRY',str(OUT/'processes.json')))
 with socket.socket() as sock:
     sock.bind(('127.0.0.1',0)); PORT=sock.getsockname()[1]
 BASE=f'http://127.0.0.1:{PORT}'
 client=httpx.Client(base_url=BASE, timeout=45, trust_env=False)
 
-def register(): (OUT/'processes.json').write_text(json.dumps(pids))
+def register(): REGISTRY.write_text(json.dumps([os.getpgrp(), *pids]))
 def stop():
     global process
     if process and process.poll() is None:
@@ -282,6 +283,26 @@ try:
             page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(OUT/'mobile.png'),full_page=True)
             assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
         check('CR-20',fresh)
+        def additional():
+            # Ambiguity and conflicting provisions must not yield a clean cap check.
+            base=(ROOT/'corpus/contracts/05-fee-based-liability-cap.txt').read_text()
+            doc=upload(data=(base+'\n\nAggregate liability is unlimited.').encode())
+            rev=review(doc);assert byrule(rev,'liability-cap')['confidence']=='OBJECTIVE';validate(doc,rev)
+            malicious=upload(data=b'<script>window.injected=true</script>\nProvider may amend unilaterally without consent.',name='safe.txt')
+            page.reload();page.locator('.doc-row').filter(has_text='safe.txt').click()
+            page.get_by_role('tab',name='Extracted source',exact=False).click();expect(page.locator('.source-block').first).to_contain_text('<script>')
+            assert page.evaluate('window.injected') is None
+            # Age one record in the real SQLite DB then restart with retention enabled.
+            with sqlite3.connect(RUN/'fresh'/'workbench.sqlite3') as c:
+                c.execute('UPDATE documents SET created=? WHERE id=?',(time.time()-3*86400,doc['id']))
+            os.environ['CRW_RETENTION_DAYS']='1'
+            try: start(data=RUN/'fresh')
+            finally: os.environ.pop('CRW_RETENTION_DAYS',None)
+            assert client.get('/api/documents/'+doc['id']).status_code==404
+            assert client.get('/api/reviews/'+rev['id']).status_code==404
+            assert not (RUN/'fresh'/'sources'/doc['id']).exists()
+            return 'Real API conflict detection, literal script rendering, and retention cascade verified.'
+        check('CR-EXTRA',additional)
         key=os.environ.get('OPENROUTER_API_KEY');model=os.environ.get('OPENROUTER_MODEL');provider=os.environ.get('OPENROUTER_PROVIDER')
         if key and model and provider:
             def live_ai():
@@ -292,6 +313,6 @@ try:
             results.append({'id':'CR-18','status':'BLOCKED_EXTERNAL','detail':'Authorized OPENROUTER_API_KEY, OPENROUTER_MODEL and OPENROUTER_PROVIDER are not all configured. No fake response used.'})
         browser.close()
 finally:
-    stop();client.close()
+    stop();client.close();REGISTRY.write_text('[]')
     (OUT/'e2e-results.json').write_text(json.dumps({'timestamp':datetime.now(timezone.utc).isoformat(),'run':str(RUN.relative_to(ROOT)),'results':sorted(results,key=lambda r:r['id'])},indent=2)+'\n')
 raise SystemExit(1 if any(r['status']=='FAIL' for r in results) else 0)

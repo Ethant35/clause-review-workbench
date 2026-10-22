@@ -127,9 +127,16 @@ def require(table, id):
 
 def now(): return datetime.now(timezone.utc).isoformat()
 
-def save_review(review):
+def update_ai(id, fields, issues=None):
     with store.db() as c:
-        c.execute("UPDATE reviews SET data=? WHERE id=?", (json.dumps(review), review["id"]))
+        c.execute("BEGIN IMMEDIATE")
+        row = c.execute("SELECT data FROM reviews WHERE id=?", (id,)).fetchone()
+        if not row: raise HTTPException(404, "Review no longer exists")
+        review = json.loads(row[0])
+        review.update(fields)
+        if issues: review["issues"].extend(issues)
+        c.execute("UPDATE reviews SET data=? WHERE id=?", (json.dumps(review), id))
+        return review
 
 @app.get("/api/health")
 def health():
@@ -270,17 +277,11 @@ async def ai_review(id: str, body: AIInput):
         try:
             issues, audit = await assist(doc, rev, body)
         except AIError as exc:
-            # Refetch to preserve reviewer decisions made while the provider was running.
-            rev = require("reviews", id)
-            rev["ai_error"] = str(exc)
-            rev["ai_status"] = "BLOCKED_EXTERNAL" if "BLOCKED_EXTERNAL" in str(exc) else "ERROR"
-            save_review(rev)
+            status = "BLOCKED_EXTERNAL" if "BLOCKED_EXTERNAL" in str(exc) else "ERROR"
+            update_ai(id, {"ai_error": str(exc), "ai_status": status})
             raise HTTPException(502, str(exc)) from exc
-        rev = require("reviews", id)
-        rev["issues"].extend(issues)
-        rev.update(ai_status="VERIFIED_CITATIONS_REQUIRES_REVIEW", ai_error=None, ai_audit={**audit, "completed_at": now()})
-        save_review(rev)
-        return rev
+        return update_ai(id, {"ai_status": "VERIFIED_CITATIONS_REQUIRES_REVIEW", "ai_error": None,
+                              "ai_audit": {**audit, "completed_at": now()}}, issues)
 
 DIST = ROOT / "frontend" / "dist"
 if DIST.exists():

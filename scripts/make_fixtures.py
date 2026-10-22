@@ -1,6 +1,8 @@
 """Generate real synthetic DOCX/PDF files for API and browser acceptance."""
 from pathlib import Path
 from docx import Document
+from docx.shared import Pt, RGBColor
+from docx.oxml.ns import qn
 import pymupdf
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,6 +15,12 @@ def make():
     doc.core_properties.author = "Ethan"
     doc.core_properties.last_modified_by = "Ethan"
     doc.core_properties.title = "Synthetic commercial agreement"
+    for style in doc.styles:
+        if style.type == 1:
+            style.font.color.rgb = RGBColor(0, 0, 0)
+            for border in list(style.element.iter(qn("w:pBdr"))):
+                border.getparent().remove(border)
+    doc.styles["Title"].font.size = Pt(20)
     doc.add_heading("Synthetic commercial agreement", 0)
     for text in source.split("\n\n"):
         if text.strip(): doc.add_paragraph(text.strip())
