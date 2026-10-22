@@ -22,7 +22,7 @@ Each rule has:
 | `fallback_language` | Optional fallback text or null |
 | `presence` | Any pattern locates a relevant source block |
 | `acceptable_all` | All groups must match; any pattern within each group suffices |
-| `unacceptable_any` | Any match in relevant blocks reports an issue |
+| `unacceptable_any` | A match reports an issue unless a scope guard requires human review |
 
 Patterns use the Python `regex` package with case-insensitive and dot-all matching, bounded execution time, and a 500-character pattern limit. Matching normalizes newlines, typographic apostrophes and common number words (twelve/thirty/sixty/ninety). Source text remains exact. Patterns are not arbitrary Python code. Human-readable alternatives are guidance, not hidden inference: encode an objectively testable alternative in `acceptable_all`, or expect a human to assess it.
 
@@ -52,3 +52,7 @@ rules:
 ```
 
 The commercial playbook contains all 18 specified categories. The NDA playbook contains confidentiality, exclusions, permitted disclosures, term, governing law, and assignment. Neither template is jurisdiction-neutral legal advice. Rules with an absent requirement express a search failure and require review of the full original. COMPLIANT means only that the configured conditions matched; it is not a legal certification.
+
+Built-in stable IDs `automatic-renewal`, `assignment`, `liability-cap`, and `indemnification` also invoke narrow category-specific safeguards. Preserve those IDs when editing their corresponding bundled rules. Generic negation and qualification guards apply to all rules; custom IDs do not receive the built-in category-specific checks. These guards are conservative and incomplete.
+
+Acceptable alternatives and fallback wording are visible in each finding and all export formats, labeled as saved playbook guidance. They do not change a deterministic outcome unless the matching conditions also support it. A null fallback is shown as unspecified; the app does not generate one.

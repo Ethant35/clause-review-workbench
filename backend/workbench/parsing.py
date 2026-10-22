@@ -4,6 +4,7 @@ from zipfile import ZipFile, BadZipFile
 from defusedxml.ElementTree import fromstring
 import pymupdf
 from docx import Document
+from .safety import EXTRACTION_REVISION
 
 MAX_TEXT = 300_000
 MAX_BLOCKS = 5000
@@ -24,6 +25,8 @@ def extract(data: bytes):
                     raise ParseError("PDF exceeds the 200-page limit.")
                 empty_pages = []
                 for page in pdf:
+                    if page.get_image_info():
+                        raise ParseError("PDF contains raster images that may contain unextracted terms. OCR is unsupported; provide a text-only PDF or complete DOCX/text copy.")
                     page_rows = []
                     for block in page.get_text("blocks", sort=True):
                         if block[6] == 0 and block[4].strip():
@@ -55,10 +58,16 @@ def extract(data: bytes):
                         fromstring(z.read(name))  # reject DTD/entity attacks before python-docx
                 xml = fromstring(z.read("word/document.xml"))
                 ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
-                if any(xml.iter(ns + "ins")) or any(xml.iter(ns + "del")):
-                    raise ParseError("Tracked changes are unsupported. Resolve revisions before upload.")
-                if any(xml.iter(ns + "txbxContent")) or any(xml.iter(ns + "altChunk")):
+                if any(e.tag in {ns + x for x in ("ins", "del", "moveFrom", "moveTo", "moveFromRangeStart", "moveToRangeStart")} for e in xml.iter()):
+                    raise ParseError("Tracked changes and moved-text revisions are unsupported. Resolve revisions before upload.")
+                if any(e.tag in {ns + "txbxContent", ns + "altChunk"} for e in xml.iter()):
                     raise ParseError("DOCX text boxes or embedded text imports are unsupported. Supply a text-based PDF.")
+                if any(e.tag == ns + "sdt" for e in xml.iter()):
+                    raise ParseError("DOCX content controls are unsupported. Supply a flattened text-only copy.")
+                if any(e.tag in {ns + "vanish", ns + "webHidden"} and e.get(ns + "val", "true") not in {"0", "false", "off"} for e in xml.iter()):
+                    raise ParseError("DOCX hidden text is unsupported. Supply a visible-text-only copy.")
+                if any(e.tag in {ns + "fldSimple", ns + "fldChar", ns + "instrText", ns + "object", ns + "drawing", ns + "pict"} for e in xml.iter()):
+                    raise ParseError("DOCX fields, drawings, or embedded objects are unsupported; their visible content may not match extracted text.")
                 if any(n.startswith(("word/footnotes", "word/endnotes")) for n in names):
                     raise ParseError("DOCX notes are unsupported. Supply a text-based PDF including all notes.")
             doc = Document(BytesIO(data))
@@ -96,4 +105,4 @@ def extract(data: bytes):
     for i, (text, page, kind, location) in enumerate(rows, 1):
         blocks.append(dict(id=f"b{i}", text=text, start=offset, end=offset + len(text), page=page, kind=kind, location=location))
         offset += len(text) + 2
-    return dict(format=fmt, text="\n\n".join(x[0] for x in rows), blocks=blocks, warnings=warnings)
+    return dict(extraction_revision=EXTRACTION_REVISION, format=fmt, text="\n\n".join(x[0] for x in rows), blocks=blocks, warnings=warnings)

@@ -179,13 +179,28 @@ try:
             page.get_by_role('button',name='Duplicate',exact=True).click()
             editor=page.get_by_label('Playbook YAML');expect(editor).to_be_visible()
             text=editor.input_value();assert 'severity: medium' in text
-            editor.fill(text.replace('severity: medium','severity: low'))
+            editor.fill(text.replace('severity: medium','severity: low').replace('fallback_language: null', 'fallback_language: Either party may opt out by giving 45 days written notice.'))
             page.get_by_role('button',name='Save playbook',exact=True).click()
             expect(page.get_by_role('dialog')).not_to_be_visible()
             page.get_by_role('button',name='Run review',exact=True).click()
             expect(page.locator('.issue-card .severity-label.low')).to_have_count(2)
             before=state['review'];after=client.get(f"/api/documents/{state['text']['id']}/reviews").json()[0]
             assert all(i['severity']=='low' for i in after['issues']) and all(i['severity']=='medium' for i in before['issues'])
+            assert all(i['playbook_guidance']['fallback_language']=='Either party may opt out by giving 45 days written notice.' for i in after['issues'])
+            assert all(i['playbook_guidance']['fallback_language'] is None for i in getrev(before['id'])['issues'])
+            page.locator('.playbook-guidance summary').click()
+            expect(page.locator('.playbook-guidance')).to_contain_text('Either party may opt out by giving 45 days written notice.')
+            # Changing the policy later must not rewrite a completed review's guidance.
+            book=client.get('/api/playbooks/'+after['playbook_id']).json()
+            changed=book['yaml'].replace('45 days written notice', '75 days written notice')
+            response=client.put('/api/playbooks/'+after['playbook_id'],json={'yaml':changed});response.raise_for_status()
+            assert getrev(after['id'])['issues']==after['issues']
+            page.reload()
+            page.locator('.doc-row').filter(has_text=state['text']['name']).click()
+            expect(page.locator('.issue-card .severity-label.low')).to_have_count(2)
+            page.locator('.playbook-guidance summary').click()
+            expect(page.locator('.playbook-guidance')).to_contain_text('45 days written notice')
+            expect(page.locator('.playbook-guidance')).not_to_contain_text('75 days written notice')
             state['review']=after
             # Actual UI import/new validation and export.
             page.locator('.import-button input').set_input_files(ROOT/'playbooks/nda.yaml')
@@ -233,6 +248,7 @@ try:
                     else: content=response.text
                     for label in ['Issue ID','Rule ID','Severity','Clause category','Observed language','Source anchor','Explanation','Preferred contract position','Suggested negotiating response','Reviewer status','Reviewer notes','Confidence or uncertainty']: assert label in content,label
                     for issue in rev['issues']: assert issue['id'] in content and issue['rule_id'] in content
+                    assert 'Saved playbook alternatives and fallback' in content and '45 days written notice' in content and '75 days written notice' not in content
             # Click all browser download controls as well.
             for name in ['Markdown','DOCX','JSON']:
                 with page.expect_download() as download: page.get_by_label('Export review').select_option(name.lower())

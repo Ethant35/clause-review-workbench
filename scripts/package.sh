@@ -8,10 +8,11 @@ python3 - <<'PY'
 from pathlib import Path
 import subprocess
 import tarfile
+import tomllib
 root=Path.cwd()
 files=[Path(x) for x in subprocess.check_output(['git','ls-files'],text=True).splitlines()]
 files+=list(Path('frontend/dist').rglob('*'))
-name='clause-review-workbench-1.0.0'
+name='clause-review-workbench-'+tomllib.loads(Path('pyproject.toml').read_text())['project']['version']
 with tarfile.open('artifacts/'+name+'.tar.gz','w:gz') as tar:
     for p in sorted(set(files)):
         if p.is_file() and not str(p).startswith('evidence/'):

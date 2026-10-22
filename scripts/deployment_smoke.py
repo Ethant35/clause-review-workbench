@@ -16,7 +16,9 @@ archive=Path(sys.argv[1]).resolve()
 out=root/'artifacts'
 target=Path(tempfile.mkdtemp(prefix='crw-deployment-'))
 with tarfile.open(archive) as tar: tar.extractall(target,filter='data')
-project=target/'clause-review-workbench-1.0.0'
+projects=list(target.glob('clause-review-workbench-*'))
+assert len(projects)==1, 'Expected one application directory'
+project=projects[0]
 with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
 env=os.environ.copy();env.pop('OPENROUTER_API_KEY',None);env.update(CRW_PORT=str(port))
 log=(out/'package-deployment.log').open('w')

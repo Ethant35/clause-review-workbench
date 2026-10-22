@@ -4,10 +4,17 @@ import json
 from docx import Document
 from docx.shared import Pt, Inches, RGBColor
 from docx.oxml.ns import qn
+from .safety import review_view
 
 FIELDS = [("id", "Issue ID"), ("rule_id", "Rule ID"), ("severity", "Severity"), ("category", "Clause category"), ("observed_language", "Observed language"), ("source_anchor", "Source anchor"), ("explanation", "Explanation"), ("preferred_position", "Preferred contract position"), ("negotiating_response", "Suggested negotiating response"), ("status", "Reviewer status"), ("notes", "Reviewer notes"), ("confidence", "Confidence or uncertainty"), ("origin", "Analysis layer")]
+FIELDS.insert(9, ("playbook_guidance", "Saved playbook alternatives and fallback"))
 
 def value(issue, field):
+    if field == "playbook_guidance":
+        guidance = issue.get(field, {})
+        alternatives = "; ".join(guidance.get("acceptable_alternatives", [])) or "None specified"
+        fallback = guidance.get("fallback_language") or "None specified"
+        return f"Playbook guidance only; not contract text or a verified legal standard. Alternatives: {alternatives}\nFallback wording: {fallback}"
     if field == "observed_language" and issue["absence"]:
         return "ABSENCE: No matching provision located. No quotation is asserted."
     if field == "source_anchor":
@@ -16,11 +23,14 @@ def value(issue, field):
     return str(issue[field] or "(none)")
 
 def export(review, document, format):
+    review = review_view(review)
     report = {"report_version": 1, "author": "Ethan", "notice": "Contract review aid, not legal advice. Attorney review is required.", "document": {k: document[k] for k in ["id", "name", "sha256", "format"]}, **review}
     if format == "json":
         return json.dumps(report, ensure_ascii=False, indent=2).encode(), "application/json", "json"
     title = "Contract review report"
     intro = f"Document: {document['name']}\nPlaybook: {review['playbook_name']}\nAI status: {review['ai_status']}\n{report['notice']}"
+    if review.get("verification_warning"):
+        intro = review["verification_warning"] + "\n" + intro
     if format == "markdown":
         lines = [f"# {title}", "", html.escape(intro), "", f"Source SHA256: {document['sha256']}", ""]
         for issue in review["issues"]:

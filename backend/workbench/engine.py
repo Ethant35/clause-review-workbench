@@ -5,6 +5,7 @@ from contextvars import ContextVar
 DEADLINE = ContextVar("review_deadline", default=float("inf"))
 import regex
 from .models import Playbook
+from .safety import context_reason, assignment_prohibition, renewal_supported
 
 def normalized(text):
     text = text.replace("’", "'").replace("–", "-").replace("\n", " ")
@@ -42,24 +43,39 @@ def analyze(document, playbook: Playbook):
     issues, checks = [], []
     for rule in playbook.rules:
         blocks = [b for b in document["blocks"] if any_match(rule.presence, b["text"])]
+        if rule.id == "liability-cap":
+            # Do not mistake a cap for absence when an exception shares its block.
+            blocks = [b for b in document["blocks"] if any_match(rule.presence, b["text"]) or
+                      matches(r"(?:aggregate|total|overall) liability.{0,160}(?:cap|limit|exceed)", b["text"])]
         props = {}
         outcome = "NOT_APPLICABLE"
         if not blocks and rule.required:
             outcome = "ISSUE"
             issues.append(make_issue(rule, None, "No provision matching this required rule was located in extracted text. This is an absence-based finding; verify the complete original and cross-references.", "NEEDS_REVIEW"))
         elif blocks:
-            bad = next((b for b in blocks if any_match(rule.unacceptable_any, b["text"])), None)
+            bad_blocks = [b for b in blocks if any_match(rule.unacceptable_any, b["text"])
+                          and not (rule.id == "assignment" and assignment_prohibition(normalized(b["text"])))]
+            bad = next(iter(bad_blocks), None)
+            contexts = [(b, context_reason(rule.id, normalized(b["text"]), adverse_match=b in bad_blocks)) for b in blocks]
+            contextual = next(((b, reason) for b, reason in contexts if reason), None)
             # Every relevant substantive block must meet conditions, or remain uncertain.
             # Standalone headings supply section labels but are not asserted compliant.
             substantive = [b for b in blocks if b["kind"] != "heading"] or blocks
             good = [b for b in substantive if all(any_match(group, b["text"]) for group in rule.acceptable_all)]
+            if rule.id == "automatic-renewal":
+                good = [b for b in good if renewal_supported(normalized(b["text"]))]
             if rule.id == "liability-cap":
                 cap = next((b for b in substantive if matches(r"(?:capped|not exceed|limited to).{0,100}(?:the )?fees (?:paid|payable)", b["text"])), None)
+                cap = cap if not contextual else None
                 props = {"explicit_fee_cap": bool(cap), "basis": "fees paid/payable" if cap else "unresolved", "period_months": None}
                 if cap:
                     period = regex.search(r"(?:preceding|prior|previous|last)\s+(\d+)\s+months|(?P<before>\d+)\s+months before", normalized(cap["text"]), regex.I)
                     props["period_months"] = int(period[1] or period["before"]) if period else None
-            if bad:
+            if contextual:
+                block, reason = contextual
+                outcome = "NEEDS_REVIEW"
+                issues.append(make_issue(rule, block, reason + " The lexical match does not establish compliance or an affirmative adverse term.", "NEEDS_REVIEW"))
+            elif bad:
                 outcome = "ISSUE"
                 explanation = "The quoted provision matches a configured unacceptable condition. Compare the full agreement and rule guidance before deciding."
                 if good:

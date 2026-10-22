@@ -2,6 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 root_dir="$PWD"
+mkdir -p artifacts
 clean_dir="$(mktemp -d "${TMPDIR:-/tmp}/crw-clean.XXXXXX")"
 printf '%s\n' "$clean_dir" > artifacts/clean-checkout-path.txt
 export CRW_PROCESS_REGISTRY="$root_dir/artifacts/processes.json"
@@ -12,6 +13,8 @@ npm --prefix frontend ci
 npm --prefix frontend run build
 .venv/bin/python -m playwright install chromium
 .venv/bin/python tests/e2e.py
+.venv/bin/python tests/adversarial_e2e.py
+.venv/bin/python tests/upgrade_e2e.py
 python3 - "$root_dir" <<'PY'
 import json
 from pathlib import Path
@@ -24,5 +27,7 @@ result['results'].append({'id':'CR-01','status':'PASS','detail':'Fresh local Git
 result['results'].sort(key=lambda x:x['id'])
 (out/'clean-e2e-results.json').write_text(json.dumps(result,indent=2)+'\n')
 (out/'clean-corpus-results.json').write_bytes(Path('artifacts/corpus-results.json').read_bytes())
+for name in ['adversarial-results.json','upgrade-results.json']:
+    (out/('clean-'+name)).write_bytes((Path('artifacts')/name).read_bytes())
 print('Clean installation and E2E acceptance passed at',result['commit'])
 PY
