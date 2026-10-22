@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "author": "Ethan",
+  "authored_before_execution": true,
+  "scope": "Paired narrow screening expectations, not enforceability judgments. Uncertain scope must not become confirmed compliance or an objective adverse finding.",
+  "cases": [
+    {"id":"mutual-positive","rule_id":"confidentiality-mutual","text":"Each party must protect the other party's confidential information using reasonable care.","expected":"COMPLIANT","reason":"Affirmative reciprocal protection."},
+    {"id":"mutual-negated-duty","rule_id":"confidentiality-mutual","text":"Each party is not required to protect the other party's confidential information using reasonable care.","expected":"NEEDS_REVIEW","reason":"Negation reverses the matched affirmative obligation."},
+    {"id":"mutual-need-not","rule_id":"confidentiality-mutual","text":"Each party need not protect the other party's confidential information using reasonable care.","expected":"NEEDS_REVIEW","reason":"Need not cannot establish a protection duty."},
+    {"id":"mutual-cross-reference","rule_id":"confidentiality-mutual","text":"Each party must protect the other party's confidential information, subject to Section 9.","expected":"NEEDS_REVIEW","reason":"The referenced qualification is unavailable."},
+    {"id":"renewal-positive","rule_id":"automatic-renewal","text":"This agreement does not renew automatically.","expected":"COMPLIANT","reason":"Expressly excludes automatic renewal."},
+    {"id":"renewal-unrelated-notice","rule_id":"automatic-renewal","text":"This agreement renews automatically. Either party may request an invoice copy on 30 days notice.","expected":"NEEDS_REVIEW","reason":"Thirty-day notice concerns invoices, not nonrenewal."},
+    {"id":"renewal-explicit-opt-out","rule_id":"automatic-renewal","text":"This agreement renews automatically unless either party gives notice of nonrenewal at least 30 days before the term ends.","expected":"COMPLIANT","reason":"Explicit timely reciprocal nonrenewal option."},
+    {"id":"renewal-negated-opt-out","rule_id":"automatic-renewal","text":"This agreement renews automatically and either party may not give notice of nonrenewal at least 30 days before the term ends.","expected":"NEEDS_REVIEW","reason":"Negated opt-out does not establish a termination option."},
+    {"id":"cap-positive","rule_id":"liability-cap","text":"Aggregate liability will not exceed fees paid in the preceding 12 months.","expected":"COMPLIANT","reason":"Explicit fee basis and measurement period."},
+    {"id":"cap-negated","rule_id":"liability-cap","text":"Aggregate liability is not limited to fees paid in the preceding 12 months.","expected":"NEEDS_REVIEW","reason":"Negated cap cannot be recorded as an explicit cap.","explicit_fee_cap":false},
+    {"id":"cap-subject-reference","rule_id":"liability-cap","text":"Aggregate liability will not exceed fees paid in the preceding 12 months, subject to Schedule B.","expected":"NEEDS_REVIEW","reason":"Unknown schedule may alter the cap.","explicit_fee_cap":false},
+    {"id":"cap-and-indemnity-one-block","rule_id":"liability-cap","text":"Aggregate liability will not exceed fees paid in the preceding 12 months. Indemnification liability is unlimited.","expected":"NEEDS_REVIEW","reason":"Main cap is present, but scope conflict must be reviewed and cannot be marked absent.","explicit_fee_cap":false},
+    {"id":"exceptions-positive","rule_id":"liability-exceptions","text":"The liability cap does not apply to fraud or willful misconduct.","expected":"COMPLIANT","reason":"Narrow named carve-outs."},
+    {"id":"exceptions-open-ended","rule_id":"liability-exceptions","text":"The liability cap does not apply to fraud, willful misconduct, or any other breach of this agreement.","expected":"NEEDS_REVIEW","reason":"Named examples do not establish narrow exception scope."},
+    {"id":"amendment-positive","rule_id":"unilateral-amendment","text":"Amendments require both parties' written agreement.","expected":"COMPLIANT","reason":"Mutual written agreement required."},
+    {"id":"amendment-prohibited","rule_id":"unilateral-amendment","text":"Neither party may amend this agreement unilaterally without the other party's consent.","expected":"NEEDS_REVIEW","reason":"Prohibited conduct must not be reported as an affirmative permission."},
+    {"id":"amendment-negated-consent","rule_id":"unilateral-amendment","text":"An amendment does not require both parties' written agreement.","expected":"NEEDS_REVIEW","reason":"Negated consent requirement reverses positive match."},
+    {"id":"assignment-positive","rule_id":"assignment","text":"Neither party may assign this agreement without the other party's prior written consent.","expected":"COMPLIANT","reason":"Recognized reciprocal consent prohibition."},
+    {"id":"assignment-prohibited-not-finding","rule_id":"assignment","text":"Neither party may assign this agreement without the other party's written consent. Assignment is prohibited without consent.","expected":"COMPLIANT","reason":"Repeating the same prohibition does not authorize assignment."},
+    {"id":"data-positive","rule_id":"data-protection","text":"Provider processes personal data only on documented instructions under a DPA.","expected":"COMPLIANT","reason":"Express instruction and DPA requirements."},
+    {"id":"data-negated","rule_id":"data-protection","text":"Provider processes personal data but is not required to follow documented instructions or enter a DPA.","expected":"NEEDS_REVIEW","reason":"Positive nouns appear within a negated obligation."},
+    {"id":"indemnity-positive","rule_id":"indemnification","text":"Each party indemnifies the other for third-party claims, subject to the liability cap.","expected":"COMPLIANT","reason":"Mutual third-party indemnity subject to cap."},
+    {"id":"indemnity-negated-cap","rule_id":"indemnification","text":"Each party indemnifies the other for third-party claims and is not subject to the liability cap.","expected":"NEEDS_REVIEW","reason":"Not subject to reverses the cap condition."},
+    {"id":"indemnity-prohibited-unlimited","rule_id":"indemnification","text":"Each party indemnifies the other for third-party claims, subject to the liability cap. Neither party has unlimited indemnification obligations.","expected":"NEEDS_REVIEW","reason":"Negated unlimited language must not become an objective uncapped finding."}
+  ]
+}
