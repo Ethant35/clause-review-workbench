@@ -41,7 +41,8 @@ Development UI: [localhost port 5173](http://127.0.0.1:5173), with `/api` proxie
 2. Select Commercial contracts or Mutual NDA, or create/import a playbook. Duplicate and edit YAML rules to fit the engagement. Run review.
 3. Filter findings, inspect source text, and distinguish observed language from interpretation. Required missing provisions are explicitly marked as absence-based, with no quote.
 4. Accept, reject, or leave issues unresolved; save reviewer notes. Open previous reviews after a restart. Rerunning creates a new review with a new policy snapshot.
-5. Export Markdown, DOCX, or JSON. Delete documents to remove sources and associated local review records.
+5. Open “Saved playbook alternatives and fallback” for the selected finding. These positions come from the saved policy, not the contract or a verified legal standard. Later policy edits do not change earlier review guidance.
+6. Export Markdown, DOCX, or JSON. Delete documents to remove sources and associated local review records.
 
 The commercial playbook covers confidentiality, exclusions, permitted disclosures, term/expiration, automatic renewal, termination for convenience, termination for breach, liability cap, cap exceptions, indemnification, IP ownership, payment, unilateral amendment, data protection, subprocessors, audit rights, governing law, and assignment. The NDA playbook selects six relevant categories. Oregon governing-law preference is illustrative and configurable.
 
@@ -58,6 +59,8 @@ To run optional live acceptance against synthetic content, provide `OPENROUTER_A
 ```sh
 .venv/bin/python -m playwright install chromium
 .venv/bin/python tests/e2e.py
+.venv/bin/python tests/adversarial_e2e.py
+.venv/bin/python tests/upgrade_e2e.py # Git checkout with the v1.0.0 tag
 # Against an already running service; exports exact per-scenario scoring:
 .venv/bin/python scripts/corpus_eval.py --output artifacts/corpus-results.json
 # Clean local checkout install, build, and all E2E workflows:
@@ -75,8 +78,14 @@ The deployment archive includes source, locked dependencies, built frontend, and
 - `CRW_DATA_DIR`: local storage path; default `.data`.
 - `CRW_RETENTION_DAYS`: positive days to expire documents; `0` retains until deletion. Cleanup runs at startup and every minute.
 - Uploads: 10 MiB; PDFs: 200 pages; extracted text: 300,000 characters/5,000 blocks.
-- OCR, encrypted PDFs, DOCX revisions/macros/text boxes/notes are unsupported. Textless PDF pages are rejected. DOCX headers/footers are not analyzed and trigger a warning.
+- OCR and encrypted PDFs are unsupported. PDFs containing any raster image (including logos) or a textless page are rejected. DOCX revisions/macros/text boxes/notes/imports/content controls/fields/drawings and directly marked hidden text are unsupported. DOCX headers/footers are not analyzed and trigger a warning.
 - Regex conditions do not resolve every negation, cross-reference, definition, legal exception, or jurisdictional question. Match results require reading the complete agreement. Original PDF layouts can differ from extraction order.
 - Downloads, filesystem backups, and SSD remnants are outside application deletion. No application-level encryption or multi-user access control is provided.
 
 See [PLAYBOOK_SCHEMA.md](PLAYBOOK_SCHEMA.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Upgrading from v1.0.0
+
+Original files, decisions, and notes remain intact. Older uploads must be downloaded and uploaded again before a new review or AI request. Earlier reviews remain viewable and exportable with a historical/unverified warning; an upgrade does not rerun or certify them. New reviews use the current extraction and screening checks.
+
+See [RESEARCH.md](RESEARCH.md) for the adversarial method, Astra for Law access research, public legal-workflow sources, and evidence limits. This app does not provide Astra for Law or its legal search index.

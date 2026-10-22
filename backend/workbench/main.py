@@ -22,6 +22,7 @@ from .models import Playbook, YAMLInput, ReviewInput, Decision, AIInput
 from .engine import analyze
 from .reports import export
 from .ai import assist, AIError
+from .safety import EXTRACTION_REVISION, REVIEW_REVISION, review_view
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_UPLOAD = 10 * 1024 * 1024
@@ -76,7 +77,7 @@ async def lifespan(app):
     except asyncio.CancelledError:
         pass
 
-app = FastAPI(title="Clause Review Workbench", version="1.0.0", lifespan=lifespan, docs_url=None, redoc_url=None)
+app = FastAPI(title="Clause Review Workbench", version="1.0.1", lifespan=lifespan, docs_url=None, redoc_url=None)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]"])
 
 @app.middleware("http")
@@ -123,7 +124,7 @@ def require(table, id):
     obj = store.get(table, id)
     if obj is None:
         raise HTTPException(404, "Record not found")
-    return obj
+    return review_view(obj) if table == "reviews" else obj
 
 def now(): return datetime.now(timezone.utc).isoformat()
 
@@ -136,11 +137,11 @@ def update_ai(id, fields, issues=None):
         review.update(fields)
         if issues: review["issues"].extend(issues)
         c.execute("UPDATE reviews SET data=? WHERE id=?", (json.dumps(review), id))
-        return review
+        return review_view(review)
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "ai_configured": bool(os.environ.get("OPENROUTER_API_KEY")), "retention_days": store.RETENTION_DAYS, "max_upload_bytes": MAX_UPLOAD}
+    return {"status": "ok", "ai_configured": bool(os.environ.get("OPENROUTER_API_KEY")), "retention_days": store.RETENTION_DAYS, "max_upload_bytes": MAX_UPLOAD, "extraction_revision": EXTRACTION_REVISION, "review_revision": REVIEW_REVISION}
 
 @app.get("/api/documents")
 def documents():
@@ -229,20 +230,22 @@ def export_playbook(id: str):
 def reviews(id: str):
     require("documents", id)
     with store.db() as c:
-        return [json.loads(r[0]) for r in c.execute("SELECT data FROM reviews WHERE document_id=? ORDER BY rowid DESC", (id,))]
+        return [review_view(json.loads(r[0])) for r in c.execute("SELECT data FROM reviews WHERE document_id=? ORDER BY rowid DESC", (id,))]
 
 @app.post("/api/documents/{id}/reviews", status_code=201)
 def run_review(id: str, body: ReviewInput):
     doc = require("documents", id)
+    if doc.get("extraction_revision") != EXTRACTION_REVISION:
+        raise HTTPException(409, "This upload predates the current extraction checks. Download and re-upload the original before reviewing.")
     pb = parse_playbook(require("playbooks", body.playbook_id)["yaml"])
     try:
         issues, checks = analyze(doc, pb)
     except TimeoutError as exc:
         raise HTTPException(422, "Playbook pattern exceeded its processing time limit") from exc
-    review = dict(id=str(uuid.uuid4()), document_id=id, playbook_id=body.playbook_id, playbook_name=pb.name, created_at=now(), issues=issues, checks=checks, ai_status="NOT_REQUESTED", ai_error=None, playbook_snapshot=pb.model_dump())
+    review = dict(id=str(uuid.uuid4()), review_revision=REVIEW_REVISION, extraction_revision=EXTRACTION_REVISION, document_id=id, playbook_id=body.playbook_id, playbook_name=pb.name, created_at=now(), issues=issues, checks=checks, ai_status="NOT_REQUESTED", ai_error=None, playbook_snapshot=pb.model_dump())
     with store.db() as c:
         c.execute("INSERT INTO reviews VALUES(?,?,?)", (review["id"], id, json.dumps(review)))
-    return review
+    return review_view(review)
 
 @app.get("/api/reviews/{id}")
 def review(id: str): return require("reviews", id)
@@ -259,7 +262,7 @@ def decision(id: str, issue_id: str, body: Decision):
         if not issue: raise HTTPException(404, "Issue not found")
         issue.update(body.model_dump())
         c.execute("UPDATE reviews SET data=? WHERE id=?", (json.dumps(rev), id))
-    return issue
+    return next(i for i in review_view(rev)["issues"] if i["id"] == issue_id)
 
 @app.get("/api/reviews/{id}/export")
 def report(id: str, format: str = "json"):
@@ -274,6 +277,8 @@ async def ai_review(id: str, body: AIInput):
     async with AI_LOCK:
         rev = require("reviews", id)
         doc = require("documents", rev["document_id"])
+        if doc.get("extraction_revision") != EXTRACTION_REVISION or rev.get("review_revision") != REVIEW_REVISION:
+            raise HTTPException(409, "Historical extraction/review is unverified. Re-upload the original and run a new review before AI assistance.")
         try:
             issues, audit = await assist(doc, rev, body)
         except AIError as exc:

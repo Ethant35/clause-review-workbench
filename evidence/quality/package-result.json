@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "archive": "clause-review-workbench-1.0.1.tar.gz",
+  "fresh_extraction": "/var/folders/j_/l874vytd19j5hkhl05ymffbc0000gn/T/crw-deployment-engr5dky",
+  "checks": [
+    "production startup",
+    "fresh database",
+    "browser upload",
+    "two expected findings",
+    "reviewer decision",
+    "JSON export"
+  ],
+  "author": "Ethan",
+  "sha256": "76241f3aa8650acf5cf410b7277f9fce77230e175356436053143808991224af",
+  "packaged_commit": "d51ac110faed1543b9e5a19c4700134f8ffcf393"
+}
