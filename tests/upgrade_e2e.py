@@ -1,6 +1,7 @@
 """Upgrade a database created by the real v1.0.0 server, without fabricating rows."""
 from datetime import datetime, timezone
 from io import BytesIO
+import argparse
 import json
 import os
 from pathlib import Path
@@ -18,12 +19,16 @@ from docx import Document
 from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
+parser = argparse.ArgumentParser()
+parser.add_argument('--baseline', choices=['v1.0.0','v1.0.1'], default='v1.0.0')
+BASELINE = parser.parse_args().baseline
+REUSE = BASELINE == 'v1.0.1'
 OUT = ROOT / 'artifacts'
 OUT.mkdir(exist_ok=True)
 RUN = Path(tempfile.mkdtemp(prefix='upgrade-', dir=OUT))
-OLD = RUN / 'v1.0.0'
+OLD = RUN / BASELINE
 OLD.mkdir()
-with tarfile.open(fileobj=BytesIO(subprocess.check_output(['git', 'archive', 'v1.0.0'], cwd=ROOT))) as archive:
+with tarfile.open(fileobj=BytesIO(subprocess.check_output(['git', 'archive', BASELINE], cwd=ROOT))) as archive:
     archive.extractall(OLD, filter='data')
 DATA = RUN / 'data'
 NETWORK = RUN / 'network.jsonl'
@@ -86,11 +91,14 @@ try:
     with httpx.Client(base_url=BASE, timeout=30, trust_env=False) as client:
         start(OLD)
         source = b'Each party is not required to protect the other party confidential information.\n'
+        if REUSE:
+            source = b'Each party aggregate liability will not exceed the fees paid in the preceding twelve months.\nThe liability cap does not apply to indemnification obligations.\n'
+        target_rule = 'liability-cap' if REUSE else 'confidentiality-mutual'
         document = payload(client.post('/api/documents', files={'file': ('historical.txt', source)}))
         did = document['id']
         review = payload(client.post(f'/api/documents/{did}/reviews', json={'playbook_id': 'commercial'}))
         rid = review['id']
-        assert next(c for c in review['checks'] if c['rule_id'] == 'confidentiality-mutual')['outcome'] == 'COMPLIANT'
+        assert next(c for c in review['checks'] if c['rule_id'] == target_rule)['outcome'] == 'COMPLIANT'
         issue = review['issues'][0]
         # Use the actual request field names from the released public API.
         decision = {'status': 'accepted', 'notes': 'Historical reviewer decision; preserve this note.'}
@@ -106,9 +114,10 @@ try:
         assert historical['issues'][0]['notes'] == decision['notes']
         assert payload(client.get(f'/api/documents/{did}/reviews'))[0]['verification_warning']
         passed('UP-01-preserve-original-rows-decisions-and-source')
-        assert client.post(f'/api/documents/{did}/reviews', json={'playbook_id': 'commercial'}).status_code == 409
+        if not REUSE:
+            assert client.post(f'/api/documents/{did}/reviews', json={'playbook_id': 'commercial'}).status_code == 409
         assert client.post(f'/api/reviews/{rid}/ai', json={'consent': True, 'model': 'openai/gpt-4o-mini', 'provider': 'OpenAI'}).status_code == 409
-        passed('UP-02-prevent-old-extraction-reuse-and-ai-transmission')
+        passed('UP-02-old-review-ai-blocked-and-extraction-policy-preserved')
         for fmt, ext in [('json', 'json'), ('markdown', 'md'), ('docx', 'docx')]:
             response = client.get(f'/api/reviews/{rid}/export', params={'format': fmt})
             response.raise_for_status()
@@ -127,28 +136,33 @@ try:
             page = browser.new_page(viewport={'width': 1440, 'height': 1100})
             page.goto(BASE)
             expect(page.get_by_text('Historical review: not verified', exact=False)).to_be_visible()
-            expect(page.get_by_role('button', name='Run review', exact=True)).to_be_disabled()
+            if REUSE:
+                expect(page.get_by_role('button', name='Run review', exact=True)).to_be_enabled()
+                expect(page.get_by_text('Run a new review to evaluate related clauses', exact=False)).to_be_visible()
+            else:
+                expect(page.get_by_role('button', name='Run review', exact=True)).to_be_disabled()
             page.screenshot(path=str(RUN / 'historical-review.png'), full_page=True)
-            passed('UP-04-browser-warning-and-disabled-review')
-            page.locator('.upload-box input').set_input_files({'name': 'reuploaded.txt', 'mimeType': 'text/plain', 'buffer': source})
-            expect(page.get_by_role('heading', level=2, name='reuploaded.txt')).to_be_visible()
+            passed('UP-04-browser-warning-and-correct-rerun-policy')
+            if not REUSE:
+                page.locator('.upload-box input').set_input_files({'name': 'reuploaded.txt', 'mimeType': 'text/plain', 'buffer': source})
+                expect(page.get_by_role('heading', level=2, name='reuploaded.txt')).to_be_visible()
             page.get_by_role('button', name='Run review', exact=True).click()
             expect(page.get_by_text('Review complete.', exact=True)).to_be_visible()
             page.screenshot(path=str(RUN / 'current-review.png'), full_page=True)
             browser.close()
-        fresh = next(d for d in payload(client.get('/api/documents')) if d['name'] == 'reuploaded.txt')
+        fresh = document if REUSE else next(d for d in payload(client.get('/api/documents')) if d['name'] == 'reuploaded.txt')
         current = payload(client.get(f"/api/documents/{fresh['id']}/reviews"))[0]
-        assert current['verification_status'] == 'CURRENT_CHECKS' and current['review_revision'] == 2
-        assert next(c for c in current['checks'] if c['rule_id'] == 'confidentiality-mutual')['outcome'] == 'NEEDS_REVIEW'
+        assert current['verification_status'] == 'CURRENT_CHECKS' and current['review_revision'] == client.get('/api/health').json()['review_revision']
+        assert next(c for c in current['checks'] if c['rule_id'] == target_rule)['outcome'] == 'NEEDS_REVIEW'
         after = stored()
         assert all(row in after[table] for table, rows in before.items() for row in rows)
         assert client.get(f"/api/documents/{fresh['id']}/original").content == source
-        passed('UP-05-browser-reupload-new-checks-preserve-history')
+        passed('UP-05-browser-new-checks-preserve-history-and-original')
         assert NETWORK.read_text() == ''
         passed('UP-06-no-backend-outbound-connections')
 finally:
     stop()
     log.close()
-    (OUT / 'upgrade-results.json').write_text(json.dumps({'author': 'Ethan', 'timestamp': datetime.now(timezone.utc).isoformat(),
-        'baseline': 'v1.0.0', 'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+    (OUT / ('upgrade-v1.0.1-results.json' if REUSE else 'upgrade-results.json')).write_text(json.dumps({'author': 'Ethan', 'timestamp': datetime.now(timezone.utc).isoformat(),
+        'baseline': BASELINE, 'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         'run': str(RUN.relative_to(ROOT)), 'results': results, 'status': 'PASS' if len(results) == 6 else 'FAIL'}, indent=2) + '\n')

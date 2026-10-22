@@ -6,7 +6,7 @@ reference, or mixed scope changes its meaning. Such cases require human review.
 import regex
 
 EXTRACTION_REVISION = 2
-REVIEW_REVISION = 2
+REVIEW_REVISION = 3
 LEGACY_WARNING = "Historical review: not verified by the current extraction and review checks. Re-upload the original and run a new review."
 
 
@@ -71,4 +71,4 @@ def review_view(review):
             "fallback_language": rule.get("fallback_language"),
         }})
     return {**review, "issues": issues, "verification_status": "CURRENT_CHECKS" if current else "HISTORICAL_UNVERIFIED",
-            "verification_warning": None if current else LEGACY_WARNING}
+            "verification_warning": None if current else (LEGACY_WARNING if review.get("extraction_revision") != EXTRACTION_REVISION else "Historical review: not verified by the current clause interaction checks. Run a new review to evaluate related clauses; the existing review and decisions are preserved.")}

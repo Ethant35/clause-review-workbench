@@ -7,9 +7,19 @@ from docx.oxml.ns import qn
 from .safety import review_view
 
 FIELDS = [("id", "Issue ID"), ("rule_id", "Rule ID"), ("severity", "Severity"), ("category", "Clause category"), ("observed_language", "Observed language"), ("source_anchor", "Source anchor"), ("explanation", "Explanation"), ("preferred_position", "Preferred contract position"), ("negotiating_response", "Suggested negotiating response"), ("status", "Reviewer status"), ("notes", "Reviewer notes"), ("confidence", "Confidence or uncertainty"), ("origin", "Analysis layer")]
-FIELDS.insert(9, ("playbook_guidance", "Saved playbook alternatives and fallback"))
+FIELDS.insert(7, ("interactions", "Related clauses and effect"))
+FIELDS.insert(10, ("playbook_guidance", "Saved playbook alternatives and fallback"))
 
 def value(issue, field):
+    if field == "interactions":
+        lines = []
+        for relation in issue.get(field, []):
+            lines.append(relation["kind"] + ": " + relation["explanation"])
+            if relation.get("reference"):
+                lines.append(relation["reference"] + ": " + relation["status"])
+            for a in relation["evidence"]:
+                lines.append(f"{a['id']}; {a['location']}; extracted offsets [{a['start']}, {a['end']}): {a['text']}")
+        return "\n".join(lines) or "No supported interaction identified. This is not an exhaustive dependency review."
     if field == "playbook_guidance":
         guidance = issue.get(field, {})
         alternatives = "; ".join(guidance.get("acceptable_alternatives", [])) or "None specified"

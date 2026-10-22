@@ -4,7 +4,23 @@ Author: Ethan. Updated October 22, 2026.
 Repository: https://github.com/Ethant35/clause-review-workbench
 Local path: /Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench
 
-## Current outcome
+## Active work and sequencing
+
+The current clause-interaction update is implemented on `codex/clause-interactions`, version 1.1.0, review revision 3. Four relationship types cover cap exceptions/separate limits, Fees definitions, convenience termination costs and qualified section references. Exact related evidence appears in the UI and all exports.
+
+Local results: expanded interactions 98/98; unchanged adversarial suite 81/81; original corpus 12/12 with the deliberate scenario-06 cap correction (191 controls); applicable core E2E checks pass; six upgrade checks each from real v1.0.0 and v1.0.1 servers pass. CR-18 remains BLOCKED_EXTERNAL. Fresh-clone acceptance passed at f1f77f5; changed desktop/mobile/source views and the one-page report were inspected. DOCX/PDF author fields are Ethan. Fresh archive/browser smoke passed. Packaged source: 0ef7d391abf1d3eca251ec5148d69200a50540a7. Archive SHA-256: 3650e402049f7e2b08ab48c14330facca3829753368b59b105ed7f02c9c954c9. PR/release publication remains pending. Do not mistake local success for release or production qualification.
+
+**Next assignment is already authorized and must begin after this bounded update completes.** Ethan's sequencing message arrived via the coordinating chat: finish current work, verification and safe release/handoff first, then begin production readiness without another prompt. Create an accurate production-readiness goal at that point. Read `/Users/ethantarnarider/Documents/ChatGPT/Open source/.agents/README.md`, all applicable project-local explicitly invoked skills in bounded phases, and current code/evidence. The prior E2E-only restriction is superseded for that phase. See the conversation's full production-readiness assignment; preserve its skill-use record, readiness matrix, security/quality/recovery/performance/onboarding/release requirements. No claim of production readiness is made here.
+
+Explicit next-phase skills: source-driven-development, constraint-driven-development, documentation-and-adrs; test-driven-development, property-based-testing, systematic-debugging, variant-analysis; api-and-interface-design, security-and-hardening, sharp-edges, differential-review, find-bugs, semgrep, conditional harness-writing; performance-optimization, observability-and-instrumentation, deprecation-and-migration; impeccable, baseline-ui, fixing-accessibility, web-design-guidelines, vercel-react-best-practices, conditional vercel-composition-patterns; conditional code-simplification, shipping-and-launch, verification-before-completion. Use the actual local skills, not substitutes. Semgrep requires its installed scan-plan approval; no cloud login, uploads or metrics. Impeccable requires Operate mode and onboard.md. Relevant extra skills may be installed only through skill-installer under the local .agents/skills with explicit-only policy, supporting files/licenses and recorded source revisions. No global changes/hooks. Astra is hands-on lead; at most two Luna High workers, no worker spawning, stop completed workers.
+
+## Persistent constraints
+
+No GitHub Actions: verify disabled status and zero runs before push/PR/tag/release. No workflows. No user config changes, no unsolicited paid integrations or source transmission. Preserve source bytes, saved policy and historical decisions. Use Ethan for personal author metadata and preserve factual provenance.
+
+Supported account usage checker is active every 55 seconds in functions cell 113. Latest checkpoint is recorded in ignored `artifacts/usage-check.json`; recheck live on resume. At 100% used / 0% remaining stop project work, workers and registered processes, save handoff if tools remain. No credits/resets/other providers to bypass exhaustion. `artifacts/processes.json` tracks local verification processes. No persistent automation was created.
+
+## Previous completed release: v1.0.1
 
 **DONE for the bounded offline corrective release v1.0.1.** Core acceptance passed under the specification's explicit CR-18 exception. Successful AI interpretation remains **BLOCKED_EXTERNAL / UNVERIFIED** because authorized OpenRouter key/model/provider configuration is absent.
 

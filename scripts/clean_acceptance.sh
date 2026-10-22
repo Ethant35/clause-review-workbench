@@ -14,7 +14,9 @@ npm --prefix frontend run build
 .venv/bin/python -m playwright install chromium
 .venv/bin/python tests/e2e.py
 .venv/bin/python tests/adversarial_e2e.py
+.venv/bin/python tests/interactions_e2e.py
 .venv/bin/python tests/upgrade_e2e.py
+.venv/bin/python tests/upgrade_e2e.py --baseline v1.0.1
 python3 - "$root_dir" <<'PY'
 import json
 from pathlib import Path
@@ -27,7 +29,7 @@ result['results'].append({'id':'CR-01','status':'PASS','detail':'Fresh local Git
 result['results'].sort(key=lambda x:x['id'])
 (out/'clean-e2e-results.json').write_text(json.dumps(result,indent=2)+'\n')
 (out/'clean-corpus-results.json').write_bytes(Path('artifacts/corpus-results.json').read_bytes())
-for name in ['adversarial-results.json','upgrade-results.json']:
+for name in ['adversarial-results.json','interactions-results.json','upgrade-results.json','upgrade-v1.0.1-results.json']:
     (out/('clean-'+name)).write_bytes((Path('artifacts')/name).read_bytes())
 print('Clean installation and E2E acceptance passed at',result['commit'])
 PY

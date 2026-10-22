@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "archive": "clause-review-workbench-1.1.0.tar.gz",
+  "fresh_extraction": "/var/folders/j_/l874vytd19j5hkhl05ymffbc0000gn/T/crw-deployment-go_e80hw",
+  "checks": [
+    "production startup",
+    "fresh database",
+    "browser upload",
+    "two expected findings",
+    "reviewer decision",
+    "JSON export"
+  ],
+  "author": "Ethan"
+}
