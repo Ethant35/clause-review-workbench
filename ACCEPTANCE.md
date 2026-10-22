@@ -1,4 +1,4 @@
-# Local acceptance for v1.0.1
+# Local acceptance for v1.1.0
 
 Author: Ethan. Date: October 22, 2026 (America/Los_Angeles).
 
@@ -8,7 +8,7 @@ GitHub Actions are intentionally omitted and disabled at repository level per Et
 
 ## Environment and reproducibility
 
-macOS arm64; Python 3.12.14; Node v22.13.1; locked Python and npm dependencies; Playwright Chromium. The clean checkout tested application commit `7a4a01073b366105992ad295b780eca84ddc3f46`. Later release-document/evidence commits do not change application behavior. Run:
+macOS arm64; Python 3.12.14; Node v22.13.1; locked Python and npm dependencies; Playwright Chromium. The clean checkout tested application commit `f1f77f5`. Later release-document/evidence commits do not change application behavior. Run:
 
 ```sh
 ./scripts/clean_acceptance.sh
@@ -18,7 +18,7 @@ macOS arm64; Python 3.12.14; Node v22.13.1; locked Python and npm dependencies; 
 
 The clean-install script clones locally to a new directory, installs a new Python environment, runs npm ci and the production build, starts the real application with fresh SQLite storage, and exercises Chromium. The archive smoke test extracts to another new directory, runs the packaged startup command, and completes a browser review/export. No unit tests, mocked parsers, fake databases, or fake LLM responses were used.
 
-Evidence: [E2E results](evidence/quality/e2e-results.json), [corpus scoring](evidence/quality/corpus-results.json), [archive deployment](evidence/quality/package-result.json), [npm audit](evidence/quality/npm-audit.json), and [workbench screenshot](evidence/quality/workbench.png).
+Evidence: [E2E results](evidence/interactions/e2e-results.json), [corpus scoring](evidence/interactions/corpus-results.json), [archive deployment](evidence/interactions/package-result.json), [npm audit](evidence/interactions/npm-audit.json), and [workbench screenshot](evidence/interactions/workbench.png).
 
 ## Required matrix
 
@@ -49,21 +49,32 @@ Additional E2E checks passed for conflicting liability provisions, safe literal 
 
 ## Corpus scoring
 
-The twelve synthetic contracts and expectations were authored independently before application analysis ran. Stable rule IDs drive scoring. There are 11 planted objective deviations, 192 compliant controls, and one explicitly ambiguous liability example.
+The twelve synthetic contracts and expectations were authored independently before application analysis ran. Stable rule IDs drive scoring. There are 11 planted objective deviations, 191 compliant controls, and two expected uncertain cap outcomes: one ambiguous formula and one cap qualified by an indemnity exception.
 
 - Scenarios passed: 12/12.
 - Planted deviations detected: 11/11.
 - False positives: 0.
 - False negatives: 0.
-- Failed compliant controls: 0/192.
+- Failed compliant controls: 0/191.
 - Citation mismatches: 0.
-- Ambiguous expected outcomes: 1/1 reported NEEDS_REVIEW.
+- Ambiguous expected outcomes: 2/2 reported NEEDS_REVIEW.
 
 Absence-based deviations are expected objective search outcomes but retain NEEDS_REVIEW confidence: absence of a pattern is not proof that a legal obligation is absent. Quotation-bearing findings exactly resolve to extracted source text. Results are not a measure of universal legal accuracy, recall, or enforceability.
 
 ## Visual and metadata checks
 
-The desktop and mobile workbench were inspected; no horizontal overflow occurred at 390 pixels. Compact tool headings replaced welcome/marketing copy. A real generated DOCX report and DOCX fixture were rendered through LibreOffice and every rendered page inspected. Both PDF fixture pages were rendered and inspected. Report title/heading styling and spacing were corrected before final inspection. Required report data survived opening with python-docx and JSON/Markdown readers. DOCX author and last-modified-by fields, and PDF fixture author, were verified as Ethan. Original uploads are preserved byte-for-byte; their metadata is never rewritten. Finder/Windows shell metadata displays were not separately verified.
+The changed interaction view, exact source navigation, and 390-pixel mobile workbench were inspected; no horizontal overflow occurred at 390 pixels. Compact tool headings replaced welcome/marketing copy. The generated one-page interaction report was rendered through LibreOffice and visually inspected. Earlier fixture layout evidence remains in evidence/quality. Required report data survived opening with python-docx and JSON/Markdown readers. DOCX author and last-modified-by fields, and PDF fixture author, were verified as Ethan. Original uploads are preserved byte-for-byte; their metadata is never rewritten. Finder/Windows shell metadata displays were not separately verified.
+
+## New interaction and upgrade acceptance
+
+- 31 authored cases across TXT/DOCX/PDF, plus resource limits, inactive-rule isolation, browser persistence/navigation/mobile layout and offline audit: 98/98 checks passed.
+- All related blocks match exact extracted offsets and authored text; Markdown, DOCX and JSON retain the explanations and evidence.
+- The same initial 26-case suite plus network audit improved from 31/79 before implementation to 79/79. Extra cases were added as edge defects were reproduced; the 98-check total is not presented as the original baseline denominator.
+- Existing adversarial suite: 81/81 unchanged expectations.
+- Real released-server upgrades: six checks each from v1.0.0 and v1.0.1. Stored rows/notes/source remain intact; current extraction can be rerun without re-upload, while older extraction cannot.
+- Original scenario 06 now expects NEEDS_REVIEW for the base cap, in addition to its two objective deviations. The removed compliant-control expectation had ignored the uncapped-indemnity exception. This is an intentional correction, not unchanged-suite equivalence.
+
+Evidence: interactions-before.json, interactions-results.json, adversarial-results.json, upgrade-results.json and upgrade-v1.0.1-results.json under evidence/interactions. These synthetic expectations are agent-authored; they are not independent lawyer validation.
 
 ## Limitations
 
