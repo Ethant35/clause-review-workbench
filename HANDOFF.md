@@ -1,54 +1,44 @@
 # Clause Review Workbench handoff
 
+Author: Ethan. Updated October 22, 2026.
 Repository: https://github.com/Ethant35/clause-review-workbench
 Local path: /Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench
-Release branch: main (implementation merged through PR #1). Final handoff update uses codex/release-handoff.
-Application acceptance commit: 2c11357d4e2d9d4dffe9a2ce3a814301dfcb5523
-Outcome: DONE for the core offline release, under the specification's explicit CR-18 exception. All applicable completion gates passed; release published and uploaded archive checksum verified.
-Release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.0.0
-Tag: v1.0.0
-Release commit: b9c359ab96ed92bfc9d496fc0f99998412e7c520
-Release archive SHA-256: db86d3f044b25731940f6ca2961fa3daff1e6738d9fba1fd10b811a49f1a57a1
-Remaining external gate: CR-18 successful real AI interpretation, explicitly UNVERIFIED. No other mandatory gate remains.
 
-## Completed
-- FastAPI/SQLite backend; React/TypeScript UI; DOCX/PDF/text source-preserving ingestion; 18-category commercial and six-category NDA playbooks.
-- Deterministic review, exact anchors, missing-clause handling, uncertainty, liability properties, reviewer decisions/notes/history, YAML editing/import/export, Markdown/DOCX/JSON reports.
-- Consent-gated OpenRouter adapter with model/provider selection, budgets, errors, and citation validation.
-- CR-01 through CR-17, CR-19, CR-20 PASS. Additional security/retention E2E PASS. Twelve corpus scenarios pass, 11 planted deviations detected, 192 compliant controls pass, zero false positives/negatives/citation mismatches.
-- Clean clone installation and fresh deployment archive browser workflow PASS. Visual DOCX/PDF and desktop/mobile review complete. Ethan author fields verified for generated DOCX/PDF.
-- CR-18 BLOCKED_EXTERNAL: no authorized OpenRouter key/model/provider configuration. Core release is permitted, labeled AI-unverified.
-- No GitHub Actions: repository setting enabled=false verified; no workflows created. Keep Actions disabled before any push, PR, tag, or release.
+## Current outcome
 
-## Processes and usage
-- No active Luna workers; both completed workers were interrupted/marked done.
-- E2E and package smoke tests stop their servers in finally. Check artifacts/processes.json and, if necessary, run .venv/bin/python scripts/stop_processes.py.
-- The session-local supported usage checker ran every 55 seconds in functions cell 11 during project work and is to be terminated at finalization. It uses get_usage_limits, writes artifacts/usage-check.json, and stops registered process groups on exhaustion. It is not a persistent automation and must be stopped when this project run ends.
-- Latest checkpoint: 15% used, 85% remaining. Recheck live on resume. Stop all work at 100% used in an applicable window; do not use credits/resets/providers to bypass exhaustion.
-- Local ignored artifacts include clean-install logs, synthetic reports, renders, package, screenshots, and test databases. Temporary clean checkouts and archive extraction directories are recorded under artifacts; they contain only synthetic data.
+**DONE for the bounded offline corrective release v1.0.1.** Core acceptance passed under the specification's explicit CR-18 exception. Successful AI interpretation remains **BLOCKED_EXTERNAL / UNVERIFIED** because authorized OpenRouter key/model/provider configuration is absent.
 
-## Exact next-session commands
-```sh
-cd '/Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench'
-git status --short
-git log -5 --oneline
-gh api repos/Ethant35/clause-review-workbench/actions/permissions
-gh pr list --state all
-gh release view v1.0.0
-cat artifacts/usage-check.json
-cat artifacts/processes.json
-```
+Release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.0.1
+Release commit: bf115be7ba3e17ed7e5d6627edf47d7e033b2cab
+Implementation/evidence PR: https://github.com/Ethant35/clause-review-workbench/pull/3 (merged).
+Application acceptance commit: 7a4a01073b366105992ad295b780eca84ddc3f46
+Packaged source commit: d51ac11 (later commits add evidence only).
+Archive SHA-256: 76241f3aa8650acf5cf410b7277f9fce77230e175356436053143808991224af
 
-The release exists and is public. The uploaded archive was downloaded again, compared byte-for-byte with the tested archive, and passed its published SHA256SUMS check. GitHub Actions remains disabled with zero workflow runs. PR #1 merged the implementation. Final handoff documentation is a separate docs-only PR and does not change release behavior.
+The published archive was downloaded and matched byte-for-byte with the locally tested archive and SHA256SUMS. Every included tracked source file also matched packaged commit d51ac11. The release is public, not a draft or prerelease. Final handoff updates do not alter release behavior.
 
-For normal use run ./scripts/start.sh and open http://127.0.0.1:8765. No application server is intentionally left running. If resuming AI verification, supply authorized OPENROUTER_API_KEY, OPENROUTER_MODEL, and OPENROUTER_PROVIDER in the test environment and run .venv/bin/python tests/e2e.py. Do not claim production-verified AI until CR-18 passes. Existing tests and local logs remain under artifacts for inspection. No external analytics or GitHub Actions were used.
+## Verified changes
 
-## Active quality reassessment
-New objective ACTIVE (2026-10-22): adversarial verification of offline findings and source completeness. The prior v1.0.0 release remains published, but its 12-case corpus is not evidence of general semantic correctness. Current investigation: negated obligations/prohibitions and exceptions can satisfy regex conditions; empty XML element truthiness may bypass unsupported-content rejection. Write independent paired expectations, reproduce via real API, fix conservatively, preserve original controls, verify upgrade behavior and release only after local acceptance.
-Branch: codex/evidence-boundary. No current application server. Usage checker functions cell 46 calls supported get_usage_limits every 55 seconds and writes artifacts/usage-check.json (latest 24% used). No Actions; enabled=false verified. Goal tool created a new bounded objective because no active goal was returned. Resume with git status, this handoff, and artifacts/adversarial-before.json once available.
+- Fixed independently reproduced false assurance from negation, unresolved references, open-ended exceptions, unrelated notice periods, and mixed liability/indemnity scope. Positive controls remain intact.
+- Reject unsupported DOCX content and PDFs with raster images, including logos. OCR remains unsupported. These gates are conservative and do not certify every possible extraction layout.
+- Historical uploads/reviews retain original bytes, stored rows, decisions, and notes. Old results carry visible/exported warnings; fresh analysis requires downloading and re-uploading the original.
+- UI/API/all exports expose acceptable alternatives and optional fallback wording from the saved playbook snapshot. Later policy edits cannot rewrite prior guidance; missing fallback is never invented.
+- RESEARCH.md records Astra for Law's restricted access, public GitHub skills, named professional and self-reported user accounts, parser sources, and evidence limits. No Astra for Law access, private legal index, public API entitlement, new integration, plugin installation, or configuration change was obtained or implied.
 
-### Reassessment checkpoint
-Baseline committed as 32e0186: 31/81 adversarial checks passed; 50 failed. Conservative engine/parser fixes now pass 81/81 and preserve all original corpus cases. Real v1.0.0-to-current upgrade passed six checks: raw rows, notes, original bytes, all export warnings, browser re-upload, no outbound sockets. User expanded research to public GitHub and practitioner anecdotes. RESEARCH.md distinguishes official restricted Astra for Law access from public skills and anecdotes. New bounded change exposes existing saved playbook alternatives/fallback in UI and exports. E2E extension is in progress; one test reload selected the wrong document and is corrected. No public Astra access, credentials, or new integrations. Current changes remain uncommitted, next run all suites, inspect renders, commit, clean clone/package, then PR/release if green. Usage checker cell 46 remains active, latest 32% used; Actions remain disabled.
+## Acceptance
 
-### Local acceptance complete, publication pending
-Application commit 7a4a01073b366105992ad295b780eca84ddc3f46 passed a fresh clone installation, original E2E/corpus, 81/81 adversarial checks, and all six actual released-server upgrade checks. Packaged v1.0.1 deployment passed a fresh extraction/browser workflow. Final two-page report and historical warning inspected; saved DOCX author fields Ethan verified. Evidence is in evidence/quality; earlier root evidence remains historical. Source code is committed; final evidence/docs commit and PR/release follow. CR-18 remains BLOCKED_EXTERNAL; no public Astra for Law access was obtained. Usage 36% used at last checkpoint. Process registry empty after test cleanup. No Actions; enabled=false and zero runs verified.
+Fresh clone installation and production build passed. CR-01 through CR-17, CR-19, CR-20, and additional security/retention checks passed. CR-18 remains BLOCKED_EXTERNAL. The fixed adversarial suite improved from 31/81 to 81/81 with unchanged expectations. Original corpus: 12/12 scenarios, 11/11 planted deviations, 192 passing controls, no citation mismatch. Six real v1.0.0-to-current upgrade checks passed. Fresh archive extraction/browser upload/review/decision/export passed. npm audit: zero vulnerabilities. Final two-page report and browser warnings inspected. DOCX author and last-modified-by fields verified as Ethan; Finder/Windows shell displays were not separately verified.
+
+Current evidence: evidence/quality and ACCEPTANCE.md. Earlier evidence files at evidence/ root are the historical v1.0.0 record. Synthetic expectations are not an independent lawyer panel, a held-out legal benchmark, or a general accuracy claim.
+
+## Processes, usage, and continuation
+
+No application server is intentionally left running; artifacts/processes.json is empty after cleanup. No active workers: the two original Luna workers completed and were interrupted. A session-local checker polled supported get_usage_limits every 55 seconds in functions cell 46 and is stopped at finalization; it is not a persistent automation. Latest checkpoint: 38% used, 62% remaining. Recheck live on resume. Stop at 100% used in an applicable window; do not use credits, resets, or other providers to bypass exhaustion.
+
+**No GitHub Actions.** Repository enabled=false and zero runs were verified through publication. Recheck before any future push, PR, tag, or release. Do not add workflows. The Git working tree should be clean on main after the final docs PR.
+
+Local ignored artifacts contain only synthetic test data, reports, screenshots, fresh-clone paths, and deployment logs. They are retained for review. No user contracts or credentials were committed. Do not change ~/.codex/config.toml without explicit authorization.
+
+To run locally: ./scripts/start.sh, then http://127.0.0.1:8765. Keep loopback binding. For verification, run ./scripts/clean_acceptance.sh from a Git checkout containing tag v1.0.0. For optional real AI acceptance, supply authorized OPENROUTER_API_KEY, OPENROUTER_MODEL, and OPENROUTER_PROVIDER, then run .venv/bin/python tests/e2e.py. Do not claim verified AI before CR-18 passes.
+
+The prior v1.0.0 release remains available for historical reproduction; PRs #1 and #2 created and documented that original release. Prefer v1.0.1 for current use.
