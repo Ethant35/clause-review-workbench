@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "archive": "clause-review-workbench-1.0.0.tar.gz",
+  "checks": [
+    "production startup",
+    "fresh database",
+    "browser upload",
+    "two expected findings",
+    "reviewer decision",
+    "JSON export"
+  ],
+  "author": "Ethan",
+  "fresh_extraction_verified": true
+}

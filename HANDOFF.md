@@ -2,30 +2,36 @@
 
 Repository: https://github.com/Ethant35/clause-review-workbench
 Local path: /Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench
-Branch: codex/build-workbench
-Goal: ACTIVE. Build, verify locally, release v1.0.0 after acceptance.
+Feature branch: codex/build-workbench
+Application acceptance commit: 2c11357d4e2d9d4dffe9a2ce3a814301dfcb5523
+Goal: Core implementation and all applicable local acceptance gates passed. Release publication is the remaining operational step at this checkpoint. Do not infer publication from this file; verify the release command below.
 
-## State
-- Origin verified; starting repository had README and MIT license only.
-- GitHub Actions disabled at repository level using actions/permissions; verified enabled=false. No workflows existed. Never enable or dispatch Actions.
-- Startup account usage: 1% used, 99% remaining. Check periodically and stop at exhaustion.
-- Architecture: Python 3.12 FastAPI, SQLite, React/TypeScript, offline rules, optional explicit OpenRouter consent.
-- No acceptance checks have run. No release or PR exists yet.
-- No running project servers yet.
+## Completed
+- FastAPI/SQLite backend; React/TypeScript UI; DOCX/PDF/text source-preserving ingestion; 18-category commercial and six-category NDA playbooks.
+- Deterministic review, exact anchors, missing-clause handling, uncertainty, liability properties, reviewer decisions/notes/history, YAML editing/import/export, Markdown/DOCX/JSON reports.
+- Consent-gated OpenRouter adapter with model/provider selection, budgets, errors, and citation validation.
+- CR-01 through CR-17, CR-19, CR-20 PASS. Additional security/retention E2E PASS. Twelve corpus scenarios pass, 11 planted deviations detected, 192 compliant controls pass, zero false positives/negatives/citation mismatches.
+- Clean clone installation and fresh deployment archive browser workflow PASS. Visual DOCX/PDF and desktop/mobile review complete. Ethan author fields verified for generated DOCX/PDF.
+- CR-18 BLOCKED_EXTERNAL: no authorized OpenRouter key/model/provider configuration. Core release is permitted, labeled AI-unverified.
+- No GitHub Actions: repository setting enabled=false verified; no workflows created. Keep Actions disabled before any push, PR, tag, or release.
 
-## Next
-Implement API, source parsing, rules, UI, independent synthetic corpus, live E2E tests, documentation. Use local acceptance only. CR-18 requires authorized available OpenRouter credentials; otherwise BLOCKED_EXTERNAL and release AI as unverified.
+## Processes and usage
+- No active Luna workers; both completed workers were interrupted/marked done.
+- E2E and package smoke tests stop their servers in finally. Check artifacts/processes.json and, if necessary, run .venv/bin/python scripts/stop_processes.py.
+- The session-local supported usage checker runs every 55 seconds in functions cell 11. It uses get_usage_limits, writes artifacts/usage-check.json, and stops registered process groups on exhaustion. It is not a persistent automation and must be stopped when this project run ends.
+- Latest checkpoint: 13% used, 87% remaining. Recheck live on resume. Stop all work at 100% used in an applicable window; do not use credits/resets/providers to bypass exhaustion.
+- Local ignored artifacts include clean-install logs, synthetic reports, renders, package, screenshots, and test databases. Temporary clean checkouts and archive extraction directories are recorded under artifacts; they contain only synthetic data.
 
-## Resume
+## Exact next-session commands
 ```sh
 cd '/Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench'
 git status --short
-git log -3 --oneline
+git log -5 --oneline
 gh api repos/Ethant35/clause-review-workbench/actions/permissions
+gh pr list --state all
+gh release view v1.0.0
+cat artifacts/usage-check.json
+cat artifacts/processes.json
 ```
 
-## Implementation milestone
-Core parser, schema, rule engine, SQLite API, report exports and optional OpenRouter adapter implemented; integration checks pending. Frontend and independent corpus workers completed and were interrupted/marked done. No worker is running. Usage checker is actually running in this chat's functions cell 9, calling the supported tool every 55 seconds; this cell is session-local, not a persisted automation. Latest observed usage 5% used. Use artifacts/processes.json with scripts/stop_processes.py for project server cleanup once tests start.
-
-## Local E2E milestone
-2026-10-22: CR-02 through CR-17, CR-19, and CR-20 PASS in artifacts/e2e-results.json. Twelve scenarios PASS with zero false positives, false negatives, or citation mismatches. CR-18 BLOCKED_EXTERNAL: no complete authorized OpenRouter key/model/provider configuration. Invalid-credential test made a real OpenRouter call and passed. CR-01 clean clone/install remains pending. No release yet. UI steering applied: no hero/marketing/welcome banner; compact direct copy. Current supported usage checker is functions cell 11 (55-second interval); artifacts/usage-check.json is its latest authoritative observation. Completed frontend/corpus agents are interrupted. E2E servers stop in finally; artifacts/processes.json is empty after completion. DOCX/PDF render verification is in progress.
+If release exists, inspect its tag/commit and assets before doing new work. If not, commit only remaining acceptance/release documentation, push the feature branch with Actions disabled, create/attach a PR, merge after acceptance, tag v1.0.0, and publish the core offline release with the deployment archive and AI-unverified label. Build final archive using ./scripts/package.sh. Read ACCEPTANCE.md and evidence/*.json for exact outcomes. Run ./scripts/clean_acceptance.sh only after application changes; documentation-only release edits do not require repeating unchanged application tests.
