@@ -40,9 +40,10 @@ Development UI: [localhost port 5173](http://127.0.0.1:5173), with `/api` proxie
 1. Upload a document and inspect extracted text and the original. PDF findings link to a page. DOCX/text findings use paragraph/block or line locations. Original bytes remain unchanged.
 2. Select Commercial contracts or Mutual NDA, or create/import a playbook. Duplicate and edit YAML rules to fit the engagement. Run review.
 3. Filter findings, inspect source text, and distinguish observed language from interpretation. Required missing provisions are explicitly marked as absence-based, with no quote.
-4. Accept, reject, or leave issues unresolved; save reviewer notes. Open previous reviews after a restart. Rerunning creates a new review with a new policy snapshot.
-5. Open “Saved playbook alternatives and fallback” for the selected finding. These positions come from the saved policy, not the contract or a verified legal standard. Later policy edits do not change earlier review guidance.
-6. Export Markdown, DOCX, or JSON. Delete documents to remove sources and associated local review records.
+4. Read “Related clauses and effect” when present. Inspect the cap, exception, definition, termination cost or qualified reference together. Each linked passage opens in source. A located reference is not a resolved legal conclusion.
+5. Accept, reject, or leave issues unresolved; save reviewer notes. Open previous reviews after a restart. Rerunning creates a new review with a new policy snapshot.
+6. Open “Saved playbook alternatives and fallback” for the selected finding. These positions come from the saved policy, not the contract or a verified legal standard. Later policy edits do not change earlier review guidance.
+7. Export Markdown, DOCX, or JSON. Delete documents to remove sources and associated local review records.
 
 The commercial playbook covers confidentiality, exclusions, permitted disclosures, term/expiration, automatic renewal, termination for convenience, termination for breach, liability cap, cap exceptions, indemnification, IP ownership, payment, unilateral amendment, data protection, subprocessors, audit rights, governing law, and assignment. The NDA playbook selects six relevant categories. Oregon governing-law preference is illustrative and configurable.
 
@@ -60,7 +61,9 @@ To run optional live acceptance against synthetic content, provide `OPENROUTER_A
 .venv/bin/python -m playwright install chromium
 .venv/bin/python tests/e2e.py
 .venv/bin/python tests/adversarial_e2e.py
+.venv/bin/python tests/interactions_e2e.py
 .venv/bin/python tests/upgrade_e2e.py # Git checkout with the v1.0.0 tag
+.venv/bin/python tests/upgrade_e2e.py --baseline v1.0.1
 # Against an already running service; exports exact per-scenario scoring:
 .venv/bin/python scripts/corpus_eval.py --output artifacts/corpus-results.json
 # Clean local checkout install, build, and all E2E workflows:
@@ -79,7 +82,7 @@ The deployment archive includes source, locked dependencies, built frontend, and
 - `CRW_RETENTION_DAYS`: positive days to expire documents; `0` retains until deletion. Cleanup runs at startup and every minute.
 - Uploads: 10 MiB; PDFs: 200 pages; extracted text: 300,000 characters/5,000 blocks.
 - OCR and encrypted PDFs are unsupported. PDFs containing any raster image (including logos) or a textless page are rejected. DOCX revisions/macros/text boxes/notes/imports/content controls/fields/drawings and directly marked hidden text are unsupported. DOCX headers/footers are not analyzed and trigger a warning.
-- Regex conditions do not resolve every negation, cross-reference, definition, legal exception, or jurisdictional question. Match results require reading the complete agreement. Original PDF layouts can differ from extraction order.
+- Supported interactions are bounded and do not resolve every negation, cross-reference, definition, legal exception, or jurisdictional question. Exact Section/Clause labels are required for reference lookup. Match results require reading the complete agreement. Original PDF layouts can differ from extraction order.
 - Downloads, filesystem backups, and SSD remnants are outside application deletion. No application-level encryption or multi-user access control is provided.
 
 See [PLAYBOOK_SCHEMA.md](PLAYBOOK_SCHEMA.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md).

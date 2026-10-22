@@ -19,6 +19,7 @@ import yaml
 from pydantic import ValidationError
 from . import store
 from .models import Playbook, YAMLInput, ReviewInput, Decision, AIInput
+from .relations import InteractionLimit
 from .engine import analyze
 from .reports import export
 from .ai import assist, AIError
@@ -77,7 +78,7 @@ async def lifespan(app):
     except asyncio.CancelledError:
         pass
 
-app = FastAPI(title="Clause Review Workbench", version="1.0.1", lifespan=lifespan, docs_url=None, redoc_url=None)
+app = FastAPI(title="Clause Review Workbench", version="1.1.0", lifespan=lifespan, docs_url=None, redoc_url=None)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]"])
 
 @app.middleware("http")
@@ -240,6 +241,8 @@ def run_review(id: str, body: ReviewInput):
     pb = parse_playbook(require("playbooks", body.playbook_id)["yaml"])
     try:
         issues, checks = analyze(doc, pb)
+    except InteractionLimit as exc:
+        raise HTTPException(422, str(exc)) from exc
     except TimeoutError as exc:
         raise HTTPException(422, "Playbook pattern exceeded its processing time limit") from exc
     review = dict(id=str(uuid.uuid4()), review_revision=REVIEW_REVISION, extraction_revision=EXTRACTION_REVISION, document_id=id, playbook_id=body.playbook_id, playbook_name=pb.name, created_at=now(), issues=issues, checks=checks, ai_status="NOT_REQUESTED", ai_error=None, playbook_snapshot=pb.model_dump())

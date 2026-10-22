@@ -5,6 +5,7 @@ from contextvars import ContextVar
 DEADLINE = ContextVar("review_deadline", default=float("inf"))
 import regex
 from .models import Playbook
+from .relations import analyze_relations
 from .safety import context_reason, assignment_prohibition, renewal_supported
 
 def normalized(text):
@@ -23,6 +24,10 @@ def any_match(patterns, text):
     return any(matches(p, text) for p in patterns)
 
 def validate_evidence(issue, document):
+    for relation in issue.get("interactions", []):
+        for anchor in relation["evidence"]:
+            if anchor not in document["blocks"] or document["text"][anchor["start"]:anchor["end"]] != anchor["text"]:
+                return False
     if issue["absence"]:
         return issue["source_anchor"] is None and issue["observed_language"] is None
     anchor = issue["source_anchor"]
@@ -88,6 +93,21 @@ def analyze(document, playbook: Playbook):
                 unknown = next((b for b in substantive if b not in good), substantive[0])
                 issues.append(make_issue(rule, unknown, "Relevant language was found, but the configured conditions do not establish an acceptable or expressly unacceptable position. Context, scope, exceptions, and cross-references require human review.", "NEEDS_REVIEW"))
         checks.append(dict(rule_id=rule.id, category=rule.category, outcome=outcome, properties=props))
+    rule_by_id = {r.id: r for r in playbook.rules}
+    for relation in analyze_relations(document, playbook.rules, matches, normalized):
+        rule_id, primary = relation.pop("rule_id"), relation.pop("primary")
+        check = next(c for c in checks if c["rule_id"] == rule_id)
+        issue = next((i for i in issues if i["rule_id"] == rule_id and not i["absence"]), None)
+        if issue is None:
+            issue = make_issue(rule_by_id[rule_id], primary,
+                               "Related provisions qualify this clause. Review their combined effect before deciding whether the selected playbook position is met.", "NEEDS_REVIEW")
+            issues.append(issue)
+        issue.setdefault("interactions", []).append(relation)
+        issue["confidence"] = "NEEDS_REVIEW"
+        if check["outcome"] != "ISSUE":
+            check["outcome"] = "NEEDS_REVIEW"
+        check["properties"]["scope_review_required"] = True
+        check["properties"]["interaction_count"] = check["properties"].get("interaction_count", 0) + 1
     if not all(validate_evidence(i, document) for i in issues):
         raise ValueError("Evidence validation failed")
     return issues, checks

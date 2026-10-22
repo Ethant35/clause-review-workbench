@@ -1,0 +1,507 @@
+{
+  "author": "Ethan",
+  "description": "Fixed synthetic semantic expectations authored before implementation. Exact related blocks must be returned; no general legal-accuracy claim.",
+  "cases": [
+    {
+      "id": "cap-alone",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "cap-indemnity-exception",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "The liability cap does not apply to indemnification obligations."
+      ],
+      "expected_kinds": [
+        "cap-exception"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_evidence": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "cap-narrow-exception",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "The liability cap does not apply to fraud or willful misconduct."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "cap-exception-supercap",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "The liability cap does not apply to indemnification obligations.",
+        "Indemnification liability is limited to two times the Fees paid in the preceding twelve months."
+      ],
+      "expected_kinds": [
+        "cap-exception"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "explanation_contains": "separate limit",
+      "expected_evidence": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "cap-other-category-limit",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "The liability cap does not apply to indemnification obligations.",
+        "Confidentiality liability is limited to two times the Fees paid in the preceding twelve months."
+      ],
+      "expected_kinds": [
+        "cap-exception"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "explanation_contains": "does not establish unlimited",
+      "expected_evidence": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "uncapped-indemnity",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Each party\u2019s indemnification obligations are uncapped."
+      ],
+      "expected_kinds": [
+        "cap-exception"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_evidence": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "cap-no-exclusion",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "The liability cap does not exclude indemnification obligations."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "damages-exclusion-is-not-cap-exception",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "The exclusion of consequential damages does not apply to indemnification obligations."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "restricted-fee-definition",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "\u201cFees\u201d means subscription fees only and excludes implementation fees."
+      ],
+      "expected_kinds": [
+        "fee-definition"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_evidence": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "duplicate-fee-definitions",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "\u201cFees\u201d means all amounts paid under this agreement.",
+        "\u201cFees\u201d means subscription fees only."
+      ],
+      "expected_kinds": [
+        "fee-definition"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "explanation_contains": "Multiple",
+      "expected_evidence": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "broad-fee-definition",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "\u201cFees\u201d means all amounts paid under this agreement."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "unused-defined-term",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "\u201cService Credits\u201d means credits only and excludes refunds."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "exit-remaining-fees",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "Upon termination for convenience, Customer shall pay all remaining fees for the term."
+      ],
+      "expected_kinds": [
+        "termination-cost"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_evidence": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "exit-no-refund",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "Upon termination for convenience, prepaid fees will not be refunded."
+      ],
+      "expected_kinds": [
+        "termination-cost"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_evidence": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "exit-breach-only",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "Upon termination for breach, Customer shall pay all remaining fees for the term."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "exit-negated-payment",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "Upon termination for convenience, Customer is not required to pay any remaining fees."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "NEEDS_REVIEW"
+    },
+    {
+      "id": "exit-refund-positive",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "Upon termination for convenience, Provider shall refund unused prepaid fees."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "NEEDS_REVIEW"
+    },
+    {
+      "id": "reference-found",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 9, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9. Exceptions",
+        "The cap excludes claims for data protection breaches."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "located"
+      ],
+      "expected_evidence": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "reference-missing",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 9, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "missing"
+      ],
+      "expected_evidence": [
+        0
+      ]
+    },
+    {
+      "id": "reference-duplicate",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 9, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9. First text",
+        "The cap excludes data claims.",
+        "Section 9. Replacement text",
+        "The cap includes data claims."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "ambiguous"
+      ],
+      "expected_evidence": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "reference-chain",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 9, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9. Exceptions",
+        "Subject to Section 10, data claims have a separate limit.",
+        "Section 10. Limit",
+        "The data claims limit is twice annual fees."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "located"
+      ],
+      "expected_evidence": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "reference-cycle",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 9, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9. Exceptions",
+        "Subject to Section 10, data claims have a separate limit.",
+        "Section 10. Limit",
+        "Subject to Section 9, the data claims limit is twice annual fees."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "cycle"
+      ],
+      "expected_evidence": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "reference-external",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Schedule A, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "external"
+      ],
+      "expected_evidence": [
+        0
+      ]
+    },
+    {
+      "id": "reference-combined",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Sections 9 and 10, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9. Exceptions",
+        "No changes."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "unsupported"
+      ],
+      "expected_evidence": [
+        0
+      ]
+    },
+    {
+      "id": "reference-unrelated",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9. Support",
+        "Invoices must reference Section 9."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "COMPLIANT"
+    },
+    {
+      "id": "reference-specific-subsection",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 9.2, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 9.1. Support",
+        "Support is available.",
+        "Section 9.2. Exception",
+        "Data claims have a separate limit."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "located"
+      ],
+      "expected_evidence": [
+        0,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "exit-other-trigger-in-same-block",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "No fees are owed upon termination for convenience. Upon termination for breach, Customer shall pay all remaining fees."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "NEEDS_REVIEW"
+    },
+    {
+      "id": "reference-negated",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months. This limit is not subject to Section 9.",
+        "Section 9. Exceptions",
+        "Data claims have a separate limit."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "NEEDS_REVIEW"
+    },
+    {
+      "id": "reference-depth-limit",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Subject to Section 1, Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Section 1. Conditions",
+        "Subject to Section 2, data claims have a separate limit.",
+        "Section 2. Conditions",
+        "Subject to Section 3, data claims have a separate limit.",
+        "Section 3. Conditions",
+        "Subject to Section 4, data claims have a separate limit.",
+        "Section 4. Conditions",
+        "Subject to Section 5, data claims have a separate limit.",
+        "Section 5. Conditions",
+        "Subject to Section 6, data claims have a separate limit.",
+        "Section 6. Conditions",
+        "Subject to Section 7, data claims have a separate limit.",
+        "Section 7. Conditions",
+        "No further qualifications."
+      ],
+      "expected_kinds": [
+        "qualified-reference"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "expected_statuses": [
+        "limit"
+      ],
+      "expected_evidence": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "id": "uncapped-and-separate-limit-conflict",
+      "rule_id": "liability-cap",
+      "blocks": [
+        "Each party\u2019s aggregate liability will not exceed the Fees paid in the preceding twelve months.",
+        "Indemnification obligations are uncapped.",
+        "Indemnification liability is limited to twice the Fees paid in the preceding twelve months."
+      ],
+      "expected_kinds": [
+        "cap-exception"
+      ],
+      "expected_outcome": "NEEDS_REVIEW",
+      "explanation_contains": "may conflict",
+      "expected_evidence": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "exit-excepted-trigger",
+      "rule_id": "termination-convenience",
+      "blocks": [
+        "Either party may terminate for convenience with 30 days written notice.",
+        "Except upon termination for convenience, Customer shall pay all remaining fees."
+      ],
+      "expected_kinds": [],
+      "expected_outcome": "NEEDS_REVIEW"
+    }
+  ]
+}

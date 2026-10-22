@@ -52,9 +52,9 @@
       "file": "contracts/06-uncapped-indemnity.txt",
       "playbook": "commercial",
       "expected_issues": ["indemnification", "liability-exceptions"],
-      "expected_uncertain": [],
-      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
-      "rationale": "Indemnification is expressly unlimited and outside the otherwise explicit aggregate liability cap, so both the indemnification scope and cap-exception treatment deviate from the baseline."
+      "expected_uncertain": ["liability-cap"],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "Indemnification is expressly unlimited and outside the otherwise explicit aggregate liability cap, so both the indemnification scope and cap-exception treatment deviate from the baseline. Interaction update: the stated fee cap is measurable but cannot establish unqualified compliance when another paragraph excludes indemnification."
     },
     {
       "id": "scenario-07-broad-ip-assignment",

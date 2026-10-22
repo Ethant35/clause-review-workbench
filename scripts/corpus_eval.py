@@ -31,6 +31,8 @@ def evaluate(base_url, output):
                         valid = a is None and i["observed_language"] is None
                     else:
                         valid = a in doc["blocks"] and doc["text"][a["start"]:a["end"]] == a["text"] and bool(i["observed_language"]) and i["observed_language"] in a["text"]
+                    for relation in i.get("interactions", []):
+                        valid = valid and all(a in doc["blocks"] and doc["text"][a["start"]:a["end"]] == a["text"] for a in relation["evidence"])
                     if not valid: mismatches.append(i["id"])
                 result = {"scenario": scenario["id"], "expected": sorted(expected), "actual": sorted(actual), "expected_uncertain": sorted(expected_uncertain), "actual_uncertain": sorted(uncertain), "false_positives": sorted(actual - expected), "false_negatives": sorted(expected - actual), "failed_compliant_controls": bad_controls, "citation_mismatches": mismatches, "issues_validated": len(review["issues"])}
                 result["pass"] = not any([result["false_positives"], result["false_negatives"], bad_controls, mismatches]) and uncertain == expected_uncertain
