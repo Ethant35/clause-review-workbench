@@ -1,0 +1,137 @@
+schema_version: 1
+name: Mutual NDA
+version: 1.0.0
+description: Mutual NDA screening; excludes SaaS-specific obligations. Requires attorney
+  review.
+rules:
+- id: confidentiality-mutual
+  category: Confidentiality
+  description: Assess confidentiality against the selected commercial position.
+  preferred_position: Both parties protect confidential information received from
+    the other.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Both parties protect confidential
+    information received from the other.'
+  fallback_language: null
+  presence:
+  - confidential.{0,140}(?:protect|reasonable care)|protect.{0,80}confidential
+  acceptable_all:
+  - - (?:each|either|both) part(?:y|ies)
+  - - (?:protect|keep confidential|not disclose)
+  unacceptable_any:
+  - provider (?:has|owes) no (?:duty|obligation)|only (?:the )?customer
+- id: confidentiality-exclusions
+  category: Confidentiality exclusions
+  description: Assess confidentiality exclusions against the selected commercial position.
+  preferred_position: Exclude public information, prior knowledge, independent development,
+    and lawful third-party receipt.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Exclude public information,
+    prior knowledge, independent development, and lawful third-party receipt.'
+  fallback_language: null
+  presence:
+  - confidential information does not include|confidentiality exclusions|public without
+    breach|independently developed
+  acceptable_all:
+  - - public(?:ly available| knowledge| domain| without breach)
+  - - prior knowledge|previously known|already known
+  - - independent(?:ly)? develop
+  - - lawful.{0,50}third.party|third.party.{0,50}lawful
+  unacceptable_any:
+  - no exclusions|without (?:any )?exclusions
+- id: permitted-disclosures
+  category: Permitted disclosures
+  description: Assess permitted disclosures against the selected commercial position.
+  preferred_position: Allow legally compelled disclosure with advance notice where
+    lawful.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Allow legally compelled
+    disclosure with advance notice where lawful.'
+  fallback_language: null
+  presence:
+  - compelled|disclos.{0,60}(?:law|court)|permitted disclosures
+  acceptable_all:
+  - - compelled|required by law|court order|law requires
+  - - (?:advance|prior|prompt) (?:written )?notice
+  unacceptable_any:
+  - without (?:any )?(?:notice|restriction)
+- id: term-expiration
+  category: Term and expiration
+  description: Assess term and expiration against the selected commercial position.
+  preferred_position: State a definite contract term or expiration date.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: State a definite contract
+    term or expiration date.'
+  fallback_language: null
+  presence:
+  - (?:begins|initial term|continues for|term is|contract term).{0,150}(?:months|years|perpetual)
+  acceptable_all:
+  - - \b\d+ (?:months|years)\b|expir(?:es|ation).{0,40}\d{4}
+  unacceptable_any:
+  - perpetual|never expires
+- id: governing-law
+  category: Governing law
+  description: Assess governing law against the selected commercial position.
+  preferred_position: Expressly select Oregon law, subject to counsel's jurisdiction
+    review.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Expressly select Oregon
+    law, subject to counsel''s jurisdiction review.'
+  fallback_language: null
+  presence:
+  - govern.{0,40}law|laws? of|law governs
+  acceptable_all:
+  - - Oregon
+  unacceptable_any:
+  - (?:laws? of|law of) (?:California|New York|England)
+- id: assignment
+  category: Assignment
+  description: Assess assignment against the selected commercial position.
+  preferred_position: Assignment requires the other party's written consent.
+  acceptable_alternatives:
+  - A specifically negotiated, documented allocation approved by counsel.
+  unacceptable_conditions:
+  - Express language matching the unacceptable patterns below; otherwise uncertainty
+    requires review.
+  severity: medium
+  required: true
+  negotiation_guidance: 'Request a revision that provides: Assignment requires the
+    other party''s written consent.'
+  fallback_language: null
+  presence:
+  - assignment|assign this (?:agreement|contract)|assign.{0,30}consent
+  acceptable_all:
+  - - (?:other party|mutual).{0,30}(?:prior )?written consent|written consent.{0,30}other
+      party
+  unacceptable_any:
+  - may assign.{0,60}without.{0,30}consent|freely assign

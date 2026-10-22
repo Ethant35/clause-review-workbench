@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "author": "Ethan",
+  "scenarios": [
+    {
+      "id": "scenario-01-acceptable-mutual-nda",
+      "file": "contracts/01-acceptable-mutual-nda.txt",
+      "playbook": "nda",
+      "expected_issues": [],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "governing-law", "assignment"],
+      "rationale": "Mutual protection applies to either party's information; the standard exclusions, compelled-disclosure notice, fixed term, Oregon law, and consent-based assignment are explicit."
+    },
+    {
+      "id": "scenario-02-unilateral-confidentiality",
+      "file": "contracts/02-unilateral-confidentiality.txt",
+      "playbook": "commercial",
+      "expected_issues": ["confidentiality-mutual"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "Only the customer has a duty to protect confidential information; the remaining commercial controls use the compliant baseline language."
+    },
+    {
+      "id": "scenario-03-confidentiality-exclusions-missing",
+      "file": "contracts/03-confidentiality-exclusions-missing.txt",
+      "playbook": "commercial",
+      "expected_issues": ["confidentiality-exclusions"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The confidentiality paragraph is mutual, but the agreement contains no exclusions for public, previously known, independently developed, or lawfully received information."
+    },
+    {
+      "id": "scenario-04-renewal-and-unilateral-audit",
+      "file": "contracts/04-renewal-and-unilateral-audit.txt",
+      "playbook": "commercial",
+      "expected_issues": ["automatic-renewal", "audit-rights"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "governing-law", "assignment"],
+      "rationale": "The agreement renews for successive twelve-month terms without a cancellation right, and grants the provider unilateral audit access at any time. Other controls retain the compliant baseline."
+    },
+    {
+      "id": "scenario-05-fee-based-liability-cap",
+      "file": "contracts/05-fee-based-liability-cap.txt",
+      "playbook": "commercial",
+      "expected_issues": [],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "This positive full-agreement example has an explicit aggregate cap based on fees paid in the preceding twelve months and narrow fraud and willful-misconduct exceptions."
+    },
+    {
+      "id": "scenario-06-uncapped-indemnity",
+      "file": "contracts/06-uncapped-indemnity.txt",
+      "playbook": "commercial",
+      "expected_issues": ["indemnification", "liability-exceptions"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "Indemnification is expressly unlimited and outside the otherwise explicit aggregate liability cap, so both the indemnification scope and cap-exception treatment deviate from the baseline."
+    },
+    {
+      "id": "scenario-07-broad-ip-assignment",
+      "file": "contracts/07-broad-ip-assignment.txt",
+      "playbook": "commercial",
+      "expected_issues": ["ip-ownership"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The customer assigns all intellectual property, including its pre-existing materials, to the provider; other commercial controls retain the compliant baseline."
+    },
+    {
+      "id": "scenario-08-unilateral-price-change",
+      "file": "contracts/08-unilateral-price-change.txt",
+      "playbook": "commercial",
+      "expected_issues": ["payment-terms"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The provider may change prices at any time without notice or customer consent, contrary to the fixed payment baseline."
+    },
+    {
+      "id": "scenario-09-data-processing-addendum-missing",
+      "file": "contracts/09-data-processing-addendum-missing.txt",
+      "playbook": "commercial",
+      "expected_issues": ["data-protection"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The agreement has no personal-data processing or DPA provision; the absence is intentional and must not be represented with an invented quotation."
+    },
+    {
+      "id": "scenario-10-unrestricted-subprocessors",
+      "file": "contracts/10-unrestricted-subprocessors.txt",
+      "playbook": "commercial",
+      "expected_issues": ["subprocessors"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The provider can use any subprocessor without consent and without an equivalent-protection obligation."
+    },
+    {
+      "id": "scenario-11-unilateral-amendment",
+      "file": "contracts/11-unilateral-amendment.txt",
+      "playbook": "commercial",
+      "expected_issues": ["unilateral-amendment"],
+      "expected_uncertain": [],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-cap", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The provider may amend the agreement without the customer's consent, contrary to the mutual written-agreement baseline."
+    },
+    {
+      "id": "scenario-12-ambiguous-liability-cap",
+      "file": "contracts/12-ambiguous-liability-cap.txt",
+      "playbook": "commercial",
+      "expected_issues": [],
+      "expected_uncertain": ["liability-cap"],
+      "compliant_controls": ["confidentiality-mutual", "confidentiality-exclusions", "permitted-disclosures", "term-expiration", "automatic-renewal", "termination-convenience", "termination-breach", "liability-exceptions", "indemnification", "ip-ownership", "payment-terms", "unilateral-amendment", "data-protection", "subprocessors", "audit-rights", "governing-law", "assignment"],
+      "rationale": "The language says liability is limited to a reasonable amount to be agreed later but states no amount, formula, or present cap. Treat the cap assessment as uncertain and do not score it as a confirmed objective issue."
+    }
+  ]
+}
