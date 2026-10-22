@@ -1,4 +1,4 @@
-# Local acceptance for v1.0.0
+# Local acceptance for v1.0.1
 
 Author: Ethan. Date: October 22, 2026 (America/Los_Angeles).
 
@@ -8,17 +8,17 @@ GitHub Actions are intentionally omitted and disabled at repository level per Et
 
 ## Environment and reproducibility
 
-macOS arm64; Python 3.12.14; Node v22.13.1; locked Python and npm dependencies; Playwright Chromium. The clean checkout tested application commit `2c11357d4e2d9d4dffe9a2ce3a814301dfcb5523`. Later release-document/evidence commits do not change application behavior. Run:
+macOS arm64; Python 3.12.14; Node v22.13.1; locked Python and npm dependencies; Playwright Chromium. The clean checkout tested application commit `7a4a01073b366105992ad295b780eca84ddc3f46`. Later release-document/evidence commits do not change application behavior. Run:
 
 ```sh
 ./scripts/clean_acceptance.sh
 ./scripts/package.sh
-.venv/bin/python scripts/deployment_smoke.py artifacts/clause-review-workbench-1.0.0.tar.gz
+.venv/bin/python scripts/deployment_smoke.py artifacts/clause-review-workbench-1.0.1.tar.gz
 ```
 
 The clean-install script clones locally to a new directory, installs a new Python environment, runs npm ci and the production build, starts the real application with fresh SQLite storage, and exercises Chromium. The archive smoke test extracts to another new directory, runs the packaged startup command, and completes a browser review/export. No unit tests, mocked parsers, fake databases, or fake LLM responses were used.
 
-Evidence: [E2E results](evidence/e2e-results.json), [corpus scoring](evidence/corpus-results.json), [archive deployment](evidence/package-result.json), [npm audit](evidence/npm-audit.json), and [workbench screenshot](evidence/workbench.png).
+Evidence: [E2E results](evidence/quality/e2e-results.json), [corpus scoring](evidence/quality/corpus-results.json), [archive deployment](evidence/quality/package-result.json), [npm audit](evidence/quality/npm-audit.json), and [workbench screenshot](evidence/quality/workbench.png).
 
 ## Required matrix
 
@@ -34,10 +34,10 @@ Evidence: [E2E results](evidence/e2e-results.json), [corpus scoring](evidence/co
 | CR-08 Liability | PASS | Explicit fees-paid cap and 12-month basis identified; narrow exceptions assessed separately |
 | CR-09 Missing provision | PASS | Missing DPA flagged with null quote and anchor; no invented text |
 | CR-10 IP assignment | PASS | Broad pre-existing IP transfer found and cited |
-| CR-11 Playbook editing | PASS | UI duplicate/edit changes severity on rerun; prior review unchanged; YAML import/export |
+| CR-11 Playbook editing | PASS | UI duplicate/edit changes severity on rerun; prior review unchanged; YAML import/export; saved fallback guidance survives later playbook edits |
 | CR-12 Reviewer workflow | PASS | Accept/reject/unresolved and notes persist across server restart |
 | CR-13 Source navigation | PASS | Browser selection displays exact quoted block; original location retained |
-| CR-14 Exports | PASS | Markdown, DOCX, JSON opened and required fields verified; browser downloads succeed |
+| CR-14 Exports | PASS | Markdown, DOCX, JSON opened and required fields plus saved policy guidance verified; browser downloads succeed |
 | CR-15 Deletion | PASS | Browser deletion removes original, metadata, and all associated reviews |
 | CR-16 Full corpus | PASS | All 12 independent manifests match objective/uncertain outcomes |
 | CR-17 Local privacy | PASS | Zero backend outbound socket connections and zero external browser requests through offline workflows; consent/missing-key gates verified |
@@ -69,4 +69,25 @@ The desktop and mobile workbench were inspected; no horizontal overflow occurred
 
 Pattern conditions cover narrow drafting forms. Negations, definitions, cross-references, unusual layouts, exceptions, and broader legal context may need manual review and can fall outside a rule's recognition. COMPLIANT means configured conditions matched, not that the agreement is legally sufficient. Governing-law guidance is configurable and illustrative.
 
-OCR, encrypted PDFs, DOCX revisions/macros/text boxes/notes are unsupported. PDFs with textless pages are rejected. DOCX headers/footers are excluded with a visible warning. Verify full originals. This is a single-user loopback application without authentication or application-level encryption; not a public-hosting service. Deletion does not erase exports, backups, or guarantee SSD forensic erasure. The OpenRouter adapter, consent, budgets, and citation gates are implemented, but successful live AI interpretation remains unverified until CR-18 can run with authorized credentials.
+OCR and encrypted PDFs are unsupported. PDFs with raster images (including logos) or textless pages are rejected. DOCX revisions/macros/text boxes/notes/imports/content controls/fields/drawings and directly marked hidden text are unsupported. DOCX headers/footers are excluded with a visible warning. Verify full originals. This is a single-user loopback application without authentication or application-level encryption; not a public-hosting service. Deletion does not erase exports, backups, or guarantee SSD forensic erasure. The OpenRouter adapter, consent, budgets, and citation gates are implemented, but successful live AI interpretation remains unverified until CR-18 can run with authorized credentials.
+
+## Corrective evidence: v1.0.0 to v1.0.1
+
+The prior twelve-contract corpus did not expose important failures. The expanded suite fixes its expectations before running the application, uses authored text rather than the application's parser as the extraction oracle, and includes paired positive/negated examples in TXT, DOCX, and PDF. Its expectations are agent-authored, not a lawyer-panel or held-out benchmark.
+
+| Check | Before | After |
+| --- | --- | --- |
+| 24 semantic cases across three real file formats | Included in 31/81 overall passes | 72/72 pass |
+| Eight OOXML/PDF structural cases | Incomplete/hidden content sometimes accepted | 8/8 pass |
+| Offline outbound socket audit | Pass | Pass |
+| Total fixed adversarial checks | 31/81 pass; 50 fail | 81/81 pass |
+| Original corpus | 12/12 pass | 12/12 pass |
+| Real released-server upgrade | Not previously tested | 6/6 pass |
+
+Evidence: [before](evidence/quality/adversarial-before.json), [after](evidence/quality/adversarial-after.json), [upgrade](evidence/quality/upgrade-results.json). The unchanged 81-check suite is a bounded regression set. It does not measure general legal correctness or exhaustive extraction safety.
+
+The upgrade suite creates its initial records through an actual v1.0.0 server, then runs the new server against the same database. It verifies original bytes, raw stored rows, accepted decisions, notes, historical warnings in API/browser/all exports, refusal to reuse old extraction, browser re-upload and new uncertainty outcome, and no backend outbound connection. Existing reviews stay historical; their legal results are not silently re-certified.
+
+The new policy panel and export fields use each review's saved playbook snapshot. E2E changes a policy after review, reloads the browser, and checks that the old fallback persists in the UI and all report formats. Unspecified fallback remains unspecified. All personal DOCX author/last-modified-by fields remain Ethan. A rendered two-page current report and the browser warning were inspected. Finder/Windows shell displays were not separately verified.
+
+See [RESEARCH.md](RESEARCH.md) for current Astra for Law access evidence, professional/user anecdotes, public GitHub sources, parser documentation, and explicit limits. No private legal index, Astra for Law access, new provider, or fake model result is included. GitHub Actions remain disabled and all verification is local. Root-level evidence files are retained as the historical v1.0.0 record; the quality subdirectory contains this patch's results.
