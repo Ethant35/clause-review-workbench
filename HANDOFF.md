@@ -1,91 +1,59 @@
-# Usability and distribution phase — publication pending
+# Clause Review Workbench 1.3.0 — completed
 
-Author: Ethan. Updated October 23, 2026.
+Author: Ethan. Completed October 23, 2026.
 
-Branch codex/usability-distribution; baseline e410391c836f8cc974647626540690fcecb501d5.
-Version 1.3.0 implementation and local acceptance are complete. The app and DMG
-are Developer ID signed, notarized, stapled and Gatekeeper accepted. Exact evidence
-and limits: docs/usability-release.md and evidence/usability/. Public publication
-and download acceptance remain open; do not mark the goal complete yet.
+Release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.3.0
+PR 7: https://github.com/Ethant35/clause-review-workbench/pull/7 (merged).
+Tag commit: e1fa5dcad0e1e5be0571f755006fa0abc6c6b19b.
+Packaged and clean-tested source: d36bdd71243860aefda8b0197cbd09a96ebf25c0.
+Subsequent commits contain documentation/evidence only. All final backend,
+frontend, native and build source hashes match the tested records.
 
-Final app: /private/tmp/crw-native-1.3.0/Clause Review Workbench.app.
-DMG: artifacts/Clause-Review-Workbench-1.3.0-arm64.dmg.
-SHA256: 012d862cdbb074ec79f507375d3f501210f8298553bf109da2c7b2cd27881e59.
-Exact AGPL corresponding sources: artifacts/corresponding-source/ (both archives).
-All bundled manifest source hashes and built frontend match this working tree.
-Local quarantined/translocated installed-browser journey passed; test app stopped
-and DMG detached. Both usability workers stopped. No user keys were modified.
+## Published downloads
 
-Remaining: commit intended files; package/verify source; verify Actions disabled;
-create and attach PR; merge and publish authorized v1.3.0 release with source and
-checksums; download public assets and verify installed browser journey; record final
-evidence; stop monitor; complete goal. Do not send to another chat without human
-authorization. Preserve the 38 untracked duplicate files and private local branch
-codex/readiness-local-evidence. Do not push raw scan history. No config changes.
+Signed, Apple-notarized and stapled Apple Silicon DMG:
+012d862cdbb074ec79f507375d3f501210f8298553bf109da2c7b2cd27881e59
+Workbench source archive:
+fef32506633b9a0eb71c5fbdf863485deca8e3236f0995d48861bd35b420db46
+Exact PyMuPDF and MuPDF sources accompany the release, with SHA256SUMS.txt.
+All five public assets were downloaded without authentication and verified.
+The public DMG was installed into a fresh test Applications directory, quarantined,
+and launched through LaunchServices with AppTranslocation. Gatekeeper, native UI,
+source/decision/export/returning browser journey and shutdown passed.
 
-Usage latest 78% used. Active checker cell 2 every 45 seconds. Stop at >=90% in any
-window; unknown is not allowance. Save handoff and pause goal at the authorized
-cutoff. No resets or credit bypass. No GitHub Actions; check before every push,
-merge or release. No numeric token budget.
+## Qualification
 
-## Previous completed release record
+109 Python tests plus 2 subtests passed in the workspace and clean source install;
+19 browser E2E passes with CR-18 successful live AI externally blocked; 98
+interactions; 83 adversarial; 12 synthetic corpus; 14 frontend readiness; 9 actual
+browser zoom checks. Bundled install/recovery journey 6 checks, real v1.2.0 import
+4 checks. Native Keychain test used a unique disposable service, removed afterward.
+Native build, signing, notarization, source comparison and public download evidence
+are in docs/usability-release.md and evidence/usability/.
 
-# Clause Review Workbench handoff
+The app bundles its runtime. PDFs with small raster images require an explicit
+manual completeness check. Scans/OCR remain unsupported. Reprocessing creates new
+records and preserves earlier history. Common playbook settings preserve patterns
+and reject stale edits. Optional AI retains consent and budget controls.
 
-Author: Ethan. Completed October22,2026 (publication UTC October23).
+Qualified scope: one trusted local user on macOS 27.2 arm64 and Chromium. No claim
+of general legal accuracy, successful live AI, automated extraction completeness,
+other operating systems/browsers, VoiceOver or unfamiliar-user usability. Public
+Common Paper templates are attributed layout fixtures, not accuracy benchmarks.
+No private AstraforLaw access or private index was obtained; RESEARCH.md contains
+earlier public research. Prior Semgrep qualifications remain in readiness records;
+no new scan ran during this phase. No Actions workflows or runs were used.
 
-## Published result
+## Cleanup and continuation
 
-v1.2.0:https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.2.0
-PR6:https://github.com/Ethant35/clause-review-workbench/pull/6 (merged).
-Release tag commit:a5b1eb2b324a23409dcc6b5907738576be2cc309.
-Packaged source:332aa0383033bea2e6bdbd282551efcc3e5fe8f5.
-Clean-tested source:0ea413aff05c74e31a75951eb4c348cccefed2c5.
-All runtime/build/test source hashes are identical between those states. The tag
-adds final documentation/evidence. Package verification checked122sourcefiles,
-built assets and Ethan archive-owner metadata. Upstream notices are unchanged.
-Public download matches tested archive SHA256:
-999cf82695141af7e60987473a8488b16ea89f64c876bc8bbf1db8663be7a056.
+Both usability workers stopped. Test apps stopped, ports closed, test DMGs detached,
+and process registry empty. The session monitor is terminated at completion.
+Latest account usage: 79% used. If separately authorized work continues, stop at
+90% used in any applicable window; unknown is not allowance. No reset/credit bypass.
+No persistent automation or global config change was made.
 
-## Qualification and scope
-
-87Python tests plus2subtests;260property examples;20clean E2E passes;83adversarial;
-98interactions;12syntheticcorpuscases;14frontendchecks;actual late-AI/modal checks;
-9native200%/400%zoomchecks with correctviewportcapture;7backup/restore/upgrade
-checks from each of v1.0.0/v1.0.1/v1.1.0. Fresh archive install/browser/doctor/
-backup/restore passed with preserved rows and originals. Three-minute37,440request
-load p95 24.10ms; separateclean15second3,600request check passed.
-
-Semgrep:9approvedcommands,2partialthirdparty sets,29aggregatefixpointtimeoutentries,
-52triagedmatches (22unexpectedcopies). No confirmed exploitable issue. NoPro/YAML/
-dedicatedJS/test-path coverage. Full outputs and excerpts remain local under
-artifacts/readiness/semgrep-final; publicdocs contain only the summary. The local
-branch codex/readiness-local-evidence retains originalqualificationhistory and
-must not be pushed. Python/npm advisory audits returned no known vulnerabilities.
-
-The qualified target is one trustedlocaluser, macOS27.2arm64, Python3.12.14,
-Node22.13.1builds and Chromium. Generallegalaccuracy, successfulliveAI(CR-18), OCR,
-completevisualextraction, otherplatforms/browsers, VoiceOver, hostilesame-user
-isolation and hostedmulti-useroperation remain unqualified. This is not an
-independently validated or autonomous legal analyst. All legal conclusions still
-need human review. Review/extraction revisions are4/4; historicaldata preserved.
-
-## Shutdown and continuation
-
-All workers stopped. No app/test/scan process remains; registry is empty. The
-sessionusage monitor is being terminated at completion. Latestaccountreading:
-40%used/60%remaining. No persistent automation was created. During any separately
-authorized continued work, stop at90%used in any applicable window; unknown is not
-free allowance. No automatic reset resume or credit bypass.
-
-Repositorymain contains this final evidence-only publication record. GitHubActions
-was disabled with0runs before publicationoperations and afterpublicverification.
-No hooks/globalconfig or accountsettings changed.38unexpecteduntrackedfiles with
-` 2` suffixes remain preserved; do not delete or stage them. Priorv1.1.0 acceptance
-and quality/interactions evidence remain intact. No AstraforLaw access/privateindex
-was obtained; publicresearch remains in RESEARCH.md.
-
-Use docs/readiness.md and evidence/readiness/package-verification.json for exact
-scope and results. Raw localruns remain ignored. No further implementation or
-qualification claim is pending for the declared local operational scope; broader
-legal-validation and live-provider work require separate evidence/authorization.
+Preserve 38 unrelated untracked files with ` 2` suffixes and private local branch
+codex/readiness-local-evidence. Never push its raw scan history. Main contains only
+intended source and curated evidence. GitHub Actions remains disabled with zero
+runs; check before any later push/release/merge. No messages were sent to another
+chat. Previous release records remain in Git history and evidence/readiness/.

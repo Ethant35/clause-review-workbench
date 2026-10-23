@@ -36,7 +36,7 @@ The bundle source hashes are compared against the final source separately.
 
 | Check | Result |
 | --- | --- |
-| Python | 109 tests and 2 subtests passed; 6 dependency deprecation warnings |
+| Python | 109 tests and 2 subtests passed in both the workspace and fresh source archive installation; 6 dependency deprecation warnings |
 | Frontend production build | Passed |
 | Browser end-to-end | 19 passed; CR-18 successful live AI blocked externally |
 | Interaction suite | 98/98 |
@@ -70,7 +70,12 @@ code verification and Gatekeeper assessment passed. The final stapled DMG SHA256
 The local DMG was mounted, copied to a separate Applications test directory,
 quarantined and launched through LaunchServices. macOS translocated the app and
 it served the working interface. No Gatekeeper bypass or quarantine removal was
-used. Public download acceptance is recorded separately after publication.
+used. Public download acceptance passed after publication. All five assets were fetched
+without authentication from the public release URLs and matched the recorded
+checksums. The downloaded DMG and copied app passed staple, signature and
+Gatekeeper checks. The quarantined app launched through AppTranslocation; its
+sample, source, decision, export and reload workflow passed. Native window
+inspection and clean shutdown passed. See `evidence/usability/public-download.json`.
 
 Early signing attempts inside the synced workspace failed because a file provider
 added Finder metadata. Building in a new directory under `/private/tmp` resolved
