@@ -1,60 +1,53 @@
 # Clause Review Workbench handoff
 
 Author: Ethan. Updated October 22, 2026.
-Repository: https://github.com/Ethant35/clause-review-workbench
-Local path: /Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench
 
-## Active work and sequencing
+## Current state
 
-The current clause-interaction update is implemented on `codex/clause-interactions`, version 1.1.0, review revision 3. Four relationship types cover cap exceptions/separate limits, Fees definitions, convenience termination costs and qualified section references. Exact related evidence appears in the UI and all exports.
+Version1.2.0 local qualification is complete; publication is next. Source commit
+332aa0383033bea2e6bdbd282551efcc3e5fe8f5 on codex/production-readiness.
+Clean tests ran at0ea413aff05c74e31a75951eb4c348cccefed2c5; all runtime/build/test
+source hashes match the packaged source exactly. The original local qualification
+commits are preserved on codex/readiness-local-evidence. Do not push that private
+branch: it retains detailed local scan outputs. The public branch contains only
+the Semgrep summary, as approved. Unexpected38files with ` 2` suffixes remain
+untracked and unchanged. Do not stage or delete them.
 
-Local results: expanded interactions 98/98; unchanged adversarial suite 81/81; original corpus 12/12 with the deliberate scenario-06 cap correction (191 controls); applicable core E2E checks pass; six upgrade checks each from real v1.0.0 and v1.0.1 servers pass. CR-18 remains BLOCKED_EXTERNAL. Fresh-clone acceptance passed at f1f77f5; changed desktop/mobile/source views and the one-page report were inspected. DOCX/PDF author fields are Ethan. Fresh archive/browser smoke passed. Packaged source: 0ef7d391abf1d3eca251ec5148d69200a50540a7. Archive SHA-256: 3650e402049f7e2b08ab48c14330facca3829753368b59b105ed7f02c9c954c9. PR/release publication remains pending. Do not mistake local success for release or production qualification.
+Archive: artifacts/clause-review-workbench-1.2.0.tar.gz.
+SHA256:999cf82695141af7e60987473a8488b16ea89f64c876bc8bbf1db8663be7a056.
+Package smoke and actual packaged doctor/backup/restore passed; all rows/originals
+survived and122trackedsourcefiles match Git. Personal archive owner is Ethan;
+upstream dependency notices remain unchanged. The archive's source commit predates
+this final evidence-only update; the qualification record states the distinction.
 
-**Next assignment is already authorized and must begin after this bounded update completes.** Ethan's sequencing message arrived via the coordinating chat: finish current work, verification and safe release/handoff first, then begin production readiness without another prompt. Create an accurate production-readiness goal at that point. Read `/Users/ethantarnarider/Documents/ChatGPT/Open source/.agents/README.md`, all applicable project-local explicitly invoked skills in bounded phases, and current code/evidence. The prior E2E-only restriction is superseded for that phase. See the conversation's full production-readiness assignment; preserve its skill-use record, readiness matrix, security/quality/recovery/performance/onboarding/release requirements. No claim of production readiness is made here.
+## Evidence
 
-Explicit next-phase skills: source-driven-development, constraint-driven-development, documentation-and-adrs; test-driven-development, property-based-testing, systematic-debugging, variant-analysis; api-and-interface-design, security-and-hardening, sharp-edges, differential-review, find-bugs, semgrep, conditional harness-writing; performance-optimization, observability-and-instrumentation, deprecation-and-migration; impeccable, baseline-ui, fixing-accessibility, web-design-guidelines, vercel-react-best-practices, conditional vercel-composition-patterns; conditional code-simplification, shipping-and-launch, verification-before-completion. Use the actual local skills, not substitutes. Semgrep requires its installed scan-plan approval; no cloud login, uploads or metrics. Impeccable requires Operate mode and onboard.md. Relevant extra skills may be installed only through skill-installer under the local .agents/skills with explicit-only policy, supporting files/licenses and recorded source revisions. No global changes/hooks. Astra is hands-on lead; at most two Luna High workers, no worker spawning, stop completed workers.
+87Python tests plus2subtests;260property examples;20clean E2E passes with CR-18
+BLOCKED_EXTERNAL;83adversarial;98interactions;12synthetic corpus cases;14frontend
+checks;actual late-AI response/modal checks;9nativezoom checks with valid CDP
+viewport captures;7upgrade/backup/restore checks from each of v1.0.0/v1.0.1/v1.1.0.
+Three-minute37,440request load p95 24.10ms; separate clean15second3,600request run.
+NineapprovedSemgrep commands,2partialthirdparty rulesets,29aggregatefixpointtimeout
+entries,52triagedmatches including22unexpectedcopies. No confirmed exploitable
+finding; no Pro/YAML/dedicatedJS/test-path coverage. Detailed outputs stay local in
+artifacts/readiness/semgrep-final. Python/npm audits no known advisories.
 
-## Persistent constraints
+Docs/readiness.md and evidence/readiness/ distinguish operational qualification
+from experimental/unqualified behavior. General legal accuracy, successful live AI,
+OCR, complete visual extraction, other platforms/browsers, VoiceOver, hostile same-
+user isolation and hosted multi-user operation are not qualified. This is not a
+production-ready autonomous legal analyst. Review/extraction revisions both4.
 
-No GitHub Actions: verify disabled status and zero runs before push/PR/tag/release. No workflows. No user config changes, no unsolicited paid integrations or source transmission. Preserve source bytes, saved policy and historical decisions. Use Ethan for personal author metadata and preserve factual provenance.
+## Publication and stop rule
 
-Supported account usage checker is active every 55 seconds in functions cell 113. Latest checkpoint is recorded in ignored `artifacts/usage-check.json`; recheck live on resume. At 100% used / 0% remaining stop project work, workers and registered processes, save handoff if tools remain. No credits/resets/other providers to bypass exhaustion. `artifacts/processes.json` tracks local verification processes. No persistent automation was created.
+Check repository Actions disabled and totalruns0 before each push/PR/tag/release.
+Create/attach reviewable PR, merge qualified work, publish archive+checksum, download
+and verify the public bytes. No force-push. Only source/evidence documentation will
+change after the package; do not silently rebuild a different public archive.
+All workers are stopped. The session account monitor remains active, polling55sec.
+Latestusage37%used. Stop at90%used in any window; unknown readings suspend work;
+no credit/reset bypass or automatic resume. Ethan explicitly resumed this phase;
+the goal API's old paused state is not a new pause instruction.
 
-## Previous completed release: v1.0.1
-
-**DONE for the bounded offline corrective release v1.0.1.** Core acceptance passed under the specification's explicit CR-18 exception. Successful AI interpretation remains **BLOCKED_EXTERNAL / UNVERIFIED** because authorized OpenRouter key/model/provider configuration is absent.
-
-Release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.0.1
-Release commit: bf115be7ba3e17ed7e5d6627edf47d7e033b2cab
-Implementation/evidence PR: https://github.com/Ethant35/clause-review-workbench/pull/3 (merged).
-Application acceptance commit: 7a4a01073b366105992ad295b780eca84ddc3f46
-Packaged source commit: d51ac11 (later commits add evidence only).
-Archive SHA-256: 76241f3aa8650acf5cf410b7277f9fce77230e175356436053143808991224af
-
-The published archive was downloaded and matched byte-for-byte with the locally tested archive and SHA256SUMS. Every included tracked source file also matched packaged commit d51ac11. The release is public, not a draft or prerelease. Final handoff updates do not alter release behavior.
-
-## Verified changes
-
-- Fixed independently reproduced false assurance from negation, unresolved references, open-ended exceptions, unrelated notice periods, and mixed liability/indemnity scope. Positive controls remain intact.
-- Reject unsupported DOCX content and PDFs with raster images, including logos. OCR remains unsupported. These gates are conservative and do not certify every possible extraction layout.
-- Historical uploads/reviews retain original bytes, stored rows, decisions, and notes. Old results carry visible/exported warnings; fresh analysis requires downloading and re-uploading the original.
-- UI/API/all exports expose acceptable alternatives and optional fallback wording from the saved playbook snapshot. Later policy edits cannot rewrite prior guidance; missing fallback is never invented.
-- RESEARCH.md records Astra for Law's restricted access, public GitHub skills, named professional and self-reported user accounts, parser sources, and evidence limits. No Astra for Law access, private legal index, public API entitlement, new integration, plugin installation, or configuration change was obtained or implied.
-
-## Acceptance
-
-Fresh clone installation and production build passed. CR-01 through CR-17, CR-19, CR-20, and additional security/retention checks passed. CR-18 remains BLOCKED_EXTERNAL. The fixed adversarial suite improved from 31/81 to 81/81 with unchanged expectations. Original corpus: 12/12 scenarios, 11/11 planted deviations, 192 passing controls, no citation mismatch. Six real v1.0.0-to-current upgrade checks passed. Fresh archive extraction/browser upload/review/decision/export passed. npm audit: zero vulnerabilities. Final two-page report and browser warnings inspected. DOCX author and last-modified-by fields verified as Ethan; Finder/Windows shell displays were not separately verified.
-
-Current evidence: evidence/quality and ACCEPTANCE.md. Earlier evidence files at evidence/ root are the historical v1.0.0 record. Synthetic expectations are not an independent lawyer panel, a held-out legal benchmark, or a general accuracy claim.
-
-## Processes, usage, and continuation
-
-No application server is intentionally left running; artifacts/processes.json is empty after cleanup. No active workers: the two original Luna workers completed and were interrupted. A session-local checker polled supported get_usage_limits every 55 seconds in functions cell 46 and is stopped at finalization; it is not a persistent automation. Latest checkpoint: 38% used, 62% remaining. Recheck live on resume. Stop at 100% used in an applicable window; do not use credits, resets, or other providers to bypass exhaustion.
-
-**No GitHub Actions.** Repository enabled=false and zero runs were verified through publication. Recheck before any future push, PR, tag, or release. Do not add workflows. The Git working tree should be clean on main after the final docs PR.
-
-Local ignored artifacts contain only synthetic test data, reports, screenshots, fresh-clone paths, and deployment logs. They are retained for review. No user contracts or credentials were committed. Do not change ~/.codex/config.toml without explicit authorization.
-
-To run locally: ./scripts/start.sh, then http://127.0.0.1:8765. Keep loopback binding. For verification, run ./scripts/clean_acceptance.sh from a Git checkout containing tag v1.0.0. For optional real AI acceptance, supply authorized OPENROUTER_API_KEY, OPENROUTER_MODEL, and OPENROUTER_PROVIDER, then run .venv/bin/python tests/e2e.py. Do not claim verified AI before CR-18 passes.
-
-The prior v1.0.0 release remains available for historical reproduction; PRs #1 and #2 created and documented that original release. Prefer v1.0.1 for current use.
+Prior releasev1.1.0 and LegalQuants research remain intact in RESEARCH.md and
+evidence/interactions/. No Astra forLaw access or private index was obtained.

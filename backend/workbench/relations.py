@@ -14,6 +14,20 @@ QUALIFIER = regex.compile(
     r"(?:the\s+)?(?P<type>sections?|clauses?|schedule|exhibit|appendix)\s+"
     r"(?P<label>" + NUMBER + r"|[a-z]+)(?![\w(])", regex.I)
 
+# Explicit drafting variants that tie a named obligation to an earlier cap.
+# Keep these forms narrow: generic uses of "excluded" or "limitations" may
+# concern remedies other than the liability cap.
+CAP_EXCLUSION = regex.compile(
+    r"\b(?:indemn\w*|confidential\w*|data protection|security|intellectual property|payment)\b"
+    r".{0,100}\b(?:is|are|shall be)\s+(?:expressly\s+)?excluded from\s+"
+    r"(?:the\s+)?(?:foregoing|above|aforesaid)\s+(?:liability\s+)?(?:cap|limitations?|limits?)\b"
+    r"|\b(?:indemn\w*|confidential\w*|data protection|security|intellectual property|payment)\b"
+    r".{0,100}\b(?:is|are|shall be)\s+not subject to\s+(?:the\s+)?(?:liability\s+)?(?:cap|limitations?|limits?)\b"
+    r"|\b(?:the\s+)?(?:foregoing|above|aforesaid)\s+(?:liability\s+)?(?:cap|limitations?|limits?)\s+"
+    r"(?:do not|does not|shall not)\s+apply to\s+.{0,100}\b(?:indemn\w*|confidential\w*|data protection|security|intellectual property|payment)\b",
+    regex.I,
+)
+
 
 class InteractionLimit(ValueError):
     pass
@@ -55,27 +69,36 @@ def analyze_relations(document, rules, matches, normalized):
             source = text[exception['id']]
             carveout = regex.search(r'\b(?:the\s+)?liability cap (?:does not|shall not) apply to\s+([^.;]+)', source, regex.I, timeout=.025)
             uncapped = matches(r'\bindemnification (?:liability|obligations) (?:is|are|shall be) (?:uncapped|unlimited)\b', source)
-            if not carveout and not uncapped:
+            named_exclusion = CAP_EXCLUSION.search(source, timeout=.025)
+            if not carveout and not uncapped and not named_exclusion:
                 continue
-            scope = carveout[1].strip() if carveout else 'indemnification'
+            category_terms = (
+                (r'indemn\w*', 'indemnification'),
+                (r'confidential\w*', 'confidentiality'),
+                (r'data protection', 'data protection'),
+                (r'security', 'security'),
+                (r'intellectual property', 'intellectual property'),
+                (r'payment', 'payment'),
+            )
+            categories = [(pattern, label) for pattern, label in category_terms if matches(pattern, source)]
+            scope = carveout[1].strip() if carveout else ', '.join(label for _, label in categories) if named_exclusion else 'indemnification'
             # These two categories are the bundled playbook's stated narrow
             # exceptions. Other allocations remain review questions, not errors.
             if carveout and regex.fullmatch(r'(?:fraud|willful misconduct)(?:\s*(?:,|and|or)\s*(?:fraud|willful misconduct))*', scope, regex.I) and not uncapped:
                 continue
-            categories = [p for p in (r'indemn\w*', r'confidential\w*', r'data protection', r'security', r'intellectual property', r'payment') if matches(p, scope)]
             separate = [b for b in blocks if b not in caps and b != exception and
-                        any(matches(p, text[b['id']]) for p in categories) and
+                        any(matches(pattern, text[b['id']]) for pattern, _ in categories) and
                         matches(r'\bliability (?:is|shall be) (?:limited to|capped at|not to exceed)\b', text[b['id']])]
-            explanation = 'A separate provision removes a named category from the base liability cap. The base fee formula does not describe all covered exposure. '
+            explanation = f'A separate provision removes {scope} from the base liability cap. The base fee formula does not describe all covered exposure. '
             if separate:
-                explanation += 'A separate limit for the same named category was also located. Check scope, conditions and precedence together; do not label the whole agreement uncapped.'
+                explanation += f'A separate limit for {scope} was also located. Check scope, conditions and precedence together; do not label the whole agreement uncapped.'
                 if uncapped or matches(r'\b(?:uncapped|unlimited)\b', source):
                     explanation += 'Express uncapped wording and a separate limit may conflict; no priority is inferred.'
             else:
                 explanation += 'An exception to the base cap alone does not establish unlimited exposure; verify any category-specific limit and other remedies.'
             for cap in caps:
                 add('liability-cap', cap, 'cap-exception', explanation, [exception, *separate])
-                if 'indemnification' in active and matches(r'indemn', scope):
+                if 'indemnification' in active and any(pattern == r'indemn\w*' for pattern, _ in categories):
                     add('indemnification', exception, 'cap-exception', explanation, [cap, *separate])
 
     if 'termination-convenience' in active:

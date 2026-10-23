@@ -10,3 +10,5 @@ test-results/
 artifacts/
 .DS_Store
 *.tsbuildinfo
+.pytest_cache/
+.hypothesis/

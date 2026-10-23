@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-10-23T05:23:29.086075+00:00",
+  "run": "artifacts/run-3808fca6",
+  "results": [
+    {
+      "id": "CR-02",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-03",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-04",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-05",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-06",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-07",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-08",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-09",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-10",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-11",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-12",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-13",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-14",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-15",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-16",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-17",
+      "status": "PASS",
+      "detail": "No backend outbound socket connections or external browser requests during offline ingestion, review, corpus and exports; consent and missing-key gates verified."
+    },
+    {
+      "id": "CR-18",
+      "status": "BLOCKED_EXTERNAL",
+      "detail": "Authorized OPENROUTER_API_KEY, OPENROUTER_MODEL and OPENROUTER_PROVIDER are not all configured. No fake response used."
+    },
+    {
+      "id": "CR-19",
+      "status": "PASS",
+      "detail": "Real OpenRouter request with deliberately invalid credential rejected; source and deterministic review preserved."
+    },
+    {
+      "id": "CR-20",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-EXTRA",
+      "status": "PASS",
+      "detail": "Real API conflict detection, literal script rendering, and retention cascade verified."
+    }
+  ],
+  "author": "Ethan"
+}

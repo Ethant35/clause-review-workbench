@@ -20,9 +20,10 @@ from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
-parser.add_argument('--baseline', choices=['v1.0.0','v1.0.1'], default='v1.0.0')
+parser.add_argument('--baseline', choices=['v1.0.0','v1.0.1','v1.1.0'], default='v1.0.0')
 BASELINE = parser.parse_args().baseline
-REUSE = BASELINE == 'v1.0.1'
+REUSE = False  # Extraction revision 4 requires re-upload for every prior release.
+CAP_CASE = BASELINE != 'v1.0.0'
 OUT = ROOT / 'artifacts'
 OUT.mkdir(exist_ok=True)
 RUN = Path(tempfile.mkdtemp(prefix='upgrade-', dir=OUT))
@@ -91,9 +92,11 @@ try:
     with httpx.Client(base_url=BASE, timeout=30, trust_env=False) as client:
         start(OLD)
         source = b'Each party is not required to protect the other party confidential information.\n'
-        if REUSE:
+        if CAP_CASE:
             source = b'Each party aggregate liability will not exceed the fees paid in the preceding twelve months.\nThe liability cap does not apply to indemnification obligations.\n'
-        target_rule = 'liability-cap' if REUSE else 'confidentiality-mutual'
+        if BASELINE == 'v1.1.0':
+            source = b'Each party aggregate liability will not exceed the fees paid in the preceding twelve months.\nIndemnification obligations are excluded from the foregoing cap.\n'
+        target_rule = 'liability-cap' if CAP_CASE else 'confidentiality-mutual'
         document = payload(client.post('/api/documents', files={'file': ('historical.txt', source)}))
         did = document['id']
         review = payload(client.post(f'/api/documents/{did}/reviews', json={'playbook_id': 'commercial'}))
@@ -106,6 +109,13 @@ try:
         assert saved['notes'] == decision['notes']
         before = stored()
         stop()
+        sys.path.insert(0, str(ROOT))
+        from backend.workbench.recovery import backup, restore
+        backup(DATA, RUN / 'verified-backup')
+        restore(RUN / 'verified-backup', RUN / 'restored-data')
+        DATA = RUN / 'restored-data'
+        assert stored() == before
+        passed('UP-00-real-prior-release-backup-restore')
         start(ROOT)
         assert stored() == before
         assert client.get(f'/api/documents/{did}/original').content == source
@@ -163,6 +173,6 @@ try:
 finally:
     stop()
     log.close()
-    (OUT / ('upgrade-v1.0.1-results.json' if REUSE else 'upgrade-results.json')).write_text(json.dumps({'author': 'Ethan', 'timestamp': datetime.now(timezone.utc).isoformat(),
+    (OUT / ('upgrade-results.json' if BASELINE == 'v1.0.0' else f'upgrade-{BASELINE}-results.json')).write_text(json.dumps({'author': 'Ethan', 'timestamp': datetime.now(timezone.utc).isoformat(),
         'baseline': BASELINE, 'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-        'run': str(RUN.relative_to(ROOT)), 'results': results, 'status': 'PASS' if len(results) == 6 else 'FAIL'}, indent=2) + '\n')
+        'run': str(RUN.relative_to(ROOT)), 'results': results, 'status': 'PASS' if len(results) == 7 else 'FAIL'}, indent=2) + '\n')

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity, AlertCircle, ArrowDownToLine, BookOpen, Check, ChevronDown, CircleHelp, FileCheck2,
   FileText, FolderOpen, LoaderCircle, MessageSquareText, RefreshCw, Search, ShieldCheck,
@@ -12,8 +12,23 @@ type Interaction = { kind: string; explanation: string; evidence: Block[]; refer
 type Issue = { interactions?: Interaction[]; playbook_guidance?: { acceptable_alternatives: string[]; fallback_language: string | null }; id: string; rule_id: string; severity: 'high' | 'medium' | 'low'; category: string; observed_language: string | null; absence: boolean; source_anchor: Block | null; explanation: string; preferred_position: string; negotiating_response: string; status: 'unresolved' | 'accepted' | 'rejected'; notes: string; confidence: 'OBJECTIVE' | 'NEEDS_REVIEW'; origin: 'deterministic' | 'ai' };
 type Check = { rule_id: string; category: string; outcome: 'COMPLIANT' | 'ISSUE' | 'NEEDS_REVIEW' | 'NOT_APPLICABLE'; properties: Record<string, unknown> };
 type Review = { verification_warning?: string | null; id: string; document_id: string; playbook_id: string; playbook_name: string; created_at: string; issues: Issue[]; checks: Check[]; ai_status: string; ai_error: string | null; playbook_snapshot: object };
+type ReviewSummary = Pick<Review, 'id' | 'document_id' | 'playbook_id' | 'playbook_name' | 'created_at' | 'ai_status'> & { extraction_revision?: number; review_revision?: number };
 type Playbook = { id: string; name: string; version: string; description: string; yaml?: string };
 type Health = { extraction_revision: number; status: string; ai_configured: boolean; retention_days: number; max_upload_bytes: number };
+
+const ONBOARDING_KEY = 'clause-workbench:onboarding:v1';
+
+function readOnboardingDismissed() {
+  try { return window.localStorage.getItem(ONBOARDING_KEY) === 'dismissed'; }
+  catch { return false; }
+}
+
+function saveOnboardingDismissed(dismissed: boolean) {
+  try {
+    if (dismissed) window.localStorage.setItem(ONBOARDING_KEY, 'dismissed');
+    else window.localStorage.removeItem(ONBOARDING_KEY);
+  } catch { /* Onboarding still works when browser storage is unavailable. */ }
+}
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`/api${path}`, init);
@@ -40,7 +55,11 @@ function App() {
   const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<string>('');
   const [detail, setDetail] = useState<DocDetail | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<ReviewSummary[]>([]);
+  const [hasMoreDocuments, setHasMoreDocuments] = useState(false);
+  const [hasMoreReviews, setHasMoreReviews] = useState(false);
+  const documentLoadSequence = useRef(0);
+  const reviewLoadSequence = useRef(0);
   const [review, setReview] = useState<Review | null>(null);
   const [selectedPlaybook, setSelectedPlaybook] = useState('');
   const [activeTab, setActiveTab] = useState<'issues' | 'checks' | 'source'>('issues');
@@ -52,8 +71,40 @@ function App() {
   const [notice, setNotice] = useState('');
   const [selectedIssue, setSelectedIssue] = useState('');
   const [sourceBlock, setSourceBlock] = useState('');
+  const [onboardingMode, setOnboardingMode] = useState<'first-run' | 'dismissed' | 'replaying'>(() => readOnboardingDismissed() ? 'dismissed' : 'first-run');
+  const uploadInput = useRef<HTMLInputElement>(null);
   useEffect(() => { setSourceBlock(''); }, [selectedIssue, review?.id]);
+  useEffect(() => {
+    if (onboardingMode === 'replaying') document.getElementById('getting-started')?.scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }, [onboardingMode]);
   const [playbookModal, setPlaybookModal] = useState(false);
+  const playbookDialog = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const dialog = playbookDialog.current;
+    if (!playbookModal || !dialog) return;
+    const previousFocus = document.activeElement;
+    const background = Array.from(document.querySelectorAll<HTMLElement>('.app-shell > :not(.modal-backdrop)'));
+    const previousInert = background.map((element) => element.inert);
+    background.forEach((element) => { element.inert = true; });
+    dialog.querySelector<HTMLTextAreaElement>('textarea')?.focus({ preventScroll: true });
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); setPlaybookModal(false); }
+      if (event.key !== 'Tab') return;
+      const controls = Array.from(dialog.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]'));
+      const first = controls[0], last = controls[controls.length - 1];
+      if (!dialog.contains(document.activeElement)) { event.preventDefault(); first?.focus(); }
+      else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    // Disabling the focused Save control can move focus to the body. Keep
+    // Escape/Tab handling active for that failure state as well.
+    document.addEventListener('keydown', keydown);
+    return () => {
+      document.removeEventListener('keydown', keydown);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus({ preventScroll: true });
+    };
+  }, [playbookModal]);
   const [editingPlaybookId, setEditingPlaybookId] = useState('');
   const [playbookText, setPlaybookText] = useState('');
   const [playbookError, setPlaybookError] = useState('');
@@ -68,23 +119,29 @@ function App() {
   const refresh = useCallback(async () => {
     setError('');
     try {
-      const [h, docs, books] = await Promise.all([api<Health>('/health'), api<Doc[]>('/documents'), api<Playbook[]>('/playbooks')]);
-      setHealth(h); setDocuments(docs); setPlaybooks(books);
+      const [h, docs, books] = await Promise.all([api<Health>('/health'), api<Doc[]>('/documents?limit=50&offset=0'), api<Playbook[]>('/playbooks')]);
+      setHealth(h); setDocuments(docs); setHasMoreDocuments(docs.length === 50); setPlaybooks(books);
       setSelectedPlaybook((current) => books.some((book) => book.id === current) ? current : books[0]?.id ?? '');
-      setSelectedDoc((current) => docs.some((doc) => doc.id === current) ? current : docs[0]?.id ?? '');
+      setSelectedDoc((current) => current || (docs[0]?.id ?? ''));
     } catch (err) { setError((err as Error).message); }
   }, []);
   useEffect(() => { void refresh(); }, [refresh]);
   const loadDocument = useCallback(async (id: string) => {
-    if (!id) { setDetail(null); setReviews([]); setReview(null); return; }
+    const sequence = ++documentLoadSequence.current;
+    const reviewSequence = ++reviewLoadSequence.current;
+    if (!id) { setDetail(null); setReviews([]); setReview(null); setHasMoreReviews(false); setBusy(''); return; }
     setBusy('document'); setError('');
     try {
-      const [doc, history] = await Promise.all([api<DocDetail>(`/documents/${id}`), api<Review[]>(`/documents/${id}/reviews`)]);
-      setDetail(doc); setReviews(history);
-      if (history.length) { const latest = await api<Review>(`/reviews/${history[0].id}`); setReview(latest); setSelectedIssue(latest.issues[0]?.id ?? ''); }
-      else { setReview(null); setSelectedIssue(''); }
-    } catch (err) { setError((err as Error).message); setDetail(null); }
-    finally { setBusy(''); }
+      const [doc, history] = await Promise.all([api<DocDetail>(`/documents/${id}`), api<ReviewSummary[]>(`/documents/${id}/reviews?summary=true&limit=50&offset=0`)]);
+      if (sequence !== documentLoadSequence.current) return;
+      setDetail(doc); setReviews(history); setHasMoreReviews(history.length === 50);
+      if (history.length) {
+        const latest = await api<Review>(`/reviews/${history[0].id}`);
+        if (sequence !== documentLoadSequence.current || reviewSequence !== reviewLoadSequence.current) return;
+        setReview(latest); setSelectedIssue(latest.issues[0]?.id ?? '');
+      } else { setReview(null); setSelectedIssue(''); }
+    } catch (err) { if (sequence === documentLoadSequence.current) { setError((err as Error).message); setDetail(null); } }
+    finally { if (sequence === documentLoadSequence.current && reviewSequence === reviewLoadSequence.current) setBusy(''); }
   }, []);
   useEffect(() => { void loadDocument(selectedDoc); }, [selectedDoc, loadDocument]);
 
@@ -98,35 +155,67 @@ function App() {
     } catch (err) { setError((err as Error).message); }
     finally { setBusy(''); }
   };
+  const trySyntheticSample = () => {
+    const sample = new File([
+      'SYNTHETIC SAMPLE CONTRACT — NOT A REAL AGREEMENT.\n\nEach party will protect the other party’s confidential information and use it only to perform this agreement.\n\nNeither party’s aggregate liability will exceed fees paid in the twelve months before the event giving rise to liability, except for a party’s indemnification obligations.\n\nThis synthetic text is for demonstrating the local workflow only.'
+    ], 'synthetic-sample.txt', { type: 'text/plain' });
+    void upload(sample);
+  };
   const runReview = async () => {
     if (!selectedDoc || !selectedPlaybook) return;
+    const sequence = documentLoadSequence.current;
+    const reviewSequence = ++reviewLoadSequence.current;
     setBusy('review'); setError(''); setNotice('');
     try {
       const next = await api<Review>(`/documents/${selectedDoc}/reviews`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playbook_id: selectedPlaybook }) });
+      if (sequence !== documentLoadSequence.current || reviewSequence !== reviewLoadSequence.current) return;
       setReview(next); setSelectedIssue(next.issues[0]?.id ?? ''); setReviews((current) => [next, ...current]); setNotice('Review complete.');
-    } catch (err) { setError((err as Error).message); }
-    finally { setBusy(''); }
+      setOnboardingMode('dismissed'); saveOnboardingDismissed(true);
+    } catch (err) { if (sequence === documentLoadSequence.current && reviewSequence === reviewLoadSequence.current) setError((err as Error).message); }
+    finally { if (sequence === documentLoadSequence.current && reviewSequence === reviewLoadSequence.current) setBusy(''); }
   };
   const deleteDocument = async () => {
     if (!selectedDoc || !window.confirm('Delete this document and its local reviews? This cannot be undone.')) return;
     setBusy('delete'); setError('');
-    try { await api(`/documents/${selectedDoc}`, { method: 'DELETE' }); setDetail(null); setReview(null); await refresh(); setNotice('Document and associated review data deleted.'); }
+    try { await api(`/documents/${selectedDoc}`, { method: 'DELETE' }); setDetail(null); setReview(null); setSelectedDoc(''); await refresh(); setNotice('Document and associated review data deleted.'); }
     catch (err) { setError((err as Error).message); }
     finally { setBusy(''); }
   };
   const openReview = async (id: string) => {
+    const sequence = documentLoadSequence.current;
+    const reviewSequence = ++reviewLoadSequence.current;
     setBusy('review-load'); setError('');
-    try { const next = await api<Review>(`/reviews/${id}`); setReview(next); setSelectedIssue(next.issues[0]?.id ?? ''); setActiveTab('issues'); }
-    catch (err) { setError((err as Error).message); }
-    finally { setBusy(''); }
+    try { const next = await api<Review>(`/reviews/${id}`); if (sequence !== documentLoadSequence.current || reviewSequence !== reviewLoadSequence.current) return; setReview(next); setSelectedIssue(next.issues[0]?.id ?? ''); setActiveTab('issues'); }
+    catch (err) { if (sequence === documentLoadSequence.current && reviewSequence === reviewLoadSequence.current) setError((err as Error).message); }
+    finally { if (sequence === documentLoadSequence.current && reviewSequence === reviewLoadSequence.current) setBusy(''); }
   };
   const updateIssue = async (issue: Issue, update: Partial<Pick<Issue, 'status' | 'notes'>>) => {
     if (!review) return;
     try {
-      const saved = await api<Issue>(`/reviews/${review.id}/issues/${issue.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: update.status ?? issue.status, notes: update.notes ?? issue.notes }) });
-      setReview((current) => current ? { ...current, issues: current.issues.map((item) => item.id === saved.id ? saved : item) } : current);
+      const saved = await api<Issue>(`/reviews/${review.id}/issues/${issue.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(update) });
+      setReview((current) => current?.id === review.id ? { ...current, issues: current.issues.map((item) => item.id === saved.id ? saved : item) } : current);
       setNotice('Reviewer update saved locally.'); setError('');
     } catch (err) { setError((err as Error).message); }
+  };
+  const loadMoreDocuments = async () => {
+    if (busy || !hasMoreDocuments) return;
+    setBusy('documents-more'); setError('');
+    try {
+      const next = await api<Doc[]>(`/documents?limit=50&offset=${documents.length}`);
+      setDocuments((current) => [...current, ...next]); setHasMoreDocuments(next.length === 50);
+    } catch (err) { setError((err as Error).message); }
+    finally { setBusy(''); }
+  };
+  const loadMoreReviews = async () => {
+    if (!selectedDoc || busy || !hasMoreReviews) return;
+    const sequence = documentLoadSequence.current;
+    setBusy('reviews-more'); setError('');
+    try {
+      const next = await api<ReviewSummary[]>(`/documents/${selectedDoc}/reviews?summary=true&limit=50&offset=${reviews.length}`);
+      if (sequence !== documentLoadSequence.current) return;
+      setReviews((current) => [...current, ...next]); setHasMoreReviews(next.length === 50);
+    } catch (err) { if (sequence === documentLoadSequence.current) setError((err as Error).message); }
+    finally { if (sequence === documentLoadSequence.current) setBusy(''); }
   };
   const download = async (url: string, filename: string) => {
     try {
@@ -138,10 +227,20 @@ function App() {
   };
   const runAi = async () => {
     if (!review || !consent || !model.trim()) { setError('Choose a model and confirm external transmission before starting AI assistance.'); return; }
+    const sequence = documentLoadSequence.current;
+    const reviewSequence = ++reviewLoadSequence.current;
+    const isCurrent = () => sequence === documentLoadSequence.current && reviewSequence === reviewLoadSequence.current;
     setBusy('ai'); setError(''); setNotice('');
-    try { const next = await api<Review>(`/reviews/${review.id}/ai`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ consent, model: model.trim(), provider, max_output_tokens: Number(maxTokens), max_cost_usd: Number(maxCost) }) }); setReview(next); setNotice('AI-assisted interpretation returned. Verify every cited passage in the source panel.'); }
-    catch (err) { setError((err as Error).message); try { setReview(await api<Review>(`/reviews/${review.id}`)); } catch { /* Keep original provider error visible. */ } }
-    finally { setBusy(''); setConsent(false); }
+    try {
+      const next = await api<Review>(`/reviews/${review.id}/ai`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ consent, model: model.trim(), provider, max_output_tokens: Number(maxTokens), max_cost_usd: Number(maxCost) }) });
+      if (isCurrent()) { setReview(next); setNotice('AI-assisted interpretation returned. Verify every cited passage in the source panel.'); }
+    } catch (err) {
+      if (isCurrent()) {
+        setError((err as Error).message);
+        try { const latest = await api<Review>(`/reviews/${review.id}`); if (isCurrent()) setReview(latest); }
+        catch { /* Keep original provider error visible. */ }
+      }
+    } finally { if (isCurrent()) { setBusy(''); setConsent(false); } }
   };
   const editPlaybook = async (id: string) => {
     setBusy('playbook-load'); setPlaybookError('');
@@ -174,23 +273,30 @@ function App() {
   const grouped = visibleIssues.reduce<Record<string, Issue[]>>((acc, issue) => { (acc[issue.severity] ??= []).push(issue); return acc; }, {});
   const format = (detail?.format ?? '').toUpperCase();
   const maxUpload = health ? formatBytes(health.max_upload_bytes) : '—';
+  const showOnboarding = (onboardingMode === 'first-run' && !review) || onboardingMode === 'replaying';
+
+  const replayOnboarding = () => {
+    setOnboardingMode('replaying'); saveOnboardingDismissed(false);
+  };
 
   return <div className="app-shell">
+    <a className="skip-link" href="#main">Skip to main content</a>
     <header className="topbar">
       <a href="#main" className="brand" aria-label="Clause Review Workbench home"><span className="brand-icon"><FileCheck2 size={21} /></span><span><strong>Clause Review</strong><small>WORKBENCH</small></span></a>
-      <div className="topbar-right"><span className="privacy-chip"><ShieldCheck size={15} /> Local by default</span><span className={`health-dot ${health ? 'online' : ''}`} aria-label={health ? 'Backend connected' : 'Checking connection'} /><span className="health-text">{health ? 'Workspace ready' : 'Connecting'}</span><button className="icon-button" onClick={() => void refresh()} aria-label="Refresh workspace" title="Refresh"><RefreshCw size={17} /></button></div>
+      <div className="topbar-right"><span className="privacy-chip"><ShieldCheck size={15} /> Local by default</span><span className={`health-dot ${health ? 'online' : ''}`} aria-hidden="true" /><span className="health-text" role="status">{health ? 'Workspace ready' : 'Connecting'}</span><button className="icon-button" onClick={() => void refresh()} aria-label="Refresh workspace" title="Refresh"><RefreshCw size={17} /></button></div>
     </header>
-    <main id="main" className="workspace">
+    <main id="main" className="workspace" tabIndex={-1} aria-busy={['upload', 'document', 'review', 'review-load', 'documents-more', 'reviews-more'].includes(busy)}>
       <aside className="sidebar" aria-label="Document library">
         <div className="side-heading"><div><span className="eyebrow">WORKSPACE</span><h1>Document library</h1></div><span className="count-badge">{documents.length}</span></div>
         <label className={`upload-box ${busy === 'upload' ? 'is-busy' : ''}`}>
-          <input type="file" accept=".docx,.pdf,.txt,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={(event) => { void upload(event.target.files?.[0]); event.currentTarget.value = ''; }} disabled={busy === 'upload'} />
+          <input ref={uploadInput} type="file" accept=".docx,.pdf,.txt,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" aria-label="Choose a contract to upload" onChange={(event) => { void upload(event.target.files?.[0]); event.currentTarget.value = ''; }} disabled={busy === 'upload'} />
           {busy === 'upload' ? <LoaderCircle className="spin" size={21} /> : <Upload size={21} />}<strong>{busy === 'upload' ? 'Processing document…' : 'Upload a contract'}</strong><span>DOCX, text PDF, or TXT · up to {maxUpload}</span>
         </label>
-        <div className="library-label"><span>YOUR DOCUMENTS</span><span>{documents.length} total</span></div>
-        <div className="doc-list">{documents.length ? documents.map((doc) => <button key={doc.id} className={`doc-row ${selectedDoc === doc.id ? 'selected' : ''}`} onClick={() => setSelectedDoc(doc.id)}>
+        <div className="library-label"><span>YOUR DOCUMENTS</span><span>{hasMoreDocuments ? `${documents.length} loaded` : `${documents.length} total`}</span></div>
+        <div className="doc-list">{documents.length ? documents.map((doc) => <button key={doc.id} data-document-id={doc.id} className={`doc-row ${selectedDoc === doc.id ? 'selected' : ''}`} onClick={() => setSelectedDoc(doc.id)}>
           <span className={`file-icon ${doc.format}`}><FileText size={18} /></span><span className="doc-copy"><strong title={doc.name}>{doc.name}</strong><small><span className="state-mark" /> Ready <i>·</i> {doc.format.toUpperCase()}</small></span><ChevronDown className="doc-chevron" size={15} />
         </button>) : <div className="empty-library"><FolderOpen size={23} /><strong>No documents yet</strong><span>Upload a contract to begin a private review.</span></div>}</div>
+        {hasMoreDocuments && <button className="load-more" onClick={() => void loadMoreDocuments()} disabled={!!busy}>{busy === 'documents-more' ? 'Loading documents…' : 'Load more documents'}</button>}
         <div className="sidebar-bottom"><div className="local-card"><ShieldCheck size={17} /><div><strong>Private workspace</strong><span>Documents stay on this device unless you choose AI assistance.</span></div></div><div className="retention-note">Local retention: {health ? (health.retention_days > 0 ? `${health.retention_days} days` : "Until you delete") : '—'}</div></div>
       </aside>
 
@@ -202,9 +308,11 @@ function App() {
         {detail && health && detail.extraction_revision !== health.extraction_revision && <div className="alert alert-error" role="alert">This upload predates the current extraction checks. Download and re-upload the original before reviewing.</div>}
         {review?.verification_warning && <div className="alert alert-error" role="alert">{review.verification_warning}</div>}
         {notice && <div className="alert alert-success" role="status"><Check size={17} /><span>{notice}</span><button onClick={() => setNotice('')} aria-label="Dismiss notice"><X size={15} /></button></div>}
+        <span className="sr-only" role="status" aria-live="polite">{busy === 'upload' ? 'Uploading and processing contract…' : busy === 'document' ? 'Loading selected document…' : busy === 'review' ? 'Running local contract review…' : busy === 'review-load' ? 'Loading saved review…' : busy === 'documents-more' ? 'Loading more documents…' : busy === 'reviews-more' ? 'Loading more reviews…' : ''}</span>
+        {showOnboarding && <GettingStarted documentName={detail?.name} action={detail ? <><button className="button button-primary" onClick={() => void runReview()} disabled={!selectedPlaybook || !!busy || (!!health && detail.extraction_revision !== health.extraction_revision)}><Sparkles size={16} />{busy === 'review' ? 'Reviewing…' : 'Run review from guide'}</button><button className="button button-quiet" onClick={trySyntheticSample} disabled={!!busy}>Try synthetic sample</button></> : <><button className="button button-primary" onClick={() => uploadInput.current?.click()} disabled={busy === 'upload'}><Upload size={16} /> Choose a contract</button><button className="button button-quiet" onClick={trySyntheticSample} disabled={!!busy}>Try synthetic sample</button></>} onDismiss={() => { setOnboardingMode('dismissed'); saveOnboardingDismissed(true); }} />}
         {!detail ? <div className="empty-workspace"><h3>No document selected</h3><p>Upload a DOCX, text-based PDF, or UTF-8 text file.</p></div> : <>
           <div className="summary-strip"><div className="summary-item"><span className="summary-icon"><BookOpen size={17} /></span><div><small>ACTIVE PLAYBOOK</small><strong>{playbooks.find((book) => book.id === selectedPlaybook)?.name ?? 'Choose a playbook'}</strong></div></div><div className="playbook-picker"><label htmlFor="playbook-select">Review against</label><select id="playbook-select" value={selectedPlaybook} onChange={(e) => setSelectedPlaybook(e.target.value)}>{playbooks.map((book) => <option key={book.id} value={book.id}>{book.name} · v{book.version}</option>)}</select></div><button className="button button-primary run-button" onClick={() => void runReview()} disabled={!selectedPlaybook || !!busy || (!!health && detail.extraction_revision !== health.extraction_revision)}><Sparkles size={16} />{busy === 'review' ? 'Reviewing…' : 'Run review'}</button></div>
-          <div className="tabbar" role="tablist" aria-label="Review views"><button role="tab" aria-selected={activeTab === 'issues'} className={activeTab === 'issues' ? 'active' : ''} onClick={() => setActiveTab('issues')}><AlertCircle size={16} /> Findings {review && <span>{review.issues.length}</span>}</button><button role="tab" aria-selected={activeTab === 'checks'} className={activeTab === 'checks' ? 'active' : ''} onClick={() => setActiveTab('checks')}><Activity size={16} /> Rule checks {review && <span>{review.checks.length}</span>}</button><button role="tab" aria-selected={activeTab === 'source'} className={activeTab === 'source' ? 'active' : ''} onClick={() => setActiveTab('source')}><FileText size={16} /> Extracted source <span>{detail.blocks.length}</span></button><div className="tab-spacer" />{review && <div className="export-menu"><label htmlFor="export-select" className="sr-only">Export review</label><select id="export-select" value="" onChange={(e) => { if (e.target.value && review) void download(`/reviews/${review.id}/export?format=${e.target.value}`, `review-${review.id}.${e.target.value === 'markdown' ? 'md' : e.target.value}`); e.target.value = ''; }}><option value="">Export report…</option><option value="markdown">Markdown</option><option value="docx">DOCX</option><option value="json">JSON</option></select><ArrowDownToLine size={15} /></div>}</div>
+          <div className="tabbar"><div className="tab-controls" role="tablist" aria-label="Review views" onKeyDown={(event) => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; event.preventDefault(); const tabs = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')); const current = tabs.indexOf(document.activeElement as HTMLButtonElement); const next = tabs[(current + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]; next.focus(); next.click(); }}><button role="tab" aria-selected={activeTab === 'issues'} tabIndex={activeTab === 'issues' ? 0 : -1} className={activeTab === 'issues' ? 'active' : ''} onClick={() => setActiveTab('issues')}><AlertCircle size={16} /> Findings {review && <span>{review.issues.length}</span>}</button><button role="tab" aria-selected={activeTab === 'checks'} tabIndex={activeTab === 'checks' ? 0 : -1} className={activeTab === 'checks' ? 'active' : ''} onClick={() => setActiveTab('checks')}><Activity size={16} /> Rule checks {review && <span>{review.checks.length}</span>}</button><button role="tab" aria-selected={activeTab === 'source'} tabIndex={activeTab === 'source' ? 0 : -1} className={activeTab === 'source' ? 'active' : ''} onClick={() => setActiveTab('source')}><FileText size={16} /> Extracted source <span>{detail.blocks.length}</span></button></div><div className="tab-spacer" />{review && <div className="export-menu"><label htmlFor="export-select" className="sr-only">Export review</label><select id="export-select" value="" onChange={(e) => { if (e.target.value && review) void download(`/reviews/${review.id}/export?format=${e.target.value}`, `review-${review.id}.${e.target.value === 'markdown' ? 'md' : e.target.value}`); e.target.value = ''; }}><option value="">Export report…</option><option value="markdown">Markdown</option><option value="docx">DOCX</option><option value="json">JSON</option></select><ArrowDownToLine size={15} /></div>}</div>
           {detail.warnings.length > 0 && <div className="warning-strip"><AlertCircle size={16} /><div><strong>Extraction notes</strong>{detail.warnings.map((warning, index) => <span key={index}>{warning}</span>)}</div></div>}
           {!review ? (activeTab === 'source' ? <SourcePanel detail={detail} /> : <div className="empty-review"><div className="empty-symbol"><SlidersHorizontal size={22} /></div><h3>No review yet</h3><p>Select a playbook and run review.</p><span><ShieldCheck size={15} /> Deterministic review works without external AI.</span></div>) : <>
             {activeTab === 'issues' && <div className="review-layout"><div className="issue-column"><div className="review-meta"><div><span className="eyebrow">REVIEW RESULTS</span><strong>{review.playbook_name}</strong><small>{dateLabel(review.created_at)} · {issues.length} findings</small></div><span className={`ai-badge ${review.ai_status.toLowerCase().includes('complete') || review.ai_status.toLowerCase().includes('success') ? 'ai-done' : ''}`}><span /> {review.ai_status || 'Offline review'}</span></div>
@@ -213,16 +321,28 @@ function App() {
             </div><div className="detail-column">{focusedIssue ? <IssueDetail issue={focusedIssue} review={review} detail={detail} onUpdate={updateIssue} onOpenSource={(anchor) => { setSourceBlock(anchor.id); setActiveTab('source'); }} /> : <div className="detail-empty"><CircleHelp size={21} /><span>Select a finding to inspect its evidence and reviewer details.</span></div>}<AiPanel health={health} review={review} consent={consent} setConsent={setConsent} provider={provider} setProvider={setProvider} model={model} setModel={setModel} maxTokens={maxTokens} setMaxTokens={setMaxTokens} maxCost={maxCost} setMaxCost={setMaxCost} runAi={runAi} busy={busy} /></div></div>}
             {activeTab === 'checks' && <div className="checks-panel"><div className="checks-heading"><div><span className="eyebrow">DETERMINISTIC ASSESSMENT</span><h3>Rule checks</h3></div><span className="check-count">{review.checks.length} checks</span></div>{review.checks.length ? <div className="check-table-wrap"><table className="check-table"><thead><tr><th>Clause category</th><th>Rule</th><th>Outcome</th><th>Observed properties</th></tr></thead><tbody>{review.checks.map((check, index) => <tr key={`${check.rule_id}-${index}`}><td><strong>{check.category}</strong></td><td><code>{check.rule_id}</code></td><td><span className={`outcome ${check.outcome.toLowerCase()}`}>{check.outcome.replace(/_/g, ' ')}</span></td><td><Properties data={check.properties} /></td></tr>)}</tbody></table></div> : <div className="no-results"><Activity size={20} /><strong>No rule checks returned</strong></div>}</div>}
             {activeTab === 'source' && <SourcePanel detail={detail} selectedIssue={focusedIssue} anchorId={sourceBlock} />}
-            <div className="history-row"><div><span className="eyebrow">REVIEW HISTORY</span><span>{reviews.length ? `${reviews.length} saved ${reviews.length === 1 ? 'review' : 'reviews'}` : 'No saved reviews'}</span></div><div className="history-actions">{reviews.map((item) => <button key={item.id} className={`history-pill ${review.id === item.id ? 'current' : ''}`} onClick={() => void openReview(item.id)}>{dateLabel(item.created_at)} <small>{item.playbook_name}</small></button>)}</div></div>
+            <div className="history-row"><div><span className="eyebrow">REVIEW HISTORY</span><span>{hasMoreReviews ? `${reviews.length}+ reviews loaded` : reviews.length ? `${reviews.length} saved ${reviews.length === 1 ? 'review' : 'reviews'}` : 'No saved reviews'}</span></div><div className="history-actions">{reviews.map((item) => <button key={item.id} className={`history-pill ${review.id === item.id ? 'current' : ''}`} onClick={() => void openReview(item.id)}>{dateLabel(item.created_at)} <small>{item.playbook_name}</small></button>)}{hasMoreReviews && <button className="load-more" onClick={() => void loadMoreReviews()} disabled={!!busy}>{busy === 'reviews-more' ? 'Loading reviews…' : 'Load more reviews'}</button>}</div></div>
             <div className="disclaimer"><ShieldCheck size={15} /><span>Clause Review Workbench supports contract review. It does not provide legal advice or replace attorney review.</span></div>
           </>}
           <div className="playbook-tools"><div><BookOpen size={16} /><span>Playbooks</span><button onClick={() => void editPlaybook(selectedPlaybook)} disabled={!selectedPlaybook}>Edit</button><button onClick={() => void duplicatePlaybook()} disabled={!selectedPlaybook}>Duplicate</button><button onClick={() => { void api<Playbook>(`/playbooks/${selectedPlaybook}`).then((book) => { setEditingPlaybookId(''); setPlaybookText((book.yaml ?? '').replace(/name:.*\n/, 'name: Custom playbook\n')); setPlaybookError(''); setPlaybookModal(true); }).catch((err: Error) => setError(err.message)); }}>New</button></div><div><label className="import-button"><Upload size={14} /> Import YAML<input type="file" accept=".yml,.yaml,text/yaml,text/plain" onChange={(event) => { void importPlaybook(event.target.files?.[0]); event.currentTarget.value = ''; }} /></label><button onClick={() => selectedPlaybook && void download(`/playbooks/${selectedPlaybook}/export`, `${playbooks.find((book) => book.id === selectedPlaybook)?.name ?? 'playbook'}.yaml`)} disabled={!selectedPlaybook}><ArrowDownToLine size={14} /> Export YAML</button></div></div>
         </>}
       </section>
     </main>
-    <footer className="app-footer"><span>Clause Review Workbench 1.1.0</span><span>Review aid only. Not legal advice; attorney review required.</span></footer>
-    {playbookModal && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setPlaybookModal(false); }}><section className="playbook-modal" role="dialog" aria-modal="true" aria-labelledby="playbook-title"><header><div><span className="eyebrow">PLAYBOOK MANAGER</span><h2 id="playbook-title">{editingPlaybookId ? 'Edit playbook' : 'Create playbook'}</h2></div><button className="icon-button" onClick={() => setPlaybookModal(false)} aria-label="Close"><X size={18} /></button></header><p className="modal-help">Edit or import versioned YAML rules. Save to validate the playbook against the configured schema.</p><label className="field-label" htmlFor="playbook-yaml">Playbook YAML</label><textarea id="playbook-yaml" className="yaml-editor" value={playbookText} onChange={(e) => setPlaybookText(e.target.value)} spellCheck={false} placeholder={'version: "1.0"\nname: My commercial playbook\nrules:\n  - id: confidentiality.mutuality\n    category: Confidentiality\n    ...'} /><div className="editor-meta"><span>{playbookText.split('\n').length} lines</span><span>YAML · schema validated on save</span></div>{playbookError && <div className="alert alert-error"><AlertCircle size={16} /><span>{playbookError}</span></div>}<div className="modal-actions"><button className="button button-quiet" onClick={() => setPlaybookModal(false)}>Cancel</button><button className="button button-primary" onClick={() => void savePlaybook()} disabled={!!busy || !playbookText.trim()}>{busy === 'playbook-save' ? <LoaderCircle className="spin" size={15} /> : <Check size={15} />} Save playbook</button></div></section></div>}
+    <footer className="app-footer"><span>Clause Review Workbench 1.2.0</span><span>Review aid only. Not legal advice; attorney review required.</span><button className="text-button onboarding-replay" onClick={replayOnboarding}>Getting started</button></footer>
+    {playbookModal && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setPlaybookModal(false); }}><section ref={playbookDialog} className="playbook-modal" role="dialog" aria-modal="true" aria-labelledby="playbook-title"><header><div><span className="eyebrow">PLAYBOOK MANAGER</span><h2 id="playbook-title">{editingPlaybookId ? 'Edit playbook' : 'Create playbook'}</h2></div><button className="icon-button" onClick={() => setPlaybookModal(false)} aria-label="Close"><X size={18} /></button></header><p className="modal-help">Edit or import versioned YAML rules. Save to validate the playbook against the configured schema.</p><label className="field-label" htmlFor="playbook-yaml">Playbook YAML</label><textarea id="playbook-yaml" aria-invalid={!!playbookError} aria-describedby={playbookError ? "playbook-error" : undefined} className="yaml-editor" value={playbookText} onChange={(e) => setPlaybookText(e.target.value)} spellCheck={false} placeholder={'version: "1.0"\nname: My commercial playbook\nrules:\n  - id: confidentiality.mutuality\n    category: Confidentiality\n    ...'} /><div className="editor-meta"><span>{playbookText.split('\n').length} lines</span><span>YAML · schema validated on save</span></div>{playbookError && <div id="playbook-error" role="alert" className="alert alert-error"><AlertCircle size={16} /><span>{playbookError}</span></div>}<div className="modal-actions"><button className="button button-quiet" onClick={() => setPlaybookModal(false)}>Cancel</button><button className="button button-primary" onClick={() => void savePlaybook()} disabled={!!busy || !playbookText.trim()}>{busy === 'playbook-save' ? <LoaderCircle className="spin" size={15} /> : <Check size={15} />} Save playbook</button></div></section></div>}
   </div>;
+}
+
+function GettingStarted({ documentName, action, onDismiss }: { documentName?: string; action: ReactNode; onDismiss: () => void }) {
+  return <section id="getting-started" className="getting-started" aria-labelledby="getting-started-title">
+    <div className="getting-started-copy">
+      <h3 id="getting-started-title">{documentName ? 'Your contract is ready' : 'Start a contract review'}</h3>
+      <p>Run a local playbook review, then inspect findings against the extracted source. Contract text stays on this device unless you separately enable external AI assistance.</p>
+      <ol><li><strong>{documentName ? 'Contract uploaded' : 'Choose a contract'}</strong><span>{documentName ?? 'DOCX, text-based PDF, or UTF-8 text.'}</span></li><li><strong>Run a review</strong><span>Select a playbook and inspect every finding in its source.</span></li></ol>
+      <div className="getting-started-actions">{action}<button className="text-button" onClick={onDismiss}>Skip for now</button></div>
+    </div>
+    <span className="getting-started-mark" aria-hidden="true"><FileCheck2 size={22} /></span>
+  </section>;
 }
 
 function Properties({ data }: { data: Record<string, unknown> }) {

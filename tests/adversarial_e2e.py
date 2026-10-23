@@ -15,6 +15,7 @@ from zipfile import ZipFile
 
 import httpx
 from docx import Document
+from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from lxml import etree
@@ -29,6 +30,8 @@ STRUCTURAL={
  'inline-control':('docx',422,'content control'),
  'moved-text':('docx',422,'revision'),
  'hidden-text':('docx',422,'hidden'),
+ 'hidden-style':('docx',422,'hidden'),
+ 'hidden-defaults':('docx',422,'hidden'),
  'hyperlink':('docx',201,None),
  'table':('docx',201,None),
  'raster-with-page-number':('pdf',422,'OCR'),
@@ -65,6 +68,14 @@ def special(kind):
   elif kind=='moved-text':
    m=OxmlElement('w:moveTo');r=OxmlElement('w:r');t=OxmlElement('w:t');t.text=TARGET;r.append(t);m.append(r);p._p.append(m)
   elif kind=='hidden-text':p.add_run(TARGET).font.hidden=True
+  elif kind=='hidden-style':
+   base=d.styles.add_style('HiddenBase',WD_STYLE_TYPE.CHARACTER);base.font.hidden=True
+   style=d.styles.add_style('HiddenClause',WD_STYLE_TYPE.CHARACTER);style.base_style=base
+   run=p.add_run(TARGET);run.style=style
+  elif kind=='hidden-defaults':
+   defaults=d.styles.element.find(qn('w:docDefaults'));run_defaults=defaults.find(qn('w:rPrDefault'));properties=run_defaults.find(qn('w:rPr'))
+   if properties is None:properties=OxmlElement('w:rPr');run_defaults.append(properties)
+   properties.append(OxmlElement('w:vanish'));p.add_run(TARGET)
  out=BytesIO();d.save(out)
  if kind!='altchunk':return out.getvalue()
  # Complete the real OOXML relationship/content type and imported text payload.

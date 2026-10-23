@@ -1,0 +1,454 @@
+{
+  "author": "Ethan",
+  "created_at": "2026-10-23T05:31:43.614828+00:00",
+  "browser": "Playwright Chromium persistent context with a temporary MV3 extension",
+  "run": "artifacts/frontend-zoom-yucygj_n",
+  "results": [
+    {
+      "id": "isolated-chromium-extension",
+      "status": "PASS",
+      "detail": "A temporary MV3 test extension ran only in a new persistent Chromium profile and requested the exact tab zoom through the browser API."
+    },
+    {
+      "id": "200-percent-guide-reflow",
+      "status": "PASS",
+      "detail": "The real browser tab zoom was confirmed through chrome.tabs.getZoom; the page has no horizontal overflow.",
+      "zoomDpr": 2,
+      "innerWidth": 640,
+      "clientWidth": 640,
+      "documentWidth": 640,
+      "bodyWidth": 640,
+      "viewportHeight": 500,
+      "documentHeight": 935,
+      "elements": {
+        ".topbar": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".topbar-right": [
+          {
+            "left": 306.3046875,
+            "right": 610,
+            "width": 303.6953125,
+            "clientWidth": 304,
+            "scrollWidth": 304,
+            "overflowX": "visible"
+          }
+        ],
+        ".workspace": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".sidebar": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".upload-box": [
+          {
+            "left": 18,
+            "right": 622,
+            "width": 604,
+            "clientWidth": 602,
+            "scrollWidth": 602,
+            "overflowX": "visible"
+          }
+        ],
+        ".main-panel": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".getting-started": [
+          {
+            "left": 17,
+            "right": 623,
+            "width": 606,
+            "clientWidth": 604,
+            "scrollWidth": 604,
+            "overflowX": "visible"
+          }
+        ],
+        ".summary-strip": [],
+        ".tabbar": [],
+        ".tab-controls": [],
+        ".issue-card": []
+      }
+    },
+    {
+      "id": "200-percent-skip-link-keyboard",
+      "status": "PASS",
+      "detail": "At true 200% browser zoom, the keyboard skip link moved focus to main content.",
+      "browser_zoom": 2
+    },
+    {
+      "id": "200-percent-synthetic-upload",
+      "status": "PASS",
+      "detail": "The clearly labeled synthetic sample went through the real local upload and parsing endpoint.",
+      "browser_zoom": 2
+    },
+    {
+      "id": "200-percent-real-review-reflow",
+      "status": "PASS",
+      "detail": "The real browser tab zoom was confirmed through chrome.tabs.getZoom; the page has no horizontal overflow.",
+      "zoomDpr": 2,
+      "innerWidth": 640,
+      "clientWidth": 640,
+      "documentWidth": 640,
+      "bodyWidth": 640,
+      "viewportHeight": 500,
+      "documentHeight": 4189,
+      "elements": {
+        ".topbar": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".topbar-right": [
+          {
+            "left": 306.3046875,
+            "right": 610,
+            "width": 303.6953125,
+            "clientWidth": 304,
+            "scrollWidth": 304,
+            "overflowX": "visible"
+          }
+        ],
+        ".workspace": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".sidebar": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".upload-box": [
+          {
+            "left": 18,
+            "right": 622,
+            "width": 604,
+            "clientWidth": 602,
+            "scrollWidth": 602,
+            "overflowX": "visible"
+          }
+        ],
+        ".main-panel": [
+          {
+            "left": 0,
+            "right": 640,
+            "width": 640,
+            "clientWidth": 640,
+            "scrollWidth": 640,
+            "overflowX": "visible"
+          }
+        ],
+        ".getting-started": [],
+        ".summary-strip": [
+          {
+            "left": 17,
+            "right": 623,
+            "width": 606,
+            "clientWidth": 604,
+            "scrollWidth": 604,
+            "overflowX": "visible"
+          }
+        ],
+        ".tabbar": [
+          {
+            "left": 17,
+            "right": 623,
+            "width": 606,
+            "clientWidth": 606,
+            "scrollWidth": 606,
+            "overflowX": "visible"
+          }
+        ],
+        ".tab-controls": [
+          {
+            "left": 17,
+            "right": 449.8828125,
+            "width": 432.8828125,
+            "clientWidth": 433,
+            "scrollWidth": 433,
+            "overflowX": "visible"
+          }
+        ],
+        ".issue-card": [
+          {
+            "left": 17,
+            "right": 623,
+            "width": 606,
+            "clientWidth": 604,
+            "scrollWidth": 604,
+            "overflowX": "visible"
+          },
+          {
+            "left": 17,
+            "right": 623,
+            "width": 606,
+            "clientWidth": 604,
+            "scrollWidth": 604,
+            "overflowX": "visible"
+          },
+          {
+            "left": 17,
+            "right": 623,
+            "width": 606,
+            "clientWidth": 604,
+            "scrollWidth": 604,
+            "overflowX": "visible"
+          }
+        ]
+      }
+    },
+    {
+      "id": "200-percent-review-and-keyboard-tabs",
+      "status": "PASS",
+      "detail": "A real local playbook review produced findings; keyboard arrow keys moved between review tabs.",
+      "browser_zoom": 2
+    },
+    {
+      "id": "400-percent-review-reflow",
+      "status": "PASS",
+      "detail": "The real browser tab zoom was confirmed through chrome.tabs.getZoom; the page has no horizontal overflow.",
+      "zoomDpr": 4,
+      "innerWidth": 320,
+      "clientWidth": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320,
+      "viewportHeight": 250,
+      "documentHeight": 5262,
+      "elements": {
+        ".topbar": [
+          {
+            "left": 0,
+            "right": 320,
+            "width": 320,
+            "clientWidth": 320,
+            "scrollWidth": 320,
+            "overflowX": "visible"
+          }
+        ],
+        ".topbar-right": [
+          {
+            "left": 208,
+            "right": 306,
+            "width": 98,
+            "clientWidth": 98,
+            "scrollWidth": 98,
+            "overflowX": "visible"
+          }
+        ],
+        ".workspace": [
+          {
+            "left": 0,
+            "right": 320,
+            "width": 320,
+            "clientWidth": 320,
+            "scrollWidth": 320,
+            "overflowX": "visible"
+          }
+        ],
+        ".sidebar": [
+          {
+            "left": 0,
+            "right": 320,
+            "width": 320,
+            "clientWidth": 320,
+            "scrollWidth": 320,
+            "overflowX": "visible"
+          }
+        ],
+        ".upload-box": [
+          {
+            "left": 18,
+            "right": 302,
+            "width": 284,
+            "clientWidth": 282,
+            "scrollWidth": 282,
+            "overflowX": "visible"
+          }
+        ],
+        ".main-panel": [
+          {
+            "left": 0,
+            "right": 320,
+            "width": 320,
+            "clientWidth": 320,
+            "scrollWidth": 320,
+            "overflowX": "visible"
+          }
+        ],
+        ".getting-started": [],
+        ".summary-strip": [
+          {
+            "left": 12,
+            "right": 308,
+            "width": 296,
+            "clientWidth": 294,
+            "scrollWidth": 294,
+            "overflowX": "visible"
+          }
+        ],
+        ".tabbar": [
+          {
+            "left": 12,
+            "right": 308,
+            "width": 296,
+            "clientWidth": 296,
+            "scrollWidth": 497,
+            "overflowX": "auto"
+          }
+        ],
+        ".tab-controls": [
+          {
+            "left": 12,
+            "right": 402.87109375,
+            "width": 390.87109375,
+            "clientWidth": 391,
+            "scrollWidth": 391,
+            "overflowX": "visible"
+          }
+        ],
+        ".issue-card": [
+          {
+            "left": 12,
+            "right": 308,
+            "width": 296,
+            "clientWidth": 294,
+            "scrollWidth": 294,
+            "overflowX": "visible"
+          },
+          {
+            "left": 12,
+            "right": 308,
+            "width": 296,
+            "clientWidth": 294,
+            "scrollWidth": 294,
+            "overflowX": "visible"
+          },
+          {
+            "left": 12,
+            "right": 308,
+            "width": 296,
+            "clientWidth": 294,
+            "scrollWidth": 294,
+            "overflowX": "visible"
+          }
+        ]
+      }
+    },
+    {
+      "id": "400-percent-review-keyboard",
+      "status": "PASS",
+      "detail": "At true 400% browser zoom, findings remained readable, the review tabs remained keyboard-operable, and the page reflowed without horizontal overflow.",
+      "browser_zoom": 3.9999999999999996
+    },
+    {
+      "id": "local-only-review",
+      "status": "PASS",
+      "detail": "The synthetic document and actual saved review stayed in the local app; browser and backend made no external request.",
+      "document_id": "f3a2fc16-c0b2-4bcf-882c-30a156bd5dda",
+      "review_count": 1
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "guide-200-percent.png",
+      "browser_zoom": 2,
+      "pixel_dimensions": [
+        1280,
+        1000
+      ],
+      "css_viewport": [
+        640,
+        500
+      ],
+      "device_pixel_ratio": 2,
+      "capture": "Chromium Page.captureScreenshot; fromSurface=true; captureBeyondViewport=false"
+    },
+    {
+      "file": "uploaded-200-percent.png",
+      "browser_zoom": 2,
+      "pixel_dimensions": [
+        1280,
+        1000
+      ],
+      "css_viewport": [
+        640,
+        500
+      ],
+      "device_pixel_ratio": 2,
+      "capture": "Chromium Page.captureScreenshot; fromSurface=true; captureBeyondViewport=false"
+    },
+    {
+      "file": "review-200-percent.png",
+      "browser_zoom": 2,
+      "pixel_dimensions": [
+        1280,
+        1000
+      ],
+      "css_viewport": [
+        640,
+        500
+      ],
+      "device_pixel_ratio": 2,
+      "capture": "Chromium Page.captureScreenshot; fromSurface=true; captureBeyondViewport=false"
+    },
+    {
+      "file": "review-400-percent.png",
+      "browser_zoom": 3.9999999999999996,
+      "pixel_dimensions": [
+        1280,
+        1000
+      ],
+      "css_viewport": [
+        320,
+        250
+      ],
+      "device_pixel_ratio": 4,
+      "capture": "Chromium Page.captureScreenshot; fromSurface=true; captureBeyondViewport=false"
+    }
+  ],
+  "passed": 9,
+  "failed": 0
+}

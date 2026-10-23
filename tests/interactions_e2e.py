@@ -141,7 +141,23 @@ def run(output, browser_check):
                     browser = pw.chromium.launch()
                     page = browser.new_page(viewport={'width':1440,'height':1100})
                     page.goto(base)
-                    page.locator('.doc-row').filter(has_text=doc['name']).click()
+                    expected_ids = {item['id'] for item in client.get('/api/documents?limit=100&offset=0').raise_for_status().json()}
+                    def load_all_documents():
+                        expect(page.locator('.doc-row').first).to_be_visible(timeout=10000)
+                        while True:
+                            rendered_ids = set(page.locator('.doc-row').evaluate_all('(rows) => rows.map((row) => row.dataset.documentId)'))
+                            if rendered_ids == expected_ids:
+                                return
+                            more = page.get_by_role('button', name='Load more documents')
+                            if more.count() == 0:
+                                raise AssertionError(f'Loaded {len(rendered_ids)} of {len(expected_ids)} API documents; missing IDs: {sorted(expected_ids - rendered_ids)}')
+                            previous_count = len(rendered_ids)
+                            more.click()
+                            page.wait_for_function('(previous) => document.querySelectorAll(".doc-row").length > previous', arg=previous_count, timeout=10000)
+                    def select_document(id):
+                        load_all_documents()
+                        page.locator(f'.doc-row[data-document-id="{id}"]').click()
+                    select_document(doc['id'])
                     expect(page.get_by_role('heading', name='Related clauses and effect')).to_be_visible()
                     expect(page.locator('.interaction-card')).to_have_count(1)
                     expect(page.locator('.interaction-card .source-card')).to_have_count(3)
@@ -155,7 +171,7 @@ def run(output, browser_check):
                     page.get_by_role('button',name='Save note',exact=True).click()
                     expect(page.get_by_text('Reviewer update saved locally.',exact=True)).to_be_visible()
                     page.reload()
-                    page.locator('.doc-row').filter(has_text=doc['name']).click()
+                    select_document(doc['id'])
                     expect(page.get_by_label('Reviewer notes')).to_have_value('Review separate indemnity limit with counsel.')
                     expect(page.locator('.interaction-card')).to_have_count(1)
                     page.set_viewport_size({'width':390,'height':844})

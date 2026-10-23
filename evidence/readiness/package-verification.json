@@ -1,0 +1,32 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "archive": "clause-review-workbench-1.2.0.tar.gz",
+  "sha256": "999cf82695141af7e60987473a8488b16ea89f64c876bc8bbf1db8663be7a056",
+  "packaged_source_commit": "332aa0383033bea2e6bdbd282551efcc3e5fe8f5",
+  "clean_tested_commit": "0ea413aff05c74e31a75951eb4c348cccefed2c5",
+  "runtime_build_test_source_identical_to_clean_run": true,
+  "tracked_source_files_verified": 122,
+  "tar_personal_owner": "Ethan",
+  "checks": [
+    "production startup",
+    "fresh database",
+    "browser upload",
+    "two expected findings",
+    "reviewer decision",
+    "JSON export",
+    "packaged doctor",
+    "packaged backup",
+    "packaged restore",
+    "restored doctor",
+    "all saved rows and original bytes preserved",
+    "tar source bytes match Git",
+    "no unexpected copies, .env file, runtime data, private scan outputs or node_modules packaged"
+  ],
+  "public_download_verified": false,
+  "built_asset_sha256": {
+    "frontend/dist/assets/index-E6JnzqH2.css": "26063444d828e079e362bdc32b660a5ba339b00df8dac6a21ed2507f13ee465f",
+    "frontend/dist/assets/index-gXaabwQE.js": "174b60dee169ea394dcca8fa15fd11f524af7acf70a4765a1e04e764e0522b5f",
+    "frontend/dist/index.html": "e886d99b0830d447502d11e0555af34e1904f3d5f73c62f912b2f71a5f8894a9"
+  }
+}

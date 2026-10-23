@@ -1,0 +1,2277 @@
+{
+  "author": "Ethan",
+  "timestamp": "2026-10-23T05:36:23.740934+00:00",
+  "commit": "0ea413aff05c74e31a75951eb4c348cccefed2c5",
+  "run": "artifacts/interactions-qeyf5i3z",
+  "passed": 98,
+  "total": 98,
+  "results": [
+    {
+      "id": "cap-alone",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-alone",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-alone",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-indemnity-exception",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-indemnity-exception",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-indemnity-exception",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-narrow-exception",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-narrow-exception",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-narrow-exception",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-exception-supercap",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-exception-supercap",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-exception-supercap",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-other-category-limit",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-other-category-limit",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-other-category-limit",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "uncapped-indemnity",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "uncapped-indemnity",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "uncapped-indemnity",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-no-exclusion",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-no-exclusion",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "cap-no-exclusion",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "damages-exclusion-is-not-cap-exception",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "damages-exclusion-is-not-cap-exception",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "damages-exclusion-is-not-cap-exception",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "restricted-fee-definition",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "fee-definition"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "restricted-fee-definition",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "fee-definition"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "restricted-fee-definition",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "fee-definition"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "duplicate-fee-definitions",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "fee-definition"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "duplicate-fee-definitions",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "fee-definition"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "duplicate-fee-definitions",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "fee-definition"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "broad-fee-definition",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "broad-fee-definition",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "broad-fee-definition",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "unused-defined-term",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "unused-defined-term",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "unused-defined-term",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-remaining-fees",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "termination-cost"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-remaining-fees",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "termination-cost"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-remaining-fees",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "termination-cost"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-no-refund",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "termination-cost"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-no-refund",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "termination-cost"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-no-refund",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "termination-cost"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-breach-only",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-breach-only",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-breach-only",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-negated-payment",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-negated-payment",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-negated-payment",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-refund-positive",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-refund-positive",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-refund-positive",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-found",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-found",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-found",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-missing",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-missing",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-missing",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-duplicate",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-duplicate",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-duplicate",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-chain",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-chain",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-chain",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-cycle",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-cycle",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-cycle",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-external",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-external",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-external",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-combined",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-combined",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-combined",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-unrelated",
+      "format": "txt",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-unrelated",
+      "format": "docx",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-unrelated",
+      "format": "pdf",
+      "actual_outcome": "COMPLIANT",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-specific-subsection",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-specific-subsection",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-specific-subsection",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-other-trigger-in-same-block",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-other-trigger-in-same-block",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-other-trigger-in-same-block",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-negated",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-negated",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-negated",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-depth-limit",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-depth-limit",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "reference-depth-limit",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "qualified-reference"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "uncapped-and-separate-limit-conflict",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "uncapped-and-separate-limit-conflict",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "uncapped-and-separate-limit-conflict",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [
+        "cap-exception"
+      ],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-excepted-trigger",
+      "format": "txt",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-excepted-trigger",
+      "format": "docx",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "exit-excepted-trigger",
+      "format": "pdf",
+      "actual_outcome": "NEEDS_REVIEW",
+      "actual_kinds": [],
+      "checks": {
+        "extraction": true,
+        "kinds": true,
+        "outcome": true,
+        "evidence_complete": true,
+        "evidence_exact": true,
+        "status": true,
+        "explanation": true,
+        "uncertainty": true,
+        "storage": true,
+        "json_identity": true,
+        "export_json": true,
+        "export_markdown": true,
+        "author": true,
+        "export_docx": true
+      },
+      "pass": true
+    },
+    {
+      "id": "interaction-count-limit",
+      "pass": true
+    },
+    {
+      "id": "reference-evidence-limit",
+      "pass": true
+    },
+    {
+      "id": "inactive-rule-isolation",
+      "pass": true
+    },
+    {
+      "id": "browser-evidence-navigation-and-notes",
+      "pass": true
+    },
+    {
+      "id": "offline-network",
+      "pass": true
+    }
+  ]
+}

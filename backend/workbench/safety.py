@@ -5,8 +5,8 @@ reference, or mixed scope changes its meaning. Such cases require human review.
 """
 import regex
 
-EXTRACTION_REVISION = 2
-REVIEW_REVISION = 3
+EXTRACTION_REVISION = 4
+REVIEW_REVISION = 4
 LEGACY_WARNING = "Historical review: not verified by the current extraction and review checks. Re-upload the original and run a new review."
 
 
@@ -61,7 +61,8 @@ def renewal_supported(text):
 
 def review_view(review):
     """Derive status at read/export time; preserve historical stored decisions."""
-    current = review.get("review_revision") == REVIEW_REVISION
+    current = (review.get("review_revision") == REVIEW_REVISION and
+               review.get("extraction_revision") == EXTRACTION_REVISION)
     rules = {r["id"]: r for r in review.get("playbook_snapshot", {}).get("rules", [])}
     issues = []
     for issue in review["issues"]:
