@@ -3,9 +3,10 @@
 Author: Ethan. Version 1.2.0. October 22, 2026.
 
 The complete clean-checkout qualification passed at commit
-`0ea413aff05c74e31a75951eb4c348cccefed2c5`. The release archive is checked
-separately from a fresh extraction; its source commit, checksum and actual outcome
-are recorded with the release in `evidence/readiness/package-verification.json`.
+`0ea413aff05c74e31a75951eb4c348cccefed2c5`. The archive from source commit `332aa0383033bea2e6bdbd282551efcc3e5fe8f5`
+passed fresh-install browser checks and packaged doctor/backup/restore. Its 122
+tracked source files match Git; runtime, build and test files are byte-identical to
+the clean-tested commit. See `evidence/readiness/package-verification.json`.
 The supported target is one trusted user on macOS 27.2 arm64, Python 3.12.14,
 Node 22.13.1 for builds, and Playwright Chromium. The operating-system account and
 private directory form the trust boundary. There is no hosted authentication,
@@ -22,7 +23,7 @@ tenancy or network-service availability claim.
 | Performance | 37,440 real HTTP requests over 180 seconds, eight concurrent clients, 1,001 history rows; p95 24.10 ms, p99 46.70 ms | Bounded workload; endpoint RSS 66,768 to 69,488 KiB does not prove no leaks |
 | Diagnostics/startup | Private 1 MB JSON log plus two backups; nine startup failure/actual HTTP tests | Content-free operational data only; no cloud telemetry |
 | Security/dependencies | Differential review, nine approved Semgrep scans with individual triage; npm/Python audits have no known advisories | Partial rules/taint timeouts/test exclusions disclosed; no security certification |
-| Release | Versioned notices, startup/recovery/rollback instructions, clean script and archive smoke | Clean checkout passed; archive-specific outcome is in the separate release record |
+| Release | Versioned notices, startup/recovery/rollback instructions, clean script and archive smoke | Clean checkout and archive installation/recovery passed; public download checked separately |
 
 The full Python suite now contains 87 tests plus two subtests, including ten floor
 guard mutation/replacement controls. A passing test count is not a legal score.
