@@ -44,3 +44,20 @@ def test_status_locator_exception_requires_exact_replacement(tmp_path, replaceme
     path.write_text(new if replacement == "exact" else new.replace("to_be_visible()", "to_be_hidden()") if replacement == "different" else "pass\n")
     result = subprocess.run(["node", str(GUARD), "--base", "HEAD"], cwd=tmp_path, capture_output=True)
     assert result.returncode == (0 if replacement == "exact" else 1)
+
+
+@pytest.mark.parametrize("replacement", ["exact", "removed", "wrong-state"])
+def test_decision_copy_exception_preserves_actual_assertion(tmp_path, replacement):
+    def git(*args):
+        subprocess.run(["git", *args], cwd=tmp_path, check=True, capture_output=True)
+    git("init", "-q")
+    (tmp_path / "tests").mkdir()
+    path = tmp_path / "tests/e2e.py"
+    old = "expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('rejected')"
+    new = "expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('Dismissed')"
+    path.write_text(old + "\n")
+    git("add", ".")
+    git("-c", "user.name=Ethan", "-c", "user.email=test@example.invalid", "commit", "-qm", "baseline")
+    path.write_text((new if replacement == "exact" else new.replace("Dismissed", "Confirmed") if replacement == "wrong-state" else "pass") + "\n")
+    result = subprocess.run(["node", str(GUARD), "--base", "HEAD"], cwd=tmp_path, capture_output=True)
+    assert result.returncode == (0 if replacement == "exact" else 1)

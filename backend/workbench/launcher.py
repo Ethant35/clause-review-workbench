@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass
 import errno
 import importlib.util
+import json
 import logging
 import os
 from pathlib import Path
@@ -11,6 +12,7 @@ import re
 import socket
 import sqlite3
 import sys
+import threading
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -226,6 +228,9 @@ def main():
         )
         return 2
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Permit a prompt restart after our closed connections enter TIME_WAIT.
+    # SO_REUSEPORT is deliberately absent: a live listener still owns the port.
+    listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         listener.bind(("127.0.0.1", settings.port))
         listener.listen(socket.SOMAXCONN)
@@ -262,8 +267,26 @@ def main():
     safe_filter = _SafeUvicornErrors()
     filtered_handlers = []
     try:
-        config = uvicorn.Config(safe_app, host="127.0.0.1", port=settings.port, access_log=False)
+        config = uvicorn.Config(safe_app, host="127.0.0.1", port=settings.port, access_log=False, timeout_graceful_shutdown=10)
         server = uvicorn.Server(config)
+        ready_stop = threading.Event()
+        def announce_ready():
+            # Private per-launch IPC. Never infer readiness from another service
+            # that happens to answer on the requested port.
+            target = os.environ.get("CRW_READY_FILE")
+            if not target:
+                return
+            while not ready_stop.wait(0.05):
+                if server.started:
+                    try:
+                        descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                        with os.fdopen(descriptor, "w") as output:
+                            json.dump({"url": f"http://127.0.0.1:{listener.getsockname()[1]}"}, output)
+                    except OSError:
+                        server.should_exit = True
+                    return
+        ready_thread = threading.Thread(target=announce_ready, daemon=True)
+        ready_thread.start()
         # Config applies Uvicorn's logging configuration, so attach the filter after it.
         for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.lifespan"):
             logging.getLogger(logger_name).addFilter(safe_filter)
@@ -272,6 +295,8 @@ def main():
                 filtered_handlers.append(handler)
         with listener:
             server.run(sockets=[listener])
+        ready_stop.set()
+        ready_thread.join(timeout=1)
         return 0 if server.started else 1
     except SystemExit:
         return 1

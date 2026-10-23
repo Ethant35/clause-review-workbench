@@ -1,0 +1,14 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "checks": [
+    "installed app browser first task",
+    "source passage navigation",
+    "finding decision",
+    "actual export",
+    "returning saved review"
+  ],
+  "limits": [
+    "Automated developer test, not an unfamiliar-user study"
+  ]
+}

@@ -34,11 +34,18 @@ def value(issue, field):
 
 def export(review, document, format):
     review = review_view(review)
-    report = {"report_version": 1, "author": "Ethan", "notice": "Contract review aid, not legal advice. Attorney review is required.", "document": {k: document[k] for k in ["id", "name", "sha256", "format"]}, **review}
+    report = {"report_version": 1, "author": "Ethan", "notice": "Contract review aid, not legal advice. Attorney review is required.", "document": {k: document[k] for k in ["id", "name", "sha256", "format"] if k in document}, **review}
     if format == "json":
         return json.dumps(report, ensure_ascii=False, indent=2).encode(), "application/json", "json"
     title = "Contract review report"
     intro = f"Document: {document['name']}\nPlaybook: {review['playbook_name']}\nAI status: {review['ai_status']}\n{report['notice']}"
+    if review.get("source_warnings"):
+        intro += "\nSource limitations: " + " ".join(review["source_warnings"])
+    visual_check = review.get("source_visual_check") or {}
+    if visual_check.get("status") == "CONFIRMED":
+        intro += (f"\nManual image-to-text comparison recorded: {visual_check.get('confirmed_at')}; "
+                  f"extraction revision {visual_check.get('extraction_revision')}; "
+                  f"image manifest SHA256 {visual_check.get('confirmed_manifest_sha256')}.")
     if review.get("verification_warning"):
         intro = review["verification_warning"] + "\n" + intro
     if format == "markdown":

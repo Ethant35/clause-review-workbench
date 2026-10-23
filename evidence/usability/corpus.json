@@ -1,0 +1,214 @@
+{
+  "author": "Ethan",
+  "scenarios": [
+    {
+      "scenario": "scenario-01-acceptable-mutual-nda",
+      "expected": [],
+      "actual": [],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 0,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-02-unilateral-confidentiality",
+      "expected": [
+        "confidentiality-mutual"
+      ],
+      "actual": [
+        "confidentiality-mutual"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-03-confidentiality-exclusions-missing",
+      "expected": [
+        "confidentiality-exclusions"
+      ],
+      "actual": [
+        "confidentiality-exclusions"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-04-renewal-and-unilateral-audit",
+      "expected": [
+        "audit-rights",
+        "automatic-renewal"
+      ],
+      "actual": [
+        "audit-rights",
+        "automatic-renewal"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 2,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-05-fee-based-liability-cap",
+      "expected": [],
+      "actual": [],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 0,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-06-uncapped-indemnity",
+      "expected": [
+        "indemnification",
+        "liability-exceptions"
+      ],
+      "actual": [
+        "indemnification",
+        "liability-exceptions"
+      ],
+      "expected_uncertain": [
+        "liability-cap"
+      ],
+      "actual_uncertain": [
+        "liability-cap"
+      ],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 3,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-07-broad-ip-assignment",
+      "expected": [
+        "ip-ownership"
+      ],
+      "actual": [
+        "ip-ownership"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-08-unilateral-price-change",
+      "expected": [
+        "payment-terms"
+      ],
+      "actual": [
+        "payment-terms"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-09-data-processing-addendum-missing",
+      "expected": [
+        "data-protection"
+      ],
+      "actual": [
+        "data-protection"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-10-unrestricted-subprocessors",
+      "expected": [
+        "subprocessors"
+      ],
+      "actual": [
+        "subprocessors"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-11-unilateral-amendment",
+      "expected": [
+        "unilateral-amendment"
+      ],
+      "actual": [
+        "unilateral-amendment"
+      ],
+      "expected_uncertain": [],
+      "actual_uncertain": [],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    },
+    {
+      "scenario": "scenario-12-ambiguous-liability-cap",
+      "expected": [],
+      "actual": [],
+      "expected_uncertain": [
+        "liability-cap"
+      ],
+      "actual_uncertain": [
+        "liability-cap"
+      ],
+      "false_positives": [],
+      "false_negatives": [],
+      "failed_compliant_controls": [],
+      "citation_mismatches": [],
+      "issues_validated": 1,
+      "pass": true
+    }
+  ],
+  "passed": 12,
+  "total": 12,
+  "false_positives": 0,
+  "false_negatives": 0,
+  "citation_mismatches": 0
+}

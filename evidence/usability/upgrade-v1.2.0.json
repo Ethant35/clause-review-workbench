@@ -1,0 +1,12 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "baseline": "v1.2.0",
+  "checks": [
+    "actual v1.2.0 created original, review, decision and note",
+    "bundled recovery imports into a separate folder without changing old database",
+    "history, original, decision and note remain; stale extraction cannot be reviewed",
+    "explicit reprocess creates new results without copying or erasing old decisions"
+  ],
+  "work_directory": "native-upgrade-jj15_20x"
+}

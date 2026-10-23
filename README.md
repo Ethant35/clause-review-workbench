@@ -1,15 +1,21 @@
 # clause-review-workbench
 Open-source contract analysis and playbook review
 
-Clause Review Workbench is a local browser application for commercial contract review. Upload a DOCX, text-based PDF, or UTF-8 text contract; compare it with editable YAML playbooks; inspect exact source passages; record reviewer decisions; and export Markdown, DOCX, or JSON reports.
+Clause Review Workbench is a local browser application for commercial contract review. Upload a DOCX, text-based PDF, or UTF-8 text contract; compare it with editable playbooks; inspect exact source passages; record reviewer decisions; and export Markdown, DOCX, or JSON reports.
 
 **This is a contract-review aid, not legal advice or a substitute for attorney review.** Deterministic checks are narrow and return uncertainty where the configured conditions do not establish a result. Synthetic acceptance does not establish universal legal accuracy.
 
-This v1.2.0 release is qualified only for the documented single-user local macOS workflow. The available tests do not establish broad contract-analysis accuracy, suitability for unsupervised legal decisions, or qualification of optional AI output.
+This v1.3.0 release is qualified only for the documented single-user local macOS workflow. The available tests do not establish broad contract-analysis accuracy, suitability for unsupervised legal decisions, or qualification of optional AI output.
 
-Repository: [Ethant35/clause-review-workbench](https://github.com/Ethant35/clause-review-workbench). MIT licensed. Author: Ethan.
+Repository: [Ethant35/clause-review-workbench](https://github.com/Ethant35/clause-review-workbench). Original source: MIT. Bundled distribution includes AGPL components; see [notices](THIRD_PARTY_NOTICES.md). Author: Ethan.
 
-## Quick start
+## Download the Mac app
+
+For Apple Silicon Macs, download the DMG from [Releases](https://github.com/Ethant35/clause-review-workbench/releases/latest), open it, and drag **Clause Review Workbench** to Applications. Open the app to start the local browser workbench. Python, uv, Node, and API keys are not needed. Use the synthetic sample to try a first review.
+
+Saved data stays in Application Support when you replace the app. The launcher has backup, restore, import, and optional AI-key controls. Read the [Mac app guide](docs/macos-distribution.md) for the supported platform, data location, update and recovery steps.
+
+## Source development setup
 
 Prerequisites: Python 3.12+ (uv can install 3.12), [uv](https://docs.astral.sh/uv/), Node.js 22+, and npm. These commands work from the repository root:
 
@@ -50,11 +56,11 @@ Development UI: [localhost port 5173](http://127.0.0.1:5173), with `/api` proxie
 
 ## Review workflow
 
-1. Upload a document and inspect extracted text and the original. PDF findings link to a page. DOCX/text findings use paragraph/block or line locations. Original bytes remain unchanged.
-2. Select Commercial contracts or Mutual NDA, or create/import a playbook. Duplicate and edit YAML rules to fit the engagement. Run review.
+1. Upload a document and inspect extracted text and the original. PDF findings link to a page. DOCX/text findings use paragraph/block or line locations. Original bytes remain unchanged. PDFs with a logo or another small raster image can be extracted only when each page also contains text; compare every listed image region against the extracted text before confirming the visual check. The app does not read image text.
+2. Select Commercial contracts or Mutual NDA, or create/import a playbook. Duplicate a playbook and use common settings for priority, required clauses and reviewer guidance. Advanced YAML edits matching patterns. Run review.
 3. Filter findings, inspect source text, and distinguish observed language from interpretation. Required missing provisions are explicitly marked as absence-based, with no quote.
 4. Read “Related clauses and effect” when present. Inspect the cap, exception, definition, termination cost or qualified reference together. Each linked passage opens in source. A located reference is not a resolved legal conclusion.
-5. Accept, reject, or leave issues unresolved; save reviewer notes. Open previous reviews after a restart. Rerunning creates a new review with a new policy snapshot.
+5. Confirm a finding, dismiss it, or leave it undecided; save reviewer notes. These decisions concern the flagged issue and do not approve or change contract terms. Open previous reviews after a restart. Rerunning creates a new review with a new policy snapshot.
 6. Open “Saved playbook alternatives and fallback” for the selected finding. These positions come from the saved policy, not the contract or a verified legal standard. Later policy edits do not change earlier review guidance.
 7. Export Markdown, DOCX, or JSON. Delete documents to remove sources and associated local review records.
 
@@ -62,7 +68,7 @@ The commercial playbook covers confidentiality, exclusions, permitted disclosure
 
 ## Optional OpenRouter assistance
 
-Optional AI assistance is not qualified for legal accuracy. Credentials are never required for offline review. Set `OPENROUTER_API_KEY` in the server environment, outside this repository, then restart. In the UI enter an exact model ID and OpenRouter provider name, set output-token and dollar budgets, and explicitly allow transmission. Consent resets after each request. No automatic provider/model fallback is allowed. If a request is interrupted after transmission may have started, the saved status is `OUTCOME_UNKNOWN`; the app does not retry automatically because a provider charge may already have occurred.
+Optional AI assistance is not qualified for legal accuracy. Credentials are never required for offline review. The Mac launcher stores an optional key in Keychain through **Optional AI key…**. Source users can set `OPENROUTER_API_KEY` in the server environment, outside this repository, then restart. In the UI enter an exact model ID and OpenRouter provider name, set output-token and dollar budgets, and explicitly allow transmission. Consent resets after each request. No automatic provider/model fallback is allowed. If a request is interrupted after transmission may have started, the saved status is `OUTCOME_UNKNOWN`; the app does not retry automatically because a provider charge may already have occurred.
 
 The server checks authentication and endpoint prices before sending extracted blocks and playbook guidance. It validates every returned quote; invalid citations reject the response. AI interpretations always need human review. See [PRIVACY.md](PRIVACY.md) and [ARCHITECTURE.md](ARCHITECTURE.md). Authentication and pricing behavior follows the [OpenRouter API reference](https://openrouter.ai/docs/api/reference/overview).
 
@@ -94,7 +100,8 @@ The deployment archive includes source, dependency lockfiles, built frontend, an
 - `CRW_DATA_DIR`: local storage path; default `.data`.
 - `CRW_RETENTION_DAYS`: positive days to expire documents; `0` retains until deletion. Cleanup runs at startup and every minute.
 - Uploads: 10 MiB; PDFs: 200 pages; extracted text: 300,000 characters/5,000 blocks. API lists use `limit`/`offset` pagination (maximum 100 rows); review history also offers a summary projection.
-- OCR and encrypted PDFs are unsupported. PDFs containing any raster image (including logos) or a textless page are rejected. PDF annotations/comments/form fields are not extracted and produce a warning; side-by-side text layout and a capped layout check also produce warnings. DOCX revisions/macros/text boxes/notes/imports/content controls/fields/drawings and hidden text, including inherited default paragraph/character styles, are unsupported. DOCX headers/footers and comments are not analyzed and trigger warnings.
+- OCR and encrypted PDFs are unsupported. Image-only PDFs, mixed PDFs with a textless page, page-scale scan images, images outside the page crop, and placements with most of the image outside the crop are rejected. Text-based PDFs with smaller raster images require a manual original-to-extracted-text check before review or AI. Small page-edge bleed is clipped to the visible page area, retains its raw coordinates, and produces a warning that content beyond the page crop is not analyzed. The app does not determine whether an image is decorative or visible through PDF layers and transparency, and it does not detect text hidden in an image. PDF annotations/comments/form fields are not extracted and produce a warning; side-by-side text layout and a capped layout check also produce warnings. DOCX revisions/macros/text boxes/notes/imports/content controls/fields/drawings and hidden text, including inherited default paragraph/character styles, are unsupported. DOCX headers/footers and comments are not analyzed and trigger warnings.
+- “Reprocess original” creates a new document from the stored, SHA-256-verified bytes using current extraction checks. It does not transfer reviews, notes, or decisions. The old document and review history remain. Each successful request creates a new document ID.
 - Supported interactions are bounded and do not resolve every negation, cross-reference, definition, legal exception, or jurisdictional question. Exact Section/Clause labels are required for reference lookup. Match results require reading the complete agreement. Original PDF layouts can differ from extraction order.
 - Downloads, filesystem backups, and SSD remnants are outside application deletion. No application-level encryption or multi-user access control is provided.
 

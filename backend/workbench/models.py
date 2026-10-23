@@ -78,3 +78,9 @@ class AIInput(Strict):
     provider: str = Field(min_length=2, max_length=100, pattern=r"^[a-zA-Z0-9_. /-]+$")
     max_output_tokens: int = Field(default=1024, ge=128, le=4096)
     max_cost_usd: float = Field(default=0.05, gt=0, le=1)
+
+class VisualCheckInput(Strict):
+    confirm_no_missing_text: Literal[True]
+    original_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    extraction_revision: int = Field(ge=1)
+    manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")

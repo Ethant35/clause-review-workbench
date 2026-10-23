@@ -104,10 +104,10 @@ def run():
             expect(page.get_by_role('heading', name='Start a contract review')).to_be_visible()
             passed('skip-persists-and-guide-replays', 'Skip persists across reload; the footer action reopens onboarding.')
 
-            page.get_by_role('button', name='Try synthetic sample').click()
+            page.get_by_role('button', name='Use synthetic sample').click()
             expect(page.get_by_role('heading', name='Your contract is ready')).to_be_visible(timeout=15000)
             expect(page.get_by_role('heading', level=2, name='synthetic-sample.txt')).to_be_visible()
-            page.get_by_role('button', name='Run review from guide').click()
+            page.get_by_role('button', name='Run local review').click()
             expect(page.get_by_text('Review complete.', exact=True)).to_be_visible(timeout=20000)
             expect(page.locator('.issue-card').first).to_be_visible()
             passed('synthetic-sample-real-review', 'The clearly labeled synthetic text was sent only to the local upload API and produced a real configured-playbook review; no output was fabricated.')
@@ -166,7 +166,8 @@ def run():
             passed('stale-document-response-guard', 'A delayed real local document response arrived after a newer selection; the newer selected document remained visible.')
 
             page.set_viewport_size({'width': 390, 'height': 844})
-            assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), 'Mobile viewport has horizontal overflow.'
+            overflow = page.evaluate('''() => ({width: document.documentElement.scrollWidth, offenders: [...document.querySelectorAll("body *")].map(el => ({tag:el.tagName, className:String(el.className||""), text:(el.innerText||"").slice(0,80), right:Math.round(el.getBoundingClientRect().right)})).filter(x => x.right > innerWidth + 1).slice(0,12)})''')
+            assert overflow['width'] <= 390, f'Mobile viewport has horizontal overflow: {overflow}'
             expect(page.get_by_role('tab', name='Findings')).to_be_visible()
             check_axe(page, 'axe-narrow-review')
             page.screenshot(path=str(RUN / 'review-mobile.png'), full_page=True)
@@ -211,14 +212,14 @@ def run():
             passed('bounded-document-and-review-pagination', 'Loaded the second document and review-summary pages from real local API records. Summaries contain metadata and revision flags but omit issue, check, playbook-snapshot, and AI-detail payloads.')
 
             page.get_by_role('button', name='Getting started').click()
-            expect(page.get_by_role('heading', name='Your contract is ready')).to_be_visible()
+            expect(page.get_by_role('heading', name='Review a finding and record your decision')).to_be_visible()
             page.get_by_role('button', name='Skip for now').click()
-            expect(page.get_by_role('heading', name='Your contract is ready')).to_have_count(0)
-            passed('guide-replays-after-first-success', 'The guide can be replayed after completing the first review and dismissed again.')
+            expect(page.get_by_role('heading', name='Review a finding and record your decision')).to_have_count(0)
+            passed('guide-replays-after-first-success', 'The returning-user guide replays with review-specific guidance and can be dismissed again.')
 
             # Return to a blank client-only profile while retaining the server-side real review.
             page.reload()
-            expect(page.get_by_role('heading', name='Your contract is ready')).to_have_count(0)
+            expect(page.get_by_role('heading', name='Review a finding and record your decision')).to_have_count(0)
             passed('returning-user-does-not-repeat-first-run', 'Existing saved review opens without forcing the first-run guide.')
             assert not external, 'Browser requested a non-local origin: ' + ', '.join(external)
             browser.close()

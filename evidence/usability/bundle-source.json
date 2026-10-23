@@ -1,0 +1,43 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "manifest_files_and_built_frontend": {
+    "backend/workbench/ai.py": "1cc28a8bbc938a08ca14f7ecfb4082dfa30eeb9a219c4a5080aba16ae54afbea",
+    "backend/workbench/diagnostics.py": "a42c6d0a121f7a7c58d7e3d0493436cf14340ade26f86e9b92fb3ec00d121ccf",
+    "backend/workbench/engine.py": "aa73675fa25b4f0137f994da09f82fb2f385ea5bd24fe14df37a60d88f573077",
+    "backend/workbench/launcher.py": "9579795764f17e69d8b3656cd1b0a811cd2d8111ecc6aec1e9a57dc0d2d29c4a",
+    "backend/workbench/main.py": "5556c95ac085a3b777ac1231b896a42644d181b096638d0397a6f04c13745eb3",
+    "backend/workbench/models.py": "b1b6884fea2ad2b8ba153ca6f1dbe9193e6bae037291cd3bc70f4dd066e69ab1",
+    "backend/workbench/parser_worker.py": "aaa5103b9d6721c7415030a8a05af988de4c86a0955ed5ab12cc8c42abd455bf",
+    "backend/workbench/parsing.py": "bc0f7319b0dc03845d817a554df77c885b93f6f03a52a9efa26569f92866dc8a",
+    "backend/workbench/playbook_settings.py": "9ba64d7c389c5c37117f8108c537b6a77f4eb47fc6fbd88b7ae07bff635bdc1a",
+    "backend/workbench/recovery.py": "faeea5e6141d3459fd3bfa83c906d17d42fa27f3c82f55a0d265c2f602bb1e40",
+    "backend/workbench/relations.py": "8d3b8dda525952c61866bbcfb4c10a6a99ed409d05bd5192e8b901e04ba6d6c3",
+    "backend/workbench/reports.py": "3011a45237d5be09e1397fb406f2f80c305f0feb6da87485d2f267df0add35ed",
+    "backend/workbench/safety.py": "10640c3bf197d6971fa2e29a9d7fd6d182b9d008e2fa97111ff4749d34209da7",
+    "backend/workbench/store.py": "c0fdcfb9b7e9d88917b20ab91e037190989abc78d28578da4e06ad560b782e6e",
+    "backend/workbench/usability_intake.py": "e6ed20f7e6829b6df29d424199ab6af094f86a74e76cae7a885427315dc0eec5",
+    "playbooks/commercial.yaml": "3031dc84735232e0c6bf415fe36e273254517dc2eb05459a8a97f79ff2ad859f",
+    "playbooks/nda.yaml": "39828012b951094a0383db6f230be2038706fc297c0e8ba0aaccd52f9f3d15f9",
+    "LICENSE": "ed84a91b136e95a4399e5ce2d5e8a62758b4ba55f0f6256d6d17bfa83a311b39",
+    "README.md": "63c721d492a8b661a42b2a47f7ddcb156b79b354ab34cc6470f0ad50e26dd55e",
+    "PRIVACY.md": "f7f9f43768aeea921fb97bf1951b813c013cb8866cd963dc8f43dca56546fbb0",
+    "SECURITY.md": "c87bb97e066e2702ef5a8edb68e4ce4f7a80c95356eb5eaf8cee45b1135f466c",
+    "THIRD_PARTY_NOTICES.md": "e40043448412bdcb6aac87a83e173c3f4e716c8d6b91df4fcff73eab970c674a",
+    "pyproject.toml": "f64032a3ae8c7e8e8870cbf617da265918e3bf3ea7b467ae8f4274a59706a2b5",
+    "uv.lock": "b289a1e4d6bf8295c47349036cb12ce62de9b6ef56311f2286a09dabf5e46c5a",
+    "frontend/dist/index.html": "b6640c2f268f4bc3981981be80b309c2e4b0fbc63046836613adf51efe73c13f",
+    "frontend/dist/assets/index-fmp7T8Gy.css": "64efa0e4bc907eb83ad31735ba7cf64a6dd58aabbb1ff572f4993d8307563daf",
+    "frontend/dist/assets/index-MmWjqR80.js": "f6ddf42aacba8a86ed5b16e37716ba811de617163f17b48ec22d76487ff29c25"
+  },
+  "final_native_and_build_source": {
+    "native/bootstrap.py": "e3b7e871ee5bc13a27e87e9e5de122d4fa79a1171141c78d8f9e2243b3126f0f",
+    "native/Workbench.swift": "47be7a4d9eae583cfdabe28bd669b21b086d2aeb9ae7bd01f95a15d559d51ce6",
+    "scripts/build_macos.py": "70aaf475e34c80230db8e3f92cdd034624efaab266de13f939f1ab474ea3b5b4",
+    "frontend/src/App.tsx": "6fd2862b6487842d3fb79d0b71b0659afa53e7baf040ac8308ccd50293cbbd95",
+    "frontend/src/styles.css": "2b23e652ff060254883b1ab8cf30d060324306a562d2f42403263307766a788a"
+  },
+  "limits": [
+    "Swift source hash records final source; binary equivalence is supported by the observed build, not a reproducible-build claim."
+  ]
+}

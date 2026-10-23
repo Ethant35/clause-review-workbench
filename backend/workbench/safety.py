@@ -5,7 +5,7 @@ reference, or mixed scope changes its meaning. Such cases require human review.
 """
 import regex
 
-EXTRACTION_REVISION = 4
+EXTRACTION_REVISION = 5
 REVIEW_REVISION = 4
 LEGACY_WARNING = "Historical review: not verified by the current extraction and review checks. Re-upload the original and run a new review."
 
@@ -71,5 +71,19 @@ def review_view(review):
             "acceptable_alternatives": rule.get("acceptable_alternatives", []),
             "fallback_language": rule.get("fallback_language"),
         }})
-    return {**review, "issues": issues, "verification_status": "CURRENT_CHECKS" if current else "HISTORICAL_UNVERIFIED",
+    warnings = list(review.get("source_warnings") or [])
+    if review.get("source_visual_check", {}).get("status") == "CONFIRMED":
+        warnings.append("The reviewer confirmed that raster image regions were compared with extracted text. OCR was not performed; this confirmation is not an automated completeness check.")
+    return {**review, "issues": issues, "source_warnings": warnings,
+            "verification_status": "CURRENT_CHECKS" if current else "HISTORICAL_UNVERIFIED",
             "verification_warning": None if current else (LEGACY_WARNING if review.get("extraction_revision") != EXTRACTION_REVISION else "Historical review: not verified by the current clause interaction checks. Run a new review to evaluate related clauses; the existing review and decisions are preserved.")}
+
+
+def visual_check_current(document):
+    check = document.get("visual_check") or {}
+    if check.get("status") == "NOT_REQUIRED":
+        return True
+    return (check.get("status") == "CONFIRMED" and
+            check.get("original_sha256") == document.get("sha256") and
+            check.get("extraction_revision") == EXTRACTION_REVISION and
+            check.get("manifest_sha256") == check.get("confirmed_manifest_sha256"))

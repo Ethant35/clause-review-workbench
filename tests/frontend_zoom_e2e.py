@@ -213,13 +213,13 @@ def run():
             expect(page.locator("#main")).to_be_focused()
             record("200-percent-skip-link-keyboard", "At true 200% browser zoom, the keyboard skip link moved focus to main content.", browser_zoom=zoom["factor"])
 
-            page.get_by_role("button", name="Try synthetic sample").click()
+            page.get_by_role("button", name="Use synthetic sample").click()
             expect(page.get_by_role("heading", level=2, name="synthetic-sample.txt")).to_be_visible(timeout=15000)
-            expect(page.get_by_text("Run a local playbook review", exact=False)).to_be_visible()
+            expect(page.get_by_role("button", name="Run local review")).to_be_visible()
             record("200-percent-synthetic-upload", "The clearly labeled synthetic sample went through the real local upload and parsing endpoint.", browser_zoom=zoom["factor"])
             capture_zoomed_viewport(context, page, "uploaded-200-percent.png", zoom["factor"])
 
-            page.get_by_role("button", name="Run review from guide").click()
+            page.get_by_role("button", name="Run local review").click()
             expect(page.get_by_text("Review complete.", exact=True)).to_be_visible(timeout=20000)
             expect(page.locator(".issue-card").first).to_be_visible()
             assert_no_horizontal_overflow(page, "200-percent-real-review-reflow")

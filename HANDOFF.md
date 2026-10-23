@@ -1,3 +1,35 @@
+# Usability and distribution phase — publication pending
+
+Author: Ethan. Updated October 23, 2026.
+
+Branch codex/usability-distribution; baseline e410391c836f8cc974647626540690fcecb501d5.
+Version 1.3.0 implementation and local acceptance are complete. The app and DMG
+are Developer ID signed, notarized, stapled and Gatekeeper accepted. Exact evidence
+and limits: docs/usability-release.md and evidence/usability/. Public publication
+and download acceptance remain open; do not mark the goal complete yet.
+
+Final app: /private/tmp/crw-native-1.3.0/Clause Review Workbench.app.
+DMG: artifacts/Clause-Review-Workbench-1.3.0-arm64.dmg.
+SHA256: 012d862cdbb074ec79f507375d3f501210f8298553bf109da2c7b2cd27881e59.
+Exact AGPL corresponding sources: artifacts/corresponding-source/ (both archives).
+All bundled manifest source hashes and built frontend match this working tree.
+Local quarantined/translocated installed-browser journey passed; test app stopped
+and DMG detached. Both usability workers stopped. No user keys were modified.
+
+Remaining: commit intended files; package/verify source; verify Actions disabled;
+create and attach PR; merge and publish authorized v1.3.0 release with source and
+checksums; download public assets and verify installed browser journey; record final
+evidence; stop monitor; complete goal. Do not send to another chat without human
+authorization. Preserve the 38 untracked duplicate files and private local branch
+codex/readiness-local-evidence. Do not push raw scan history. No config changes.
+
+Usage latest 78% used. Active checker cell 2 every 45 seconds. Stop at >=90% in any
+window; unknown is not allowance. Save handoff and pause goal at the authorized
+cutoff. No resets or credit bypass. No GitHub Actions; check before every push,
+merge or release. No numeric token budget.
+
+## Previous completed release record
+
 # Clause Review Workbench handoff
 
 Author: Ethan. Completed October22,2026 (publication UTC October23).
