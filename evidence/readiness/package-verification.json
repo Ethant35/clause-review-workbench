@@ -23,10 +23,16 @@
     "tar source bytes match Git",
     "no unexpected copies, .env file, runtime data, private scan outputs or node_modules packaged"
   ],
-  "public_download_verified": false,
+  "public_download_verified": true,
   "built_asset_sha256": {
     "frontend/dist/assets/index-E6JnzqH2.css": "26063444d828e079e362bdc32b660a5ba339b00df8dac6a21ed2507f13ee465f",
     "frontend/dist/assets/index-gXaabwQE.js": "174b60dee169ea394dcca8fa15fd11f524af7acf70a4765a1e04e764e0522b5f",
     "frontend/dist/index.html": "e886d99b0830d447502d11e0555af34e1904f3d5f73c62f912b2f71a5f8894a9"
-  }
+  },
+  "release_url": "https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.2.0",
+  "release_tag_commit": "a5b1eb2b324a23409dcc6b5907738576be2cc309",
+  "pull_request": "https://github.com/Ethant35/clause-review-workbench/pull/6",
+  "actions_enabled": false,
+  "actions_total_runs": 0,
+  "metadata_limits": "Archive owner and report/manifests identify Ethan. Upstream notices retain original authors. Browser-generated PNG personal-author metadata was not configured or verified; their JSON evidence reports identify Ethan."
 }

@@ -1,6 +1,6 @@
 # Local deployment qualification
 
-Author: Ethan. Version 1.2.0. October 22, 2026.
+Author: Ethan. Version 1.2.0. October 22, 2026. Published and download-verified.
 
 The complete clean-checkout qualification passed at commit
 `0ea413aff05c74e31a75951eb4c348cccefed2c5`. The archive from source commit `332aa0383033bea2e6bdbd282551efcc3e5fe8f5`
@@ -23,7 +23,7 @@ tenancy or network-service availability claim.
 | Performance | 37,440 real HTTP requests over 180 seconds, eight concurrent clients, 1,001 history rows; p95 24.10 ms, p99 46.70 ms | Bounded workload; endpoint RSS 66,768 to 69,488 KiB does not prove no leaks |
 | Diagnostics/startup | Private 1 MB JSON log plus two backups; nine startup failure/actual HTTP tests | Content-free operational data only; no cloud telemetry |
 | Security/dependencies | Differential review, nine approved Semgrep scans with individual triage; npm/Python audits have no known advisories | Partial rules/taint timeouts/test exclusions disclosed; no security certification |
-| Release | Versioned notices, startup/recovery/rollback instructions, clean script and archive smoke | Clean checkout and archive installation/recovery passed; public download checked separately |
+| Release | Versioned notices, startup/recovery/rollback instructions, clean script and archive smoke | Clean checkout and archive installation/recovery passed; public download SHA-256 matched the tested archive |
 
 The full Python suite now contains 87 tests plus two subtests, including ten floor
 guard mutation/replacement controls. A passing test count is not a legal score.
@@ -68,3 +68,9 @@ The clean run also repeated a 15-second, 3,600-request load check (p95 19.56ms).
 The earlier 180-second run remains separate evidence. Full raw logs and browser
 images remain in the ignored local run directory; selected reports and runtime
 source hashes are in [evidence/readiness](../evidence/readiness/).
+
+Publication: [v1.2.0](https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.2.0),
+[PR6](https://github.com/Ethant35/clause-review-workbench/pull/6). GitHub Actions
+remained disabled with zero runs. Archive/report personal metadata identifies
+Ethan; upstream notices retain their authors. Browser PNG personal-author metadata
+was not configured or verified; their JSON evidence reports identify Ethan.
