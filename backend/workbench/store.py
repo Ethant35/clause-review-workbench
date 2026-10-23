@@ -1,5 +1,6 @@
 """Single-user local storage; short transactions and cascading review deletion."""
 import json
+import hashlib
 import os
 import sqlite3
 import time
@@ -33,12 +34,14 @@ def initialize():
           CREATE TABLE IF NOT EXISTS playbooks (id TEXT PRIMARY KEY, data TEXT NOT NULL);
           CREATE TABLE IF NOT EXISTS reviews (id TEXT PRIMARY KEY, document_id TEXT NOT NULL REFERENCES documents(id) ON DELETE CASCADE, data TEXT NOT NULL);
           CREATE TABLE IF NOT EXISTS pending_deletions (id TEXT PRIMARY KEY);
+          CREATE TABLE IF NOT EXISTS pending_uploads (id TEXT PRIMARY KEY);
           CREATE INDEX IF NOT EXISTS documents_created ON documents(created DESC, id DESC);
           CREATE INDEX IF NOT EXISTS reviews_document ON reviews(document_id);
         ''')
         c.execute("UPDATE reviews SET data=json_set(data, '$.ai_status', 'OUTCOME_UNKNOWN', '$.ai_error', ?) WHERE json_extract(data, '$.ai_status')='IN_PROGRESS'", (AI_INTERRUPTED,))
     (DATA / "workbench.sqlite3").chmod(0o600)
     retry_deletions()
+    retry_pending_uploads()
     purge_expired()
 
 @contextmanager
@@ -70,6 +73,29 @@ def retry_deletions():
         ids = c.execute("SELECT id FROM pending_deletions").fetchall()
     for (id,) in ids:
         finish_deletion(id)
+
+def retry_pending_uploads():
+    """Clean interrupted unpublished copies during exclusive app startup only."""
+    with db() as c:
+        ids = c.execute("SELECT id FROM pending_uploads").fetchall()
+    for (id,) in ids:
+        source = source_path(id)
+        with db() as c:
+            row = c.execute("SELECT data FROM documents WHERE id=?", (id,)).fetchone()
+        if row:
+            # The document row and removal of its marker commit together. If a
+            # DB status was ambiguous, preserve a complete published source.
+            doc = json.loads(row[0])
+            try:
+                intact = hashlib.sha256(source.read_bytes()).hexdigest() == doc.get("sha256")
+            except OSError:
+                intact = False
+            if not intact:
+                raise ValueError("Published source with pending upload marker failed integrity check")
+        else:
+            source.unlink(missing_ok=True)
+        with db() as c:
+            c.execute("DELETE FROM pending_uploads WHERE id=?", (id,))
 
 def delete_document(id):
     source_path(id)  # Validate before committing any change.

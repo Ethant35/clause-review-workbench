@@ -1,3 +1,33 @@
+# Version 1.3.0 — Mac app and practical review workflow
+
+Author: Ethan.
+
+- Apple Silicon DMG with bundled CPython and locked dependencies. Native start,
+  restart, backup, restore and prior-data import controls; no setup tools needed.
+- Developer ID signing, Apple notarization and stapling for app and disk image.
+- Short first-task flow, explicit Confirm finding / Dismiss finding decisions,
+  source navigation, export and returning review history.
+- Common playbook settings with stale-edit protection; advanced YAML remains
+  available. Switching modes warns before discarding edits.
+- Optional AI is collapsed by default. The native launcher stores an optional
+  API key in Keychain. Consent, provider selection and budgets remain per request.
+- Text PDFs with ordinary raster artwork enter an explicit manual completeness
+  check. Scanned/textless/page-scale-image PDFs remain unsupported; no OCR claim.
+- Reprocessing creates a new document from the hash-verified stored original,
+  preserving old results and decisions. Extraction revision is now 5.
+
+Before updating, quit the workbench and back up. Replace the app, leaving the data
+folder intact. Source/tar users can import their stopped `.data` folder through
+the launcher. Restore writes a separate data folder; it does not overwrite data.
+Keep the old app and backup for rollback. See docs/macos-distribution.md.
+
+The tested platform is macOS 27.2 on Apple Silicon. Broad legal accuracy, live-AI
+success, OCR, other operating systems, and unfamiliar-user usability are not
+qualified. See docs/usability-release.md for evidence and limits. PyMuPDF/MuPDF
+AGPL notices and exact corresponding source downloads accompany the distribution.
+
+---
+
 # Version 1.2.0: safer local review and recovery
 
 Author: Ethan

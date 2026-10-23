@@ -1,0 +1,4 @@
+Author: Ethan
+109 passed; 2 subtests passed; 6 existing SWIG/Starlette TestClient deprecation warnings.
+Command: .venv/bin/python -m pytest -q
+Full local output: artifacts/usability-final-pytest.log

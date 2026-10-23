@@ -1,0 +1,25 @@
+{
+  "author": "Ethan",
+  "sources": [
+    {
+      "file": "common-paper-mnda-1.0.pdf",
+      "sha256": "8d31fe0e0eb96649b180ec4f6eec84617ff2d499576f8dccde981e58c5a829d6",
+      "source_author": "Common Paper",
+      "license": "CC BY 4.0",
+      "modified": false,
+      "url": "https://commonpaper.com/wp-content/uploads/2021/12/Mutual-NDA-public-2page.pdf",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "retrieved_date": "2026-10-22"
+    },
+    {
+      "file": "common-paper-design-partner-1.0.pdf",
+      "sha256": "4d96717f42a50655334966694156e215609a44a2a40da9e018866fc5826f09d7",
+      "source_author": "Common Paper",
+      "license": "CC BY 4.0",
+      "modified": false,
+      "url": "https://commonpaper.com/wp-content/uploads/2022/09/Common-Paper-Design-Partner-Agreement-v1-cover-page-and-standard-terms.pdf",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "retrieved_date": "2026-10-22"
+    }
+  ]
+}

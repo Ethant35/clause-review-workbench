@@ -139,6 +139,8 @@ def inspect(root):
             raise ValueError("Unsupported database schema")
         if "pending_deletions" in tables and c.execute("SELECT 1 FROM pending_deletions LIMIT 1").fetchone():
             raise ValueError("Pending deletion: restart the app to finish cleanup before backup")
+        if "pending_uploads" in tables and c.execute("SELECT 1 FROM pending_uploads LIMIT 1").fetchone():
+            raise ValueError("Pending source copy: restart the app to finish cleanup before backup")
         for id, data in c.execute("SELECT id,data FROM documents"):
             if not isinstance(id, str) or str(uuid.UUID(id)) != id:
                 raise ValueError("Invalid source identifier")

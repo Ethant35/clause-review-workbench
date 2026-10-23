@@ -25,7 +25,9 @@ from .relations import InteractionLimit
 from .engine import analyze
 from .reports import export
 from .ai import assist, AIError
-from .safety import EXTRACTION_REVISION, REVIEW_REVISION, review_view
+from .safety import EXTRACTION_REVISION, REVIEW_REVISION, review_view, visual_check_current
+from .usability_intake import router as usability_intake_router
+from .playbook_settings import router as playbook_settings_router
 from .recovery import exclusive_store
 from . import diagnostics
 
@@ -92,7 +94,9 @@ async def lifespan(app):
                 pass
             diagnostics.close()
 
-app = FastAPI(title="Clause Review Workbench", version="1.2.0", lifespan=lifespan, docs_url=None, redoc_url=None)
+app = FastAPI(title="Clause Review Workbench", version="1.3.0", lifespan=lifespan, docs_url=None, redoc_url=None)
+app.include_router(usability_intake_router)
+app.include_router(playbook_settings_router)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]"])
 
 @app.exception_handler(RequestValidationError)
@@ -153,6 +157,15 @@ def require(table, id):
 
 def now(): return datetime.now(timezone.utc).isoformat()
 
+def verify_document_original(doc):
+    """Check the durable source before producing source-linked results."""
+    try:
+        original = store.source_path(doc["id"]).read_bytes()
+    except (OSError, ValueError, KeyError) as exc:
+        raise HTTPException(409, "The stored original is unavailable or unsafe. No source-linked result was created.") from exc
+    if not doc.get("sha256") or hashlib.sha256(original).hexdigest() != doc["sha256"]:
+        raise HTTPException(409, "The stored original failed its SHA256 check. No source-linked result was created.")
+
 def update_ai(id, fields, issues=None):
     with store.db() as c:
         c.execute("BEGIN IMMEDIATE")
@@ -197,7 +210,8 @@ async def upload(file: UploadFile = File(...)):
     # Display-only sanitized filename; disk storage never uses an uploaded name.
     name = (file.filename or "document").replace("\\", "/").split("/")[-1]
     name = "".join(c for c in name if c.isprintable())[:200] or "document"
-    obj = dict(id=id, name=name, format=parsed.pop("format"), created_at=now(), state="ready", sha256=hashlib.sha256(data).hexdigest(), **parsed)
+    visual_check = parsed.get("visual_check", {})
+    obj = dict(id=id, name=name, format=parsed.pop("format"), created_at=now(), state="needs_visual_check" if visual_check.get("status") == "NEEDS_VISUAL_CHECK" else "ready", sha256=hashlib.sha256(data).hexdigest(), **parsed)
     path = store.DATA / "sources" / id
     try:
         path.write_bytes(data)
@@ -215,6 +229,7 @@ def document(id: str): return require("documents", id)
 @app.get("/api/documents/{id}/original")
 def original(id: str):
     doc = require("documents", id)
+    verify_document_original(doc)
     mime = {"pdf":"application/pdf", "txt":"text/plain", "docx":"application/vnd.openxmlformats-officedocument.wordprocessingml.document"}[doc["format"]]
     return FileResponse(store.source_path(doc["id"]), media_type=mime, filename=doc["name"], content_disposition_type="inline" if doc["format"] == "pdf" else "attachment")
 
@@ -269,8 +284,11 @@ def reviews(id: str, summary: bool = False, limit: int = Query(100, ge=1, le=100
 @app.post("/api/documents/{id}/reviews", status_code=201)
 def run_review(id: str, body: ReviewInput):
     doc = require("documents", id)
+    verify_document_original(doc)
     if doc.get("extraction_revision") != EXTRACTION_REVISION:
         raise HTTPException(409, "This upload predates the current extraction checks. Download and re-upload the original before reviewing.")
+    if not visual_check_current(doc):
+        raise HTTPException(409, "Compare every raster image in the original with the extracted text, then confirm the visual check before reviewing.")
     pb = parse_playbook(require("playbooks", body.playbook_id)["yaml"])
     try:
         issues, checks = analyze(doc, pb)
@@ -278,7 +296,7 @@ def run_review(id: str, body: ReviewInput):
         raise HTTPException(422, str(exc)) from exc
     except TimeoutError as exc:
         raise HTTPException(422, "Playbook pattern exceeded its processing time limit") from exc
-    review = dict(id=str(uuid.uuid4()), review_revision=REVIEW_REVISION, extraction_revision=EXTRACTION_REVISION, document_id=id, playbook_id=body.playbook_id, playbook_name=pb.name, created_at=now(), issues=issues, checks=checks, ai_status="NOT_REQUESTED", ai_error=None, playbook_snapshot=pb.model_dump())
+    review = dict(id=str(uuid.uuid4()), review_revision=REVIEW_REVISION, extraction_revision=EXTRACTION_REVISION, document_id=id, playbook_id=body.playbook_id, playbook_name=pb.name, created_at=now(), issues=issues, checks=checks, ai_status="NOT_REQUESTED", ai_error=None, playbook_snapshot=pb.model_dump(), source_warnings=list(doc.get("warnings") or []), source_visual_check=dict(doc.get("visual_check") or {}))
     with store.db() as c:
         c.execute("INSERT INTO reviews VALUES(?,?,?)", (review["id"], id, json.dumps(review)))
     return review_view(review)
@@ -304,7 +322,9 @@ def decision(id: str, issue_id: str, body: Decision):
 def report(id: str, format: str = "json"):
     if format not in {"json", "markdown", "docx"}: raise HTTPException(422, "Unknown export format")
     rev = require("reviews", id)
-    data, mime, ext = export(rev, require("documents", rev["document_id"]), format)
+    doc = require("documents", rev["document_id"])
+    verify_document_original(doc)
+    data, mime, ext = export(rev, doc, format)
     return Response(data, media_type=mime, headers={"Content-Disposition": f'attachment; filename="review-{id}.{ext}"'})
 
 @app.post("/api/reviews/{id}/ai")
@@ -313,8 +333,11 @@ async def ai_review(id: str, body: AIInput):
     async with AI_LOCK:
         rev = require("reviews", id)
         doc = require("documents", rev["document_id"])
+        verify_document_original(doc)
         if doc.get("extraction_revision") != EXTRACTION_REVISION or rev.get("review_revision") != REVIEW_REVISION:
             raise HTTPException(409, "Historical extraction/review is unverified. Re-upload the original and run a new review before AI assistance.")
+        if not visual_check_current(doc):
+            raise HTTPException(409, "Compare every raster image in the original with the extracted text, then confirm the visual check before AI assistance.")
         attempt = {**body.model_dump(), "attempt_id": str(uuid.uuid4()), "started_at": now()}
         update_ai(id, {"ai_status": "IN_PROGRESS", "ai_error": None, "ai_audit": attempt})
         try:

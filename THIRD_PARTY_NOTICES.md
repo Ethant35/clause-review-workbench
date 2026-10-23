@@ -1,16 +1,24 @@
 # Third-party notices
 
-Author: Ethan. Inventory checked October 22, 2026 for version 1.2.0.
+Author: Ethan. Inventory checked October 22, 2026 for version 1.3.0.
 
 The repository's MIT license covers its original application code. Dependencies
 retain their own licenses. It does not make the installed application or every
 included component MIT-only. Upstream author and copyright notices are preserved.
 
-The release archive includes application source, built frontend assets, and these
-notices. It does not include the Python interpreter, Python wheels, node_modules,
-or development browsers. Locked Python dependencies are installed separately by
-`uv sync --frozen --python 3.12 --no-dev`. Node build/test tools are installed by
-`npm ci` for source development and are not included in the release bundle.
+The source archive includes application source, built frontend assets and notices.
+The separate macOS app bundles Python, locked Python wheels and frontend assets.
+Development Node tools and browsers are not bundled. The CPython runtime is the
+hash-pinned Astral python-build-standalone 20260901 build. Its original Python and
+component license texts and PYTHON.json accompany the app under Resources.
+
+The native combined distribution is supplied subject to AGPLv3 terms. The
+original application source retains its MIT grant; this does not remove the
+AGPL obligations of the combined binary distribution. No commercial license is
+supplied. The exact PyMuPDF and MuPDF corresponding source archives are available
+as separate assets beside the app and workbench source on the same release.
+[The source manifest](licenses/corresponding-source.json) records URLs, hashes and
+rebuild instructions. Their upstream source and notices are unchanged.
 
 ## PyMuPDF and MuPDF
 

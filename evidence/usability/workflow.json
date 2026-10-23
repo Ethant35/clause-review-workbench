@@ -1,0 +1,15 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "run": "artifacts/usability-frontend-i5ye9aim",
+  "checks": [
+    "synthetic first review",
+    "source passage navigation",
+    "explicit finding disposition",
+    "JSON export",
+    "returning review history",
+    "lineage-preserving reprocess",
+    "common playbook settings",
+    "small image PDF visual check blocks review until confirmation"
+  ]
+}

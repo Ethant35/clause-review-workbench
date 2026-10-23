@@ -2,6 +2,9 @@
 from io import BytesIO
 from zipfile import ZipFile, BadZipFile
 from defusedxml.ElementTree import fromstring
+import hashlib
+import json
+import math
 import pymupdf
 from docx import Document
 from .safety import EXTRACTION_REVISION
@@ -33,6 +36,8 @@ def _inspect_pdf_layout(page_blocks, pair_budget):
 def extract(data: bytes):
     rows = []
     warnings = []
+    visual_check = {"status": "NOT_REQUIRED", "manifest_sha256": None}
+    image_manifest = []
     if data.startswith(b"%PDF-"):
         fmt = "pdf"
         try:
@@ -46,9 +51,47 @@ def extract(data: bytes):
                 has_side_by_side_blocks = False
                 layout_check_limited = False
                 layout_pair_budget = 100_000
+                total_image_pixels = 0
+                has_page_scale_image = False
+                has_clipped_image = False
                 for page in pdf:
-                    if page.get_image_info():
-                        raise ParseError("PDF contains raster images that may contain unextracted terms. OCR is unsupported; provide a text-only PDF or complete DOCX/text copy.")
+                    image_info = page.get_image_info()
+                    if len(image_manifest) + len(image_info) > 500:
+                        raise ParseError("PDF contains too many raster images to verify safely (limit 500).")
+                    page_rect = page.rect
+                    if image_info and (page_rect.width <= 0 or page_rect.height <= 0):
+                        raise ParseError("PDF page has an unsupported size for image verification.")
+                    for image in image_info:
+                        bbox = image.get("bbox")
+                        if not bbox or len(bbox) != 4 or not all(math.isfinite(float(v)) for v in bbox):
+                            raise ParseError("PDF contains a raster image with an unsupported or uncertain position. Simplify the PDF and try again.")
+                        x0, y0, x1, y1 = map(float, bbox)
+                        if x1 <= x0 or y1 <= y0:
+                            raise ParseError("PDF contains an invisible or uncertain raster image. Simplify the PDF and try again.")
+                        ix0, iy0 = max(x0, page_rect.x0), max(y0, page_rect.y0)
+                        ix1, iy1 = min(x1, page_rect.x1), min(y1, page_rect.y1)
+                        if ix1 <= ix0 or iy1 <= iy0:
+                            raise ParseError("PDF contains a raster image fully outside the page crop. Simplify the PDF and try again.")
+                        visible_fraction = ((ix1 - ix0) * (iy1 - iy0)) / ((x1 - x0) * (y1 - y0))
+                        if visible_fraction < 0.5:
+                            raise ParseError("PDF contains a raster image mostly outside the page crop. Simplify the PDF and try again.")
+                        clipped = x0 < page_rect.x0 - 0.01 or y0 < page_rect.y0 - 0.01 or x1 > page_rect.x1 + 0.01 or y1 > page_rect.y1 + 0.01
+                        has_clipped_image = has_clipped_image or clipped
+                        width, height = int(image.get("width") or 0), int(image.get("height") or 0)
+                        if width < 1 or height < 1 or width > 100_000 or height > 100_000 or width * height > 50_000_000:
+                            raise ParseError("PDF raster dimensions exceed safe verification limits. Simplify the PDF and try again.")
+                        total_image_pixels += width * height
+                        if total_image_pixels > 100_000_000:
+                            raise ParseError("PDF raster dimensions exceed safe verification limits. Simplify the PDF and try again.")
+                        if ((x1 - x0) * (y1 - y0)) / max(1.0, page_rect.width * page_rect.height) >= 0.85:
+                            has_page_scale_image = True
+                        image_manifest.append({
+                            "page": page.number + 1,
+                            "bbox": [round((ix0 - page_rect.x0) / page_rect.width, 6), round((iy0 - page_rect.y0) / page_rect.height, 6), round((ix1 - page_rect.x0) / page_rect.width, 6), round((iy1 - page_rect.y0) / page_rect.height, 6)],
+                            "raw_bbox_points": [round(v, 3) for v in (x0, y0, x1, y1)],
+                            "clipped": clipped,
+                            "width": width, "height": height,
+                        })
                     page_rows = []
                     page_blocks = [block for block in page.get_text("blocks", sort=True) if block[6] == 0 and block[4].strip()]
                     has_annotations = has_annotations or bool(list(page.annots() or [])) or bool(list(page.widgets() or []))
@@ -66,6 +109,16 @@ def extract(data: bytes):
                 if empty_pages:
                     # Partial extraction is not silently treated as a complete document.
                     raise ParseError("PDF contains pages without extractable text. OCR is unsupported; provide a complete text-based copy.")
+                if has_page_scale_image:
+                    raise ParseError("PDF contains a page-scale image, which may be a scan with an OCR text layer. OCR completeness cannot be checked; provide a non-scanned text-based copy.")
+                if image_manifest:
+                    # Images can contain contract terms. A human must compare the
+                    # original against extracted text before this upload is usable.
+                    canonical = json.dumps(image_manifest, sort_keys=True, separators=(",", ":")).encode()
+                    visual_check = {"status": "NEEDS_VISUAL_CHECK", "manifest_sha256": hashlib.sha256(canonical).hexdigest()}
+                    warnings.append("PDF contains raster images. OCR and image text checks are unsupported. Image placement does not establish whether a PDF layer or transparency makes an image invisible. Compare the original with all extracted text and verify every listed region; missing terms may change review results.")
+                if has_clipped_image:
+                    warnings.append("A raster image extends beyond a page crop. Only its visible cropped region is listed; content outside the crop is not analyzed. Compare the original rendered page and extracted text before confirming.")
                 if has_annotations:
                     warnings.append("PDF annotations, comments, and form fields are not analyzed. Verify the original for additional terms or review context.")
                 if has_side_by_side_blocks:
@@ -209,4 +262,4 @@ def extract(data: bytes):
     for i, (text, page, kind, location) in enumerate(rows, 1):
         blocks.append(dict(id=f"b{i}", text=text, start=offset, end=offset + len(text), page=page, kind=kind, location=location))
         offset += len(text) + 2
-    return dict(extraction_revision=EXTRACTION_REVISION, format=fmt, text="\n\n".join(x[0] for x in rows), blocks=blocks, warnings=warnings)
+    return dict(extraction_revision=EXTRACTION_REVISION, format=fmt, text="\n\n".join(x[0] for x in rows), blocks=blocks, warnings=warnings, visual_check=visual_check, image_manifest=image_manifest)

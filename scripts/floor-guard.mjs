@@ -98,7 +98,33 @@ for (const { file, text } of removed) {
     const newStatus = "expect(page.get_by_role('status').filter(has_text='Reviewer update saved locally.')).to_be_visible()";
     const exactStatusReplacement = file === 'tests/e2e.py' && text.trim() === oldStatus
       && added.some((line) => line.file === file && line.text.trim() === newStatus);
-    if (!exactStatusReplacement) flag('assertion-removed', file, text);
+    // User-requested finding decision labels: five exact paired replacements.
+    // API enums and persistent decision assertions remain unchanged (CR-12/20).
+    const decisionLabelPairs = [
+  [
+    "page.get_by_role('button',name='Accept',exact=True).click();expect(page.locator('.issue-card').first.locator('.issue-status')).to_have_text('accepted')",
+    "page.get_by_role('button',name='Confirm finding',exact=True).click();expect(page.locator('.issue-card').first.locator('.issue-status')).to_have_text('Confirmed')"
+  ],
+  [
+    "expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('rejected')",
+    "expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('Dismissed')"
+  ],
+  [
+    "expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('unresolved')",
+    "expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('Needs decision')"
+  ],
+  [
+    "page.get_by_role('button',name='Reject',exact=True).click();expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('rejected')",
+    "page.get_by_role('button',name='Dismiss finding',exact=True).click();expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('Dismissed')"
+  ],
+  [
+    "expect(page.locator('.issue-card').filter(has_text='unilateral-amendment').locator('.issue-status')).to_have_text('accepted')",
+    "expect(page.locator('.issue-card').filter(has_text='unilateral-amendment').locator('.issue-status')).to_have_text('Confirmed')"
+  ]
+];
+    const exactDecisionLabelReplacement = file === 'tests/e2e.py' && decisionLabelPairs.some(([oldLine, newLine]) =>
+      text.trim() === oldLine && added.some((line) => line.file === file && line.text.trim() === newLine));
+    if (!exactStatusReplacement && !exactDecisionLabelReplacement) flag('assertion-removed', file, text);
   }
 }
 

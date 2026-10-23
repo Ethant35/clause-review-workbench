@@ -76,7 +76,7 @@ class LocalBoundary:
         path = scope.get("path", "")
         group = None
         if scope.get("method") == "POST":
-            if path == "/api/documents": group = "upload"
+            if path == "/api/documents" or (path.startswith("/api/documents/") and path.endswith("/reprocess")): group = "upload"
             elif path.startswith("/api/documents/") and path.endswith("/reviews"): group = "review"
             elif path.startswith("/api/reviews/") and path.endswith("/ai"): group = "ai"
         rejected = self.active >= self.max_active or (group and self.groups[group] >= (1 if group == "ai" else 2))
