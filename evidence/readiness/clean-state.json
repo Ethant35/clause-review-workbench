@@ -1,0 +1,13 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "run": "artifacts/frontend-state-c0zo806l",
+  "checks": [
+    "held actual invalid AI request",
+    "422 before provider invocation",
+    "new selection retains its own exported review",
+    "consent reset",
+    "no backend outbound sockets",
+    "modal initial focus, tab containment, escape, focus return and announced field error"
+  ]
+}

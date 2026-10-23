@@ -1,0 +1,38 @@
+{
+  "author": "Ethan",
+  "timestamp": "2026-10-23T05:36:41.396846+00:00",
+  "baseline": "v1.0.0",
+  "commit": "0ea413aff05c74e31a75951eb4c348cccefed2c5",
+  "run": "artifacts/upgrade-66o54bxx",
+  "results": [
+    {
+      "id": "UP-00-real-prior-release-backup-restore",
+      "status": "PASS"
+    },
+    {
+      "id": "UP-01-preserve-original-rows-decisions-and-source",
+      "status": "PASS"
+    },
+    {
+      "id": "UP-02-old-review-ai-blocked-and-extraction-policy-preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "UP-03-all-exports-label-historical-results",
+      "status": "PASS"
+    },
+    {
+      "id": "UP-04-browser-warning-and-correct-rerun-policy",
+      "status": "PASS"
+    },
+    {
+      "id": "UP-05-browser-new-checks-preserve-history-and-original",
+      "status": "PASS"
+    },
+    {
+      "id": "UP-06-no-backend-outbound-connections",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

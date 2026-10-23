@@ -4,15 +4,17 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import os
+import sqlite3
 from pathlib import Path
 import subprocess
 import sys
 import time
 import uuid
 
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import FileResponse, Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
 from starlette.concurrency import run_in_threadpool
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 import yaml
@@ -24,9 +26,12 @@ from .engine import analyze
 from .reports import export
 from .ai import assist, AIError
 from .safety import EXTRACTION_REVISION, REVIEW_REVISION, review_view
+from .recovery import exclusive_store
+from . import diagnostics
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_UPLOAD = 10 * 1024 * 1024
+BODY_TIMEOUT_SECONDS = 30
 PROCESSING = asyncio.Semaphore(2)
 AI_LOCK = asyncio.Lock()
 
@@ -50,7 +55,7 @@ def parse_playbook(text):
             raise ValueError("YAML anchors and aliases are unsupported")
         return Playbook.model_validate(yaml.load(text, Loader=UniqueLoader))
     except (yaml.YAMLError, ValidationError, ValueError, RecursionError) as exc:
-        raise HTTPException(422, "Invalid playbook: " + str(exc)[:700]) from exc
+        raise HTTPException(422, "Invalid playbook. Check required fields, unique rule IDs, patterns, and YAML structure; aliases are unsupported.") from exc
 
 def save_playbook(id, text):
     pb = parse_playbook(text)
@@ -62,24 +67,37 @@ def save_playbook(id, text):
 async def retention_loop():
     while True:
         await asyncio.sleep(60)
-        await run_in_threadpool(store.purge_expired)
+        try:
+            await run_in_threadpool(store.purge_expired)
+        except (OSError, ValueError, sqlite3.Error):
+            diagnostics.event("retention_failed", request_id=str(uuid.uuid4()), entry_point="retention", status=503, route="retention", duration_ms=0)
 
 @asynccontextmanager
 async def lifespan(app):
-    store.initialize()
-    for path in (ROOT / "playbooks").glob("*.yaml"):
-        if not store.get("playbooks", path.stem):
-            save_playbook(path.stem, path.read_text())
-    task = asyncio.create_task(retention_loop())
-    yield
-    task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
-        pass
+    store.DATA.mkdir(mode=0o700, parents=True, exist_ok=True)
+    with exclusive_store(store.DATA):
+        store.initialize()
+        diagnostics.configure(store.DATA)
+        for path in (ROOT / "playbooks").glob("*.yaml"):
+            if not store.get("playbooks", path.stem):
+                save_playbook(path.stem, path.read_text())
+        task = asyncio.create_task(retention_loop())
+        try:
+            yield
+        finally:
+            task.cancel()
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
+            diagnostics.close()
 
-app = FastAPI(title="Clause Review Workbench", version="1.1.0", lifespan=lifespan, docs_url=None, redoc_url=None)
+app = FastAPI(title="Clause Review Workbench", version="1.2.0", lifespan=lifespan, docs_url=None, redoc_url=None)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]"])
+
+@app.exception_handler(RequestValidationError)
+async def invalid_request(request, exc):
+    return JSONResponse({"detail": "Invalid request fields or values. Check the API contract."}, 422)
 
 @app.middleware("http")
 async def local_security(request: Request, call_next):
@@ -111,15 +129,21 @@ class BodyLimit:
         if declared > limit:
             return await JSONResponse({"detail": "Request exceeds size limit"}, 413)(scope, receive, send)
         count = 0
+        deadline = time.monotonic() + BODY_TIMEOUT_SECONDS
         async def bounded():
             nonlocal count
-            message = await receive()
+            try:
+                async with asyncio.timeout(max(0, deadline - time.monotonic())):
+                    message = await receive()
+            except TimeoutError as exc:
+                raise HTTPException(408, "Request body exceeded the 30-second read limit") from exc
             count += len(message.get("body", b""))
             if count > limit:
                 raise HTTPException(413, "Request exceeds size limit")
             return message
         await self.app(scope, bounded, send)
 app.add_middleware(BodyLimit)
+app.add_middleware(diagnostics.LocalBoundary)
 
 def require(table, id):
     obj = store.get(table, id)
@@ -145,10 +169,9 @@ def health():
     return {"status": "ok", "ai_configured": bool(os.environ.get("OPENROUTER_API_KEY")), "retention_days": store.RETENTION_DAYS, "max_upload_bytes": MAX_UPLOAD, "extraction_revision": EXTRACTION_REVISION, "review_revision": REVIEW_REVISION}
 
 @app.get("/api/documents")
-def documents():
+def documents(limit: int = Query(100, ge=1, le=100), offset: int = Query(0, ge=0)):
     with store.db() as c:
-        rows = [json.loads(r[0]) for r in c.execute("SELECT data FROM documents ORDER BY created DESC")]
-    return [{k:v for k,v in r.items() if k not in {"text", "blocks", "warnings"}} for r in rows]
+        return [json.loads(r[0]) for r in c.execute("SELECT json_remove(data, '$.text', '$.blocks', '$.warnings') FROM documents ORDER BY created DESC, id DESC LIMIT ? OFFSET ?", (limit, offset))]
 
 def parse_bytes(data):
     try:
@@ -176,9 +199,9 @@ async def upload(file: UploadFile = File(...)):
     name = "".join(c for c in name if c.isprintable())[:200] or "document"
     obj = dict(id=id, name=name, format=parsed.pop("format"), created_at=now(), state="ready", sha256=hashlib.sha256(data).hexdigest(), **parsed)
     path = store.DATA / "sources" / id
-    path.write_bytes(data)
-    path.chmod(0o600)
     try:
+        path.write_bytes(data)
+        path.chmod(0o600)
         with store.db() as c:
             c.execute("INSERT INTO documents VALUES(?,?,?)", (id, time.time(), json.dumps(obj)))
     except Exception:
@@ -193,12 +216,18 @@ def document(id: str): return require("documents", id)
 def original(id: str):
     doc = require("documents", id)
     mime = {"pdf":"application/pdf", "txt":"text/plain", "docx":"application/vnd.openxmlformats-officedocument.wordprocessingml.document"}[doc["format"]]
-    return FileResponse(store.DATA / "sources" / doc["id"], media_type=mime, filename=doc["name"], content_disposition_type="inline" if doc["format"] == "pdf" else "attachment")
+    return FileResponse(store.source_path(doc["id"]), media_type=mime, filename=doc["name"], content_disposition_type="inline" if doc["format"] == "pdf" else "attachment")
 
 @app.delete("/api/documents/{id}")
 def delete(id: str):
-    require("documents", id)
-    store.delete_document(id)
+    try:
+        deleted = store.delete_document(id)
+    except ValueError as exc:
+        raise HTTPException(404, "Record not found") from exc
+    except OSError as exc:
+        raise HTTPException(503, "Deletion is pending. Check storage permissions and retry; cleanup also resumes on restart.") from exc
+    if not deleted:
+        raise HTTPException(404, "Record not found")
     return {"deleted": True}
 
 @app.get("/api/playbooks")
@@ -228,10 +257,14 @@ def export_playbook(id: str):
     return Response(require("playbooks", id)["yaml"], media_type="application/yaml", headers={"Content-Disposition": 'attachment; filename="playbook.yaml"'})
 
 @app.get("/api/documents/{id}/reviews")
-def reviews(id: str):
+def reviews(id: str, summary: bool = False, limit: int = Query(100, ge=1, le=100), offset: int = Query(0, ge=0)):
     require("documents", id)
+    projection = "json_remove(data, '$.issues', '$.checks', '$.playbook_snapshot', '$.ai_audit', '$.ai_error')" if summary else "data"
     with store.db() as c:
-        return [review_view(json.loads(r[0])) for r in c.execute("SELECT data FROM reviews WHERE document_id=? ORDER BY rowid DESC", (id,))]
+        rows = [json.loads(r[0]) for r in c.execute(f"SELECT {projection} FROM reviews WHERE document_id=? ORDER BY rowid DESC LIMIT ? OFFSET ?", (id, limit, offset))]
+    if not summary:
+        return [review_view(row) for row in rows]
+    return [{k: v for k, v in review_view({**row, "issues": []}).items() if k != "issues"} for row in rows]
 
 @app.post("/api/documents/{id}/reviews", status_code=201)
 def run_review(id: str, body: ReviewInput):
@@ -263,7 +296,7 @@ def decision(id: str, issue_id: str, body: Decision):
         rev = json.loads(row[0])
         issue = next((i for i in rev["issues"] if i["id"] == issue_id), None)
         if not issue: raise HTTPException(404, "Issue not found")
-        issue.update(body.model_dump())
+        issue.update(body.model_dump(exclude_unset=True))
         c.execute("UPDATE reviews SET data=? WHERE id=?", (json.dumps(rev), id))
     return next(i for i in review_view(rev)["issues"] if i["id"] == issue_id)
 
@@ -282,14 +315,19 @@ async def ai_review(id: str, body: AIInput):
         doc = require("documents", rev["document_id"])
         if doc.get("extraction_revision") != EXTRACTION_REVISION or rev.get("review_revision") != REVIEW_REVISION:
             raise HTTPException(409, "Historical extraction/review is unverified. Re-upload the original and run a new review before AI assistance.")
+        attempt = {**body.model_dump(), "attempt_id": str(uuid.uuid4()), "started_at": now()}
+        update_ai(id, {"ai_status": "IN_PROGRESS", "ai_error": None, "ai_audit": attempt})
         try:
             issues, audit = await assist(doc, rev, body)
+        except asyncio.CancelledError:
+            update_ai(id, {"ai_status": "OUTCOME_UNKNOWN", "ai_error": store.AI_INTERRUPTED})
+            raise
         except AIError as exc:
-            status = "BLOCKED_EXTERNAL" if "BLOCKED_EXTERNAL" in str(exc) else "ERROR"
+            status = "BLOCKED_EXTERNAL" if "BLOCKED_EXTERNAL" in str(exc) else ("OUTCOME_UNKNOWN" if exc.outcome_unknown else "ERROR")
             update_ai(id, {"ai_error": str(exc), "ai_status": status})
             raise HTTPException(502, str(exc)) from exc
         return update_ai(id, {"ai_status": "VERIFIED_CITATIONS_REQUIRES_REVIEW", "ai_error": None,
-                              "ai_audit": {**audit, "completed_at": now()}}, issues)
+                              "ai_audit": {**attempt, **audit, "completed_at": now()}}, issues)
 
 DIST = ROOT / "frontend" / "dist"
 if DIST.exists():

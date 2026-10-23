@@ -1,0 +1,8 @@
+Author: Ethan
+Command: .venv/bin/python -m pytest -q
+Result: 87 passed, 6 warnings, 2 subtests passed in 8.85s
+Warnings: PyMuPDF SWIG type metadata deprecations and Starlette's deprecated
+httpx TestClient compatibility path. No failed or skipped test is hidden.
+This is a normalized result summary. The full local log remains at
+artifacts/readiness/pytest-final.log; it includes environment paths and upstream
+warning source excerpts that are omitted from this public summary.

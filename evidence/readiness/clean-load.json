@@ -1,0 +1,19 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "requests": 3600,
+  "concurrency": 8,
+  "sustained_seconds": 15,
+  "rss_before_kib": 66432,
+  "rss_after_kib": 76576,
+  "history_rows": 1001,
+  "p50_ms": 14.62,
+  "p95_ms": 19.56,
+  "p99_ms": 26.68,
+  "upload_statuses": {
+    "201": 2,
+    "503": 14
+  },
+  "run": "artifacts/readiness-load-smb6p7x1",
+  "limits": "Bounded local workload; endpoint RSS samples do not establish absence of leaks. Not a long-duration reliability or legal accuracy benchmark."
+}

@@ -214,7 +214,7 @@ try:
             page.get_by_role('button',name='Accept',exact=True).click();expect(page.locator('.issue-card').first.locator('.issue-status')).to_have_text('accepted')
             page.get_by_label('Reviewer notes').fill('Discuss reciprocal audit scope with counsel.')
             page.get_by_role('button',name='Save note',exact=True).click()
-            expect(page.get_by_role('status')).to_contain_text('Reviewer update saved locally.')
+            expect(page.get_by_role('status').filter(has_text='Reviewer update saved locally.')).to_be_visible()
             page.locator('.issue-card').nth(1).click();page.get_by_role('button',name='Reject',exact=True).click()
             expect(page.locator('.issue-card').nth(1).locator('.issue-status')).to_have_text('rejected')
             page.get_by_role('button',name='Clear decision',exact=True).click()

@@ -1,14 +1,44 @@
 """Explicit-consent OpenRouter assistance. No offline code calls this module's network path."""
+import asyncio
 import json
+import math
 import os
 import uuid
 import httpx
 from .engine import validate_evidence
 
 class AIError(ValueError):
-    pass
+    outcome_unknown = False
+
+TOTAL_TIMEOUT_SECONDS = 120
+
+async def bounded_request(client, method, url, **kwargs):
+    async with client.stream(method, url, **kwargs) as response:
+        chunks, size = [], 0
+        async for chunk in response.aiter_bytes(chunk_size=65536):
+            size += len(chunk)
+            if size > 1_000_000:
+                raise AIError("Provider response exceeds the local size limit.")
+            chunks.append(chunk)
+        return httpx.Response(response.status_code, headers=response.headers, content=b"".join(chunks))
 
 async def assist(document, review, request):
+    attempt = {"transmitted": False}
+    try:
+        # HTTPX read timeouts bound each chunk, not the complete operation.
+        # https://docs.python.org/3.12/library/asyncio-task.html#asyncio.timeout
+        async with asyncio.timeout(TOTAL_TIMEOUT_SECONDS):
+            return await _assist(document, review, request, attempt)
+    except (AIError, TimeoutError) as exc:
+        message = str(exc) if isinstance(exc, AIError) else "AI operation exceeded its total time limit."
+        if attempt["transmitted"]:
+            message += " A provider charge may have occurred. Check provider activity before retrying; no automatic retry was made."
+        error = AIError(message)
+        error.outcome_unknown = attempt["transmitted"]
+        raise error from exc
+
+
+async def _assist(document, review, request, attempt):
     if not request.consent:
         raise AIError("Explicit permission to transmit contract text is required.")
     key = os.environ.get("OPENROUTER_API_KEY")
@@ -26,11 +56,11 @@ async def assist(document, review, request):
               'All interpretation requires attorney review. Return an empty issues list when no concern is supported.')
     try:
         async with httpx.AsyncClient(timeout=40, follow_redirects=False, trust_env=False) as client:
-            auth = await client.get("https://openrouter.ai/api/v1/auth/key", headers={"Authorization": f"Bearer {key}"})
+            auth = await bounded_request(client, "GET", "https://openrouter.ai/api/v1/auth/key", headers={"Authorization": f"Bearer {key}"})
             if auth.status_code != 200:
                 raise AIError(f"OpenRouter authentication failed (HTTP {auth.status_code}). No contract was sent.")
             # Fetch pricing without document text. Provider-only routing forbids silent fallback.
-            r = await client.get(f"https://openrouter.ai/api/v1/models/{request.model}/endpoints", headers={"Authorization": f"Bearer {key}"})
+            r = await bounded_request(client, "GET", f"https://openrouter.ai/api/v1/models/{request.model}/endpoints", headers={"Authorization": f"Bearer {key}"})
             if r.status_code != 200:
                 raise AIError(f"OpenRouter pricing/authentication request failed (HTTP {r.status_code}). No contract was sent.")
             endpoints = r.json().get("data", {}).get("endpoints", [])
@@ -42,6 +72,8 @@ async def assist(document, review, request):
                 pricing = endpoint.get("pricing", {})
                 # Fixed/image/web fees cannot be safely budgeted in this text-only adapter.
                 for name, cost in pricing.items():
+                    if not math.isfinite(float(cost or 0)) or float(cost or 0) < 0:
+                        raise AIError("Invalid provider pricing.")
                     if name not in {"prompt", "completion", "input_cache_read", "input_cache_write", "discount"} and float(cost or 0) > 0:
                         raise AIError("Provider has additional fees that cannot be bounded. Choose another provider explicitly.")
                 inp, out = float(pricing["prompt"]), float(pricing["completion"])
@@ -54,7 +86,8 @@ async def assist(document, review, request):
             if upper > request.max_cost_usd:
                 raise AIError(f"Conservative estimated cost ${upper:.4f} exceeds the ${request.max_cost_usd:.4f} budget. No contract was sent.")
             payload = {"model": request.model, "provider": {"only": [request.provider], "allow_fallbacks": False, "require_parameters": True, "max_price": {"prompt": price_in * 1_000_000, "completion": price_out * 1_000_000}}, "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}], "max_tokens": request.max_output_tokens, "temperature": 0, "response_format": {"type": "json_object"}}
-            r = await client.post("https://openrouter.ai/api/v1/chat/completions", headers={"Authorization": f"Bearer {key}"}, json=payload)
+            attempt["transmitted"] = True
+            r = await bounded_request(client, "POST", "https://openrouter.ai/api/v1/chat/completions", headers={"Authorization": f"Bearer {key}"}, json=payload)
             if r.status_code != 200:
                 raise AIError(f"OpenRouter review request failed (HTTP {r.status_code}). Your offline review is preserved.")
             body = r.json()
@@ -66,7 +99,7 @@ async def assist(document, review, request):
                 raise AIError("Provider response does not match the required issue format.")
     except AIError:
         raise
-    except (httpx.HTTPError, KeyError, ValueError, TypeError) as exc:
+    except (httpx.HTTPError, KeyError, ValueError, TypeError, AttributeError, IndexError) as exc:
         raise AIError("OpenRouter request or response validation failed. Your offline review is preserved.") from exc
     rules = {r["id"]: r for r in review["playbook_snapshot"]["rules"]}
     blocks = {b["id"]: b for b in document["blocks"]}
@@ -74,6 +107,8 @@ async def assist(document, review, request):
     for item in parsed["issues"]:
         if not isinstance(item, dict):
             raise AIError("Invalid AI issue rejected.")
+        if not all(isinstance(item.get(key), str) for key in ("rule_id", "block_id")):
+            raise AIError("AI returned unsupported source or rule references. Entire response rejected.")
         rule, block = rules.get(item.get("rule_id")), blocks.get(item.get("block_id"))
         if not rule or not block or not all(isinstance(item.get(f), str) and 0 < len(item[f]) <= 10000 for f in ["quote", "explanation", "negotiating_response"]):
             raise AIError("AI returned unsupported source or rule references. Entire response rejected.")

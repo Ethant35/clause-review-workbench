@@ -21,6 +21,7 @@ assert len(projects)==1, 'Expected one application directory'
 project=projects[0]
 with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
 env=os.environ.copy();env.pop('OPENROUTER_API_KEY',None);env.update(CRW_PORT=str(port))
+subprocess.run(['uv', 'sync', '--frozen', '--python', '3.12', '--no-dev'], cwd=project, check=True)
 log=(out/'package-deployment.log').open('w')
 p=subprocess.Popen(['bash','scripts/start.sh'],cwd=project,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
 (out/'processes.json').write_text(json.dumps([os.getpgrp(),p.pid]))

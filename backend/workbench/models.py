@@ -63,8 +63,14 @@ class ReviewInput(Strict):
     playbook_id: str
 
 class Decision(Strict):
-    status: Literal["accepted", "rejected", "unresolved"]
-    notes: str = Field(default="", max_length=10000)
+    status: Literal["accepted", "rejected", "unresolved"] | None = None
+    notes: str | None = Field(default=None, max_length=10000)
+
+    @model_validator(mode="after")
+    def nonempty_patch(self):
+        if not self.model_fields_set or any(getattr(self, key) is None for key in self.model_fields_set):
+            raise ValueError("Supply status or notes; null values are not supported")
+        return self
 
 class AIInput(Strict):
     consent: bool
