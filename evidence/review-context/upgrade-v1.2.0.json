@@ -1,0 +1,12 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "baseline": "v1.2.0",
+  "baseline_ref": "v1.2.0",
+  "checks": [
+    "v1.2.0 created original, review, decision and note",
+    "bundled recovery imports into a separate folder without changing old database",
+    "history, original, saved policy, decision and note remain; review gate follows extraction revision",
+    "explicit reprocess creates new results without copying or erasing old decisions"
+  ]
+}

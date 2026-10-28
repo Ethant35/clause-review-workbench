@@ -1,0 +1,4 @@
+Author: Ethan.
+Clean intended Git diff against 8cff50c: floor-guard: clean.
+Two exact reviewed assertion migrations retain independent controls: source-card multiplicity and revision-aware old-document review gate.
+19 focused floor tests passed, including exact, near-miss and removed-assertion controls.

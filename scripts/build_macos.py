@@ -26,6 +26,57 @@ def run(*args, **kwargs):
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def source_inventory(root):
+    """Return intended source files, using the index or an extracted source tree."""
+    root = Path(root).resolve()
+    probe = subprocess.run(['git', '-C', str(root), 'rev-parse', '--show-toplevel'],
+                           capture_output=True, text=True)
+    if probe.returncode == 0 and Path(probe.stdout.strip()).resolve() == root:
+        listed = subprocess.run(['git', '-C', str(root), 'ls-files', '-z'],
+                                check=True, capture_output=True).stdout
+        return {Path(os.fsdecode(item)) for item in listed.split(b'\0') if item}
+
+    # The published source archive is itself the allowlist when .git is absent.
+    # Limit fallback discovery to inputs copied into the app, not arbitrary files
+    # such as evidence, tests, build output or local tool state.
+    paths = set()
+    for directory in ('backend', 'playbooks', 'docs', 'licenses'):
+        base = root / directory
+        if not base.is_dir():
+            continue
+        for path in base.rglob('*'):
+            if (path.is_file() and not path.is_symlink() and
+                    '__pycache__' not in path.parts):
+                paths.add(path.relative_to(root))
+    paths.update(Path(name) for name in (
+        'LICENSE', 'README.md', 'PRIVACY.md', 'SECURITY.md',
+        'THIRD_PARTY_NOTICES.md', 'pyproject.toml', 'uv.lock',
+    ) if (root / name).is_file() and not (root / name).is_symlink())
+    return paths
+
+def bundle_sources(root):
+    """Select files needed at runtime and retained documentation/notices."""
+    root = Path(root).resolve()
+    inventory = source_inventory(root)
+    required = {Path(name) for name in (
+        'LICENSE', 'README.md', 'PRIVACY.md', 'SECURITY.md',
+        'THIRD_PARTY_NOTICES.md', 'pyproject.toml', 'uv.lock',
+    )}
+    missing = sorted(str(path) for path in required if path not in inventory)
+    if missing:
+        raise ValueError('Required app source files are missing from the package inventory: ' + ', '.join(missing))
+    selected = {
+        path for path in inventory
+        if ((path.parts[0] == 'backend' and path.suffix == '.py' and '__pycache__' not in path.parts) or
+            (path.parts[0] == 'playbooks' and path.suffix == '.yaml') or
+            path in required or path.parts[0] in {'docs', 'licenses'})
+    }
+    if not any(path.parts[0] == 'docs' for path in selected):
+        raise ValueError('No documentation files were found in the package inventory')
+    if not any(path.parts[0] == 'licenses' for path in selected):
+        raise ValueError('No license files were found in the package inventory')
+    return [root / path for path in sorted(selected)]
+
 def download(name, url, expected):
     path = CACHE / name
     if not path.exists():
@@ -66,16 +117,9 @@ def main():
         site = resources / 'python/lib/python3.12/site-packages'
         run('uv', 'pip', 'install', '--python', python, '--target', site, '--require-hashes', '--only-binary', ':all:', '-r', requirements)
         workbench = resources / 'workbench'; workbench.mkdir()
-        sources = []
-        for path in sorted((ROOT / 'backend').rglob('*.py')):
-            if '__pycache__' not in path.parts and ' ' not in path.name:
-                sources.append(path)
-        sources += sorted((ROOT / 'playbooks').glob('*.yaml'))
-        sources += [ROOT / name for name in ('LICENSE','README.md','PRIVACY.md','SECURITY.md','THIRD_PARTY_NOTICES.md','pyproject.toml','uv.lock')]
+        sources = bundle_sources(ROOT)
         for path in sources:
             target = workbench / path.relative_to(ROOT); target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(path,target)
-        shutil.copytree(ROOT / 'licenses', workbench / 'licenses')
-        shutil.copytree(ROOT / 'docs', workbench / 'docs')
         shutil.copytree(ROOT / 'frontend/dist', workbench / 'frontend/dist')
         shutil.copy2(ROOT / 'native/bootstrap.py', resources / 'bootstrap.py')
         run('xcrun', 'swiftc', '-swift-version', '5', '-O', '-target', 'arm64-apple-macosx13.0', ROOT / 'native/Workbench.swift', '-o', macos / 'Workbench')

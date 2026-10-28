@@ -1,3 +1,35 @@
+# Version 1.4.0 — contract interactions and saved review context
+
+Author: Ethan.
+
+- Recognize ordinary agreement expiry and written durations separately from
+  confidentiality survival. Conflicting dates, conditional wording and unsupported
+  qualifications remain review questions. Narrow early-termination wording does
+  not erase an otherwise definite base term.
+- Link multiple explicit liability-cap exceptions, including indemnification,
+  to the base cap and any supported separate limit. A cap exclusion alone does
+  not establish unlimited exposure. Read all linked passages and conditions.
+- Restore the saved review's playbook on return. Show the saved policy separately
+  from the policy selected for the next review. Start at the highest-priority
+  finding and distinguish adverse wording, missing provisions and unresolved meaning.
+- Replace the short sample with a complete synthetic workflow example. It illustrates
+  amendment risk, termination costs and category-specific liability limits.
+- Review revision is 5; extraction revision remains 5. Earlier reviews keep their
+  policy snapshots, decisions and notes and display a historical warning. A new
+  review starts without copied decisions. Reprocessing still creates a separate
+  document and preserves its original.
+- Both optional provider tests now require explicit opt-in; local acceptance sends
+  no provider request by default.
+
+Quit and back up before replacing the app. Keep the old app and backup for rollback.
+See [Mac installation, updates and removal](docs/macos-distribution.md). The supported
+scope remains one trusted local reviewer on the tested Apple Silicon Mac. The checks
+are bounded patterns; they do not establish general legal accuracy, OCR, successful
+live AI, VoiceOver or unfamiliar-user usability. See the [release qualification record](evidence/review-context/ACCEPTANCE.md)
+for the exact tests and downloadable-byte verification.
+
+---
+
 # Version 1.3.0 — Mac app and practical review workflow
 
 Author: Ethan.

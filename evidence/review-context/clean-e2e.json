@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-10-28T03:30:52.479373+00:00",
+  "run": "artifacts/run-f1ba9d07",
+  "results": [
+    {
+      "id": "CR-02",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-03",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-04",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-05",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-06",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-07",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-08",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-09",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-10",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-11",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-12",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-13",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-14",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-15",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-16",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-17",
+      "status": "PASS",
+      "detail": "No backend outbound socket connections or external browser requests during offline ingestion, review, corpus and exports; consent and missing-key gates verified."
+    },
+    {
+      "id": "CR-18",
+      "status": "BLOCKED_EXTERNAL",
+      "detail": "Live AI requires explicit authorization, CRW_ALLOW_LIVE_AI_TEST=1 and provider configuration. No provider request or fake response used."
+    },
+    {
+      "id": "CR-19",
+      "status": "BLOCKED_EXTERNAL",
+      "detail": "Provider rejection test requires explicit authorization and CRW_ALLOW_PROVIDER_REJECTION_TEST=1. No provider request made."
+    },
+    {
+      "id": "CR-20",
+      "status": "PASS",
+      "detail": "Verified against running application"
+    },
+    {
+      "id": "CR-EXTRA",
+      "status": "PASS",
+      "detail": "Real API conflict detection, literal script rendering, and retention cascade verified."
+    }
+  ]
+}

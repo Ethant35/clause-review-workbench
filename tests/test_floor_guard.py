@@ -61,3 +61,53 @@ def test_decision_copy_exception_preserves_actual_assertion(tmp_path, replacemen
     path.write_text((new if replacement == "exact" else new.replace("Dismissed", "Confirmed") if replacement == "wrong-state" else "pass") + "\n")
     result = subprocess.run(["node", str(GUARD), "--base", "HEAD"], cwd=tmp_path, capture_output=True)
     assert result.returncode == (0 if replacement == "exact" else 1)
+
+
+@pytest.mark.parametrize("replacement", ["exact", "near-miss", "removed"])
+def test_native_upgrade_revision_gate_exception_is_exact(tmp_path, replacement):
+    def git(*args):
+        subprocess.run(["git", *args], cwd=tmp_path, check=True, capture_output=True)
+    git("init", "-q")
+    (tmp_path / "tests").mkdir()
+    path = tmp_path / "tests/native_upgrade.py"
+    old = "assert client.post(f'/api/documents/{doc[\"id\"]}/reviews',json={'playbook_id':'commercial'}).status_code==409"
+    path.write_text(old + "\n")
+    git("add", ".")
+    git("-c", "user.name=Ethan", "-c", "user.email=test@example.invalid", "commit", "-qm", "baseline")
+    new = [
+        "extraction_is_stale=(baseline_health['extraction_revision'] != client.get('/api/health').json()['extraction_revision'])",
+        "rerun_response=client.post(f'/api/documents/{doc[\"id\"]}/reviews',json={'playbook_id':'commercial'})",
+        "assert rerun_response.status_code == (409 if extraction_is_stale else 201), (rerun_response.status_code, baseline_health)",
+    ]
+    if replacement == "exact":
+        replacement_text = "\n".join(new)
+    elif replacement == "near-miss":
+        replacement_text = "\n".join(new[:-1] + [new[-1].replace('else 201', 'else 409')])
+    else:
+        replacement_text = "\n".join(new[:-1] + ["pass"])
+    path.write_text(replacement_text + "\n")
+    result = subprocess.run(["node", str(GUARD), "--base", "HEAD"], cwd=tmp_path, capture_output=True)
+    assert result.returncode == (0 if replacement == "exact" else 1), result.stderr.decode()
+
+
+@pytest.mark.parametrize("replacement", ["exact", "near-miss", "removed"])
+def test_source_card_locator_exception_is_exact(tmp_path, replacement):
+    def git(*args):
+        subprocess.run(["git", *args], cwd=tmp_path, check=True, capture_output=True)
+    git("init", "-q")
+    (tmp_path / "tests").mkdir()
+    path = tmp_path / "tests/usability_frontend.py"
+    old = 'expect(page.locator(".finding-detail .source-card")).to_be_visible()'
+    path.write_text(old + "\n")
+    git("add", ".")
+    git("-c", "user.name=Ethan", "-c", "user.email=test@example.invalid", "commit", "-qm", "baseline")
+    new = 'expect(page.locator(".finding-detail .source-card").first).to_be_visible()'
+    if replacement == "exact":
+        replacement_text = new
+    elif replacement == "near-miss":
+        replacement_text = new.replace(".first", ".last")
+    else:
+        replacement_text = "pass"
+    path.write_text(replacement_text + "\n")
+    result = subprocess.run(["node", str(GUARD), "--base", "HEAD"], cwd=tmp_path, capture_output=True)
+    assert result.returncode == (0 if replacement == "exact" else 1), result.stderr.decode()

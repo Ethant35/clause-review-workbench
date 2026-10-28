@@ -124,7 +124,25 @@ for (const { file, text } of removed) {
 ];
     const exactDecisionLabelReplacement = file === 'tests/e2e.py' && decisionLabelPairs.some(([oldLine, newLine]) =>
       text.trim() === oldLine && added.some((line) => line.file === file && line.text.trim() === newLine));
-    if (!exactStatusReplacement && !exactDecisionLabelReplacement) flag('assertion-removed', file, text);
+    // Independently reviewed revision-aware migration. Old 1.2.0 documents
+    // remain blocked when extraction changed; 1.3.0 documents can be reviewed
+    // under the new analysis revision, with new decisions checked separately.
+    const nativeUpgradeOld = "assert client.post(f'/api/documents/{doc[\"id\"]}/reviews',json={'playbook_id':'commercial'}).status_code==409";
+    const nativeUpgradeNew = [
+      "extraction_is_stale=(baseline_health['extraction_revision'] != client.get('/api/health').json()['extraction_revision'])",
+      "rerun_response=client.post(f'/api/documents/{doc[\"id\"]}/reviews',json={'playbook_id':'commercial'})",
+      "assert rerun_response.status_code == (409 if extraction_is_stale else 201), (rerun_response.status_code, baseline_health)",
+    ];
+    const exactNativeUpgradeReplacement = file === 'tests/native_upgrade.py' && text.trim() === nativeUpgradeOld
+      && nativeUpgradeNew.every((expected) => added.some((line) => line.file === file && line.text.trim() === expected));
+    // A real review can render several source cards. Keep the visibility check
+    // attached to one rendered card instead of weakening it to any/none.
+    const oldSourceCard = 'expect(page.locator(".finding-detail .source-card")).to_be_visible()';
+    const newSourceCard = 'expect(page.locator(".finding-detail .source-card").first).to_be_visible()';
+    const exactSourceCardReplacement = file === 'tests/usability_frontend.py' && text.trim() === oldSourceCard
+      && added.some((line) => line.file === file && line.text.trim() === newSourceCard);
+    if (!exactStatusReplacement && !exactDecisionLabelReplacement &&
+        !exactNativeUpgradeReplacement && !exactSourceCardReplacement) flag('assertion-removed', file, text);
   }
 }
 

@@ -5,7 +5,7 @@ Clause Review Workbench is a local browser application for commercial contract r
 
 **This is a contract-review aid, not legal advice or a substitute for attorney review.** Deterministic checks are narrow and return uncertainty where the configured conditions do not establish a result. Synthetic acceptance does not establish universal legal accuracy.
 
-This v1.3.0 release is qualified only for the documented single-user local macOS workflow. The available tests do not establish broad contract-analysis accuracy, suitability for unsupervised legal decisions, or qualification of optional AI output.
+The supported deployment is a single-user local macOS workflow; see the version-specific qualification record in the release notes. The available tests do not establish broad contract-analysis accuracy, suitability for unsupervised legal decisions, or qualification of optional AI output.
 
 Repository: [Ethant35/clause-review-workbench](https://github.com/Ethant35/clause-review-workbench). Original source: MIT. Bundled distribution includes AGPL components; see [notices](THIRD_PARTY_NOTICES.md). Author: Ethan.
 
@@ -58,7 +58,7 @@ Development UI: [localhost port 5173](http://127.0.0.1:5173), with `/api` proxie
 
 1. Upload a document and inspect extracted text and the original. PDF findings link to a page. DOCX/text findings use paragraph/block or line locations. Original bytes remain unchanged. PDFs with a logo or another small raster image can be extracted only when each page also contains text; compare every listed image region against the extracted text before confirming the visual check. The app does not read image text.
 2. Select Commercial contracts or Mutual NDA, or create/import a playbook. Duplicate a playbook and use common settings for priority, required clauses and reviewer guidance. Advanced YAML edits matching patterns. Run review.
-3. Filter findings, inspect source text, and distinguish observed language from interpretation. Required missing provisions are explicitly marked as absence-based, with no quote.
+3. Filter findings and inspect source text. Each finding distinguishes configured adverse wording, a provision not located, or an unresolved interpretation. The saved policy is shown separately from the policy selected for a new review. Required missing provisions have no invented quote.
 4. Read “Related clauses and effect” when present. Inspect the cap, exception, definition, termination cost or qualified reference together. Each linked passage opens in source. A located reference is not a resolved legal conclusion.
 5. Confirm a finding, dismiss it, or leave it undecided; save reviewer notes. These decisions concern the flagged issue and do not approve or change contract terms. Open previous reviews after a restart. Rerunning creates a new review with a new policy snapshot.
 6. Open “Saved playbook alternatives and fallback” for the selected finding. These positions come from the saved policy, not the contract or a verified legal standard. Later policy edits do not change earlier review guidance.
@@ -72,7 +72,7 @@ Optional AI assistance is not qualified for legal accuracy. Credentials are neve
 
 The server checks authentication and endpoint prices before sending extracted blocks and playbook guidance. It validates every returned quote; invalid citations reject the response. AI interpretations always need human review. See [PRIVACY.md](PRIVACY.md) and [ARCHITECTURE.md](ARCHITECTURE.md). Authentication and pricing behavior follows the [OpenRouter API reference](https://openrouter.ai/docs/api/reference/overview).
 
-To run optional live acceptance against synthetic content, provide `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `OPENROUTER_PROVIDER` to the test process. This authorizes a bounded real request (test budget $0.10). Missing configuration is `BLOCKED_EXTERNAL`, never PASS. CR-19 always makes a real authentication request with a deliberately invalid credential and sends no contract.
+Optional provider acceptance is disabled by default. After separately authorizing the provider, synthetic payload and $0.10 test budget, set `CRW_ALLOW_LIVE_AI_TEST=1` with `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `OPENROUTER_PROVIDER`. The separate CR-19 invalid-credential authentication test requires `CRW_ALLOW_PROVIDER_REJECTION_TEST=1`; it sends no contract. Without the corresponding opt-in, each test is `BLOCKED_EXTERNAL`, never PASS. Credentials alone do not authorize transmission.
 
 ## Local acceptance and packaging
 
@@ -92,6 +92,8 @@ To run optional live acceptance against synthetic content, provide `OPENROUTER_A
 ```
 
 Acceptance includes Python tests and real HTTP, Playwright Chromium, SQLite, DOCX/PDF parsing, and export checks. The v1.2.0 suite was reported as 87 pytest tests plus 2 unittest-style subtests; this count is a test inventory, not a legal-accuracy score. Results go to `artifacts/`; checked release evidence is in `evidence/` and [ACCEPTANCE.md](ACCEPTANCE.md). GitHub Actions are intentionally omitted and disabled at the repository level by owner instruction. Equivalent release checks run locally.
+
+The explicit, project-local [verification procedure](.agents/verify-clause-review-workbench/SKILL.md) maps intake, policy selection, source evidence, decisions, exports, history and native launch to the existing harnesses. Provider tests are blocked by default, including the invalid-credential rejection test. A separately authorized run must explicitly set `CRW_ALLOW_PROVIDER_REJECTION_TEST=1` or `CRW_ALLOW_LIVE_AI_TEST=1`; available credentials alone do not enable them.
 
 The deployment archive includes source, dependency lockfiles, built frontend, and `scripts/start.sh`, but no installed Python environment. After extracting it, run `uv sync --frozen --python 3.12 --no-dev`, then `./scripts/start.sh`. Dependency installation needs network access; subsequent offline reviews require no external network. Docker is not qualified by this release. The supported deployment evidence is limited to a single-user local macOS setup.
 

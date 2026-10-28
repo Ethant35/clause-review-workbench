@@ -45,6 +45,16 @@ It does not replace the original document or copy old decisions into new results
 Run a new review on the new record. Backups contain contract content; protect them
 as you protect the originals.
 
+## Remove the app
+
+Quit the launcher, then move Clause Review Workbench from Applications to Trash.
+This leaves saved contracts and reviews in the data folder. To remove those too,
+use **Show saved data** before quitting, verify the folder, and remove it only after
+saving any needed backup. If you used a restored or custom data location, that
+folder is separate from the default Application Support folder. Exports, backups
+and system backup copies remain until you remove them separately. Remove a saved
+AI key using **Optional AI key…** before uninstalling if you no longer need it.
+
 ## Optional AI
 
 Use **Optional AI key…** in the native launcher to store or remove an OpenRouter

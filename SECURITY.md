@@ -4,7 +4,7 @@ Author: Ethan
 
 Run on loopback for one trusted local user. No authentication or user isolation is provided. Any local process with access to the service can read or delete data. Do not expose this service to untrusted users or a public network.
 
-The v1.2.0 readiness evidence covers a single-user local macOS workflow. It does not establish multi-user or network security, broad legal accuracy, or qualification of optional AI for legal analysis.
+The documented release evidence covers a single-user local macOS workflow. It does not establish multi-user or network security, broad legal accuracy, or qualification of optional AI for legal analysis.
 
 Controls include content-sniffed upload parsing; a 10 MiB file limit; 200 PDF pages; 30 MB DOCX expanded size; 300,000 extracted characters; 5,000 blocks; bounded parsing subprocesses; bounded regex matching; UUID storage paths; SQL parameterization; safe React text rendering; a restrictive Content Security Policy on the production server; trusted local Host checks; and rejection of cross-site writes. The API bounds request bodies and active work; body-read timeout returns 408, oversize requests return 413, and admission rejection returns 503 with `Retry-After: 2`. These are per-process availability limits, not defenses against a malicious same-user process. Malformed formats, macro documents, XML entity attacks, unsupported DOCX features, and image-only or partially textless PDFs are rejected. Original files should still be opened only in patched document viewers.
 
