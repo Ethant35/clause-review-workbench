@@ -1,0 +1,5 @@
+interface:
+  display_name: "Verify Clause Review Workbench"
+  short_description: "Run this app's local workflow checks"
+policy:
+  allow_implicit_invocation: false

@@ -4,7 +4,7 @@ Author: Ethan
 
 Documents and reviews stay in local storage by default. There is no automatic analytics, telemetry, or background provider request. Offline parsing, reviews, exports, and playbook editing work without credentials. The browser uses only local assets.
 
-The v1.2.0 readiness evidence is limited to a single-user local macOS workflow. It does not establish broad legal accuracy or qualify optional AI for legal analysis.
+The documented release evidence is limited to a single-user local macOS workflow. It does not establish broad legal accuracy or qualify optional AI for legal analysis.
 
 `CRW_DATA_DIR` selects storage (default `.data` in the working directory). The directory and source files use restrictive permissions. SQLite is not application-encrypted; use full-disk encryption and an appropriate local account. Operating-system backups, swap, browser downloads, and exported reports may retain copies.
 

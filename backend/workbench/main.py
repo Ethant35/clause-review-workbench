@@ -94,7 +94,7 @@ async def lifespan(app):
                 pass
             diagnostics.close()
 
-app = FastAPI(title="Clause Review Workbench", version="1.3.0", lifespan=lifespan, docs_url=None, redoc_url=None)
+app = FastAPI(title="Clause Review Workbench", version="1.4.0", lifespan=lifespan, docs_url=None, redoc_url=None)
 app.include_router(usability_intake_router)
 app.include_router(playbook_settings_router)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]"])

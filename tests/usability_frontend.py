@@ -79,11 +79,12 @@ def main():
                 expect(page.get_by_role("heading", level=2, name="synthetic-sample.txt")).to_be_visible(timeout=15000)
                 page.get_by_role("button", name="Run local review").click()
                 expect(page.get_by_text("Review complete.", exact=True)).to_be_visible(timeout=20000)
+                page.screenshot(path=RUN / "sample-review.png", full_page=True)
                 finding = page.locator(".issue-card").first
                 expect(finding).to_be_visible()
                 finding.click()
                 expect(page.locator(".finding-detail h3")).to_be_visible()
-                expect(page.locator(".finding-detail .source-card")).to_be_visible()
+                expect(page.locator(".finding-detail .source-card").first).to_be_visible()
                 quote = page.locator(".finding-detail .source-card > p").first.inner_text()
                 expect(page.get_by_role("button", name="Confirm finding")).to_be_visible()
                 page.get_by_role("button", name="View in source").first.click()

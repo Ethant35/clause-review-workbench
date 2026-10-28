@@ -285,7 +285,10 @@ try:
             assert client.get('/api/documents/'+doc['id']).status_code==200
             assert NETWORK.read_text().strip(),'Must be an actual provider request'
             return 'Real OpenRouter request with deliberately invalid credential rejected; source and deterministic review preserved.'
-        check('CR-19',invalid_ai)
+        if os.environ.get('CRW_ALLOW_PROVIDER_REJECTION_TEST') == '1':
+            check('CR-19',invalid_ai)
+        else:
+            results.append({'id':'CR-19','status':'BLOCKED_EXTERNAL','detail':'Provider rejection test requires explicit authorization and CRW_ALLOW_PROVIDER_REJECTION_TEST=1. No provider request made.'})
         def fresh():
             freshdata=RUN/'fresh';start(data=freshdata)
             assert client.get('/api/documents').json()==[]
@@ -321,13 +324,13 @@ try:
             return 'Real API conflict detection, literal script rendering, and retention cascade verified.'
         check('CR-EXTRA',additional)
         key=os.environ.get('OPENROUTER_API_KEY');model=os.environ.get('OPENROUTER_MODEL');provider=os.environ.get('OPENROUTER_PROVIDER')
-        if key and model and provider:
+        if os.environ.get('CRW_ALLOW_LIVE_AI_TEST') == '1' and key and model and provider:
             def live_ai():
                 start(key=key);doc=upload(ROOT/'corpus/contracts/12-ambiguous-liability-cap.txt');rev=review(doc)
                 r=client.post(f"/api/reviews/{rev['id']}/ai",json={'consent':True,'model':model,'provider':provider,'max_cost_usd':0.10});r.raise_for_status();validate(doc,r.json());assert r.json()['ai_status']=='VERIFIED_CITATIONS_REQUIRES_REVIEW'
             check('CR-18',live_ai)
         else:
-            results.append({'id':'CR-18','status':'BLOCKED_EXTERNAL','detail':'Authorized OPENROUTER_API_KEY, OPENROUTER_MODEL and OPENROUTER_PROVIDER are not all configured. No fake response used.'})
+            results.append({'id':'CR-18','status':'BLOCKED_EXTERNAL','detail':'Live AI requires explicit authorization, CRW_ALLOW_LIVE_AI_TEST=1 and provider configuration. No provider request or fake response used.'})
         browser.close()
 finally:
     stop();client.close();REGISTRY.write_text('[]')
