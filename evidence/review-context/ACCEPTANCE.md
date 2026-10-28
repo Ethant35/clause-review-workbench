@@ -40,6 +40,13 @@ repaired with positive, negative, narrow-exception and source-anchor controls.
 The floor guard retains its general assertion-removal check with two exact reviewed
 migrations and six positive/near-miss/removal tests. No tests were disabled to pass.
 
+One final source-archive browser run lost its active browser page after a click
+stability timeout, while its API-only checks still passed. The failure JSON and
+logs are retained privately. An isolated rerun of the exact same archive and test
+code passed all eighteen local checks without changing assertions or timeouts.
+The root cause of the browser interruption is not established; the passing run
+emitted macOS CVDisplayLink warnings. Installed-app browser acceptance also passed.
+
 Results produced before the implementation commit record the preceding HEAD as a
 baseline; this does not mean the checkout was unchanged. Bundle hashes and the
 sealed archive identify the tested contents separately. The archive has Ethan
