@@ -1,3 +1,55 @@
+# Version 1.4.0 complete — October 27, 2026
+
+Author: Ethan.
+
+Production release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.4.0
+PR #8 merged: https://github.com/Ethant35/clause-review-workbench/pull/8
+Immutable tag commit: 03b6dbaed1fac5bc2cad833a20be0770d7bcf895.
+Later commits add evidence only; sealed app/DMG/source bytes are unchanged.
+
+Signed, Apple-notarized and stapled app/DMG passed local and public downloaded
+quarantine, codesign, Gatekeeper, syspolicy_check, AppTranslocation, actual browser
+sample/source/decision/export/reload and shutdown. All five public assets were
+fetched without authentication and matched hashes. DMG SHA256:
+023546384d2654992209f461834223d8737a6b8c4f8be3c27c3dfd5a53e7821c.
+Source archive SHA256:
+ba31694d8df8aae43b35c79bc62c3c4ac0a9263532bcb1f346cb1d3401e2bf0f.
+Exact PyMuPDF/MuPDF sources and checksums accompany the release.
+
+Final clean source: 152 Python tests +10 subtests; browser/API18 pass with both
+provider tests blocked. Corpus12/12, interactions98/98, adversarial83/83,
+frontend readiness14/14, zoom9/9, sample8 checks, saved policy context, native6
+checks, v1.2.0/v1.3.0 original/review/policy/decision preservation all pass.
+One source-browser interruption is retained and disclosed; an isolated unchanged
+rerun passed. No test timeout or assertion was weakened to conceal it.
+Independent review, targeted regression controls and clean intended-diff floor
+checks passed. Narrow test migrations have exact paired guards and negative tests.
+
+Evidence: evidence/review-context/ACCEPTANCE.md and adjacent curated JSON.
+Detailed local runs: artifacts/verification-20261027. Final artifacts remain in
+/private/tmp/crw-release-1.4.0-20261027; downloaded bytes in
+/private/tmp/crw-public-1.4.0-20261027; installed public test data in
+/private/tmp/crw-public-install-1.4.0-20261027. Preserve until no longer needed.
+General legal accuracy, OCR, complete extraction, live AI success, VoiceOver,
+other platforms/browsers and unfamiliar-user usability remain unqualified.
+No further required implementation or release work remains for this stated scope.
+
+Both assistants completed and were interrupted. All owned test/native processes
+exited; ports closed. Process registry cleared. Checker cell3 terminated at close.
+Actual account usage49%->74% used (51%->26% remaining), same reset_at1793599137;
+no in-work reset or <=5% remaining trigger. No reset/credit/provider bypass.
+No provider calls during this continuation. GitHub Actions disabled; zero runs.
+
+Unrelated duplicate files, shared skills symlink and broken refs/heads/main 2 are
+preserved. That pre-existing ref blocked a normal fetch. A clean temporary clone
+fetched merged main, then git bundle unbundle supplied the verified commit; only
+origin/main was advanced and local main fast-forwarded. No unrelated ref was edited.
+No global config or hooks changed. No user data changed. Final goal completion
+is recorded through the actual existing production goal, never a duplicate.
+Earlier checkpoints below are historical and superseded by this completion record.
+
+---
+
 # Active production continuation — October 27, 2026
 
 Author: Ethan.

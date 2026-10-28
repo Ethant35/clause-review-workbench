@@ -3,8 +3,8 @@
 Author: Ethan. Tested October 27, 2026.
 
 This release targets one trusted local contract reviewer on the tested macOS
-27.2 arm64 system, with Chromium for browser checks. The app bundles Python3.12.14
-and locked dependencies. The macOS13 deployment target is a loader minimum,
+27.2 arm64 system, with Chromium for browser checks. The app bundles Python 3.12.14
+and locked dependencies. The macOS 13 deployment target is a loader minimum,
 not a claim that older systems were tested.
 
 ## Behavior and evidence
@@ -55,14 +55,24 @@ notices remain intact. Screenshot author metadata was not verified.
 
 ## Distribution
 
-Developer ID: Ethan Tarnarider, TeamZ2SL92S4B6. Apple accepted app submission
+Developer ID: Ethan Tarnarider, Team Z2SL92S4B6. Apple accepted app submission
 2ecb3433-ce20-4930-8ff5-a8359a68d6d1 and DMG submission
 48d5b5ad-c993-48d7-941d-8d0d7b28eac8. Both have stapled tickets. The installed copy
 passed deep strict codesign, Gatekeeper and syspolicy_check, then launched through
 AppTranslocation. Source, finding decision, export, reload and shutdown passed.
 Exact PyMuPDF/MuPDF corresponding sources accompany the release. Checksums are
-in release-hashes.json. Publication and public-download acceptance are the remaining
-gates at this pre-publication checkpoint; local acceptance alone is not public proof.
+in release-hashes.json. Version 1.4.0 was published from merged commit
+03b6dbaed1fac5bc2cad833a20be0770d7bcf895 through PR #8. All five public assets were
+fetched without authentication and matched the local sealed checksums and GitHub
+asset digests. The public DMG was mounted read-only, copied into an isolated
+Applications folder, quarantined and launched through AppTranslocation. Signature,
+tickets, Gatekeeper, syspolicy_check, sample/source/decision/export/reload and clean
+shutdown passed. See public-download.json and public-installed.json.
+
+The immutable release tag and artifacts remain at the tested bytes. This later
+commit records public evidence only. The signed native code and source archive
+are unchanged. The source archive's 153 files matched the implementation at
+publication; raw evidence is retained outside it.
 
 ## Limits
 
@@ -73,7 +83,7 @@ The unchanged public Common Paper documents test PDF layout, not representative
 executed-contract accuracy. Extraction warnings and the manual PDF comparison
 remain required. Source matching proves correspondence, not legal significance.
 
-No live provider request ran in the October27 qualification. A prior October25
+No live provider request ran in the October 27 qualification. A prior October 25
 legacy test made one rejected invalid-key request; that led to the explicit opt-in
 fix. No credentials or real contracts were sent in that test. Semgrep was not rerun;
 its existing triage, timeouts and partial coverage remain disclosed in
