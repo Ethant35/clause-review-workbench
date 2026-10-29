@@ -1,3 +1,26 @@
+# 1.5.1 — bounded review-assistance release
+
+Author: Ethan. October 29, 2026.
+
+Includes the merged UX fixes: distinct document references, source-check readiness,
+truthful DOCX timestamps, retention wording, startup diagnostics and narrow buttons.
+The commercial policy 1.0.1 repairs explicit without-cause termination detection
+and longer monetary-cap wording. Negated/conditional termination rights cannot
+satisfy the unrestricted-right check. Analysis revision is 6; extraction remains 6.
+On upgrade the corrected policy is added separately. Select version 1.0.1 for new
+reviews; saved/custom policies, decisions and historical snapshots are preserved.
+
+Supported formats and 18 commercial / 6 NDA categories are frozen in
+evaluation/release-contract.json. The legal-review packet separates extraction,
+detection and interpretation and reserves four cases from project tuning.
+Independent qualified legal acceptance remains pending. Known benchmark coverage
+gaps remain; no general legal-accuracy, OCR or complete accessibility claim.
+
+Software qualification and exact download hashes are recorded in evidence/release-1.5.1.
+This section is a source description until public installed acceptance is recorded.
+
+---
+
 # Version 1.4.0 — contract interactions and saved review context
 
 

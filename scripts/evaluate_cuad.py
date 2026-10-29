@@ -1,6 +1,6 @@
 """Offline diagnostic against independent CUAD test annotations. Author: Ethan.
 
-No model calls, downloads, threshold tuning, or legal-risk gold labels. Input is
+No model calls, downloads, or legal-risk gold labels. The test split is now exposed development data. Input is
 the upstream data.zip, verified before parsing. See docs/legal-evaluation.md.
 """
 import argparse
@@ -95,7 +95,7 @@ def evaluate(path):
     return {"author": "Ethan", "dataset_author": "The Atticus Project; Hendrycks, Burns, Chen and Ball",
             "source": "https://github.com/The-Atticus-Project/cuad/blob/main/data.zip",
             "license": "CC BY 4.0", "archive_sha256": ARCHIVE_SHA256,
-            "split": "All 102 contracts in upstream test.json, no sampling or tuning on these results",
+            "split": "All 102 contracts in upstream test.json; exposed development diagnostic after targeted repairs, not held-out performance",
             "contracts_total": len(data), "contracts_completed": len(data) - len(failures),
             "failures": failures, "category_counts": {k: dict(v) for k, v in counts.items()},
             "playbook_sha256": hashlib.sha256(playbook_bytes).hexdigest(),

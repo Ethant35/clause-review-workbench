@@ -6,7 +6,7 @@ reference, or mixed scope changes its meaning. Such cases require human review.
 import regex
 
 EXTRACTION_REVISION = 6
-REVIEW_REVISION = 5
+REVIEW_REVISION = 6
 LEGACY_WARNING = "Historical review: not verified by current extraction or analysis checks. Use the retained original to create a new review; existing results and decisions are preserved."
 
 
@@ -25,6 +25,11 @@ def assignment_prohibition(text):
 
 def context_reason(rule_id, text, *, adverse_match=False):
     """Return a reason to abstain; never infer the opposite legal conclusion."""
+    if rule_id == "termination-convenience" and search(
+        r"\b(?:neither party|no party|may not|shall not|must not|cannot|no right to)\b.{0,80}\bterminat"
+        r"|\bterminat\w*.{0,100}\bonly (?:for|if|upon)\b", text
+    ):
+        return "A negated or conditional termination right does not establish an unrestricted right to terminate."
     obligation_text = text
     if rule_id == "indemnification" and adverse_match and search(r"\bobligations (?:are|shall be) uncapped\b", text):
         # An affirmative uncapped obligation remains an adverse finding when a

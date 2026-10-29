@@ -393,7 +393,7 @@ function App() {
         </>}
       </section>
     </main>
-    <footer className="app-footer"><span>Clause Review Workbench 1.5.0</span><span>Review aid only. Not legal advice; attorney review required.</span><button className="text-button onboarding-replay" onClick={replayOnboarding}>Getting started</button></footer>
+    <footer className="app-footer"><span>Clause Review Workbench 1.5.1</span><span>Review aid only. Not legal advice; attorney review required.</span><button className="text-button onboarding-replay" onClick={replayOnboarding}>Getting started</button></footer>
     {playbookModal && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setPlaybookModal(false); }}><section ref={playbookDialog} className="playbook-modal" role="dialog" aria-modal="true" aria-labelledby="playbook-title"><PlaybookEditor editing={!!editingPlaybookId} settings={playbookSettings} setSettings={setPlaybookSettings} selectedRuleId={selectedRuleId} setSelectedRuleId={setSelectedRuleId} advanced={advancedPlaybook} setAdvanced={setAdvancedPlaybook} yaml={playbookText} setYaml={setPlaybookText} error={playbookError} busy={busy} onClose={() => setPlaybookModal(false)} onSave={() => void (playbookSettings && !advancedPlaybook ? savePlaybookSettings() : savePlaybook())} /></section></div>}
   </div>;
 }

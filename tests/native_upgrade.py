@@ -18,7 +18,7 @@ import httpx
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('app',type=Path)
-parser.add_argument('--baseline', choices=('v1.2.0','v1.3.0','v1.4.0'), default='v1.2.0',
+parser.add_argument('--baseline', choices=('v1.2.0','v1.3.0','v1.4.0','v1.5.0'), default='v1.2.0',
                     help='release to create the original review with (default: v1.2.0)')
 args=parser.parse_args()
 baseline_ref={'v1.2.0':'v1.2.0',
@@ -26,7 +26,8 @@ baseline_ref={'v1.2.0':'v1.2.0',
               # local tag ref is not. Pin the verified release commit so the
               # update test does not require a network fetch.
               'v1.3.0':'e1fa5dcad0e1e5be0571f755006fa0abc6c6b19b',
-              'v1.4.0':'03b6dbaed1fac5bc2cad833a20be0770d7bcf895'}[args.baseline]
+              'v1.4.0':'03b6dbaed1fac5bc2cad833a20be0770d7bcf895',
+              'v1.5.0':'3fc975abb5df6fff63794357b7ae1e58dc4a7af1'}[args.baseline]
 work=Path(tempfile.mkdtemp(prefix='native-upgrade-',dir=ROOT/'artifacts'))
 old=work/args.baseline;old.mkdir()
 with tarfile.open(fileobj=BytesIO(subprocess.check_output(['git','archive',baseline_ref],cwd=ROOT))) as archive:archive.extractall(old,filter='data')

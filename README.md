@@ -1,7 +1,9 @@
 # clause-review-workbench
 
-Version 1.5.0 adds clean contract revision comparison and stronger extraction
-checks. See [revision comparison](docs/revision-comparison.md)
+Version 1.5.1 includes clearer document identity and source-check guidance, truthful
+export timestamps, and targeted commercial-policy matching repairs. On upgrade,
+select Commercial contracts 1.0.1 for new reviews; saved policies and reviews remain
+unchanged. Version 1.5.0 added clean revision comparison and extraction checks. See [revision comparison](docs/revision-comparison.md)
 for the workflow and [external-label evaluation](docs/legal-evaluation.md) for
 measured clause-detection gaps. No independent legal-quality acceptance is claimed.
 

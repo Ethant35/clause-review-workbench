@@ -103,3 +103,59 @@ Do not use the above test results for tuning and then describe a rerun as held o
 
 This protocol is prepared, not executed. No paid reviewer engagement or external
 transmission is authorized or initiated by this work.
+
+
+## 1.5.1 bounded completion pass
+
+The three-axis frozen rubric and software release gates are in
+`evaluation/release-contract.json`. No formats or rule categories were added or
+withdrawn. The 18 commercial and 6 NDA categories remain the supported screening
+scope. Every import, citation, preserved-review and installed-release requirement
+remains a software gate; legal-quality acceptance is a separate pending gate.
+
+The previously exposed CUAD test split is now development evidence, not held out.
+Two demonstrated misses in the complete CENTRACK hosting agreement were repaired:
+an explicit monetary cap beyond the short matching window and an express
+without-cause termination right. Negative controls also exposed and now block
+negated rights and heading/notice sentences being combined into an acceptable
+termination result. This changes matching behavior; saved snapshots are unchanged.
+Commercial policy 1.0.1 is added alongside older saved policies on upgrade. Select
+it explicitly for new reviews. Analysis revision 6 marks old results historical.
+
+The rerun uses all 102 previously exposed contracts, with no exclusions. Counts
+are below; remaining misses and label mismatches are retained, not declared solved.
+These counts do not establish precision or recall of legal risk because category
+scope differs and independent scope adjudication has not occurred.
+
+| Category | Located / labeled present | Missed | Located / labeled absent |
+| --- | ---: | ---: | ---: |
+| Governing Law | 83 / 83 | 0 | 6 / 19 |
+| Cap On Liability | 29 / 44 | 15 | 10 / 58 |
+| Anti-Assignment | 62 / 72 | 10 | 5 / 30 |
+| Termination For Convenience | 15 / 29 | 14 | 20 / 73 |
+
+The full new record is `evidence/release-1.5.1/cuad-development.json`; the original
+October 28 record is preserved. Do not describe the comparison as independent
+held-out improvement. False positives/negatives above are label-alignment terms,
+not adjudicated legal errors. No stronger legal-quality claim follows from release.
+
+The downloadable `legal-review-packet-1.5.1.zip` contains the fixed rubric, blank
+blind worksheets, one complete exposed CUAD development context, four reserved
+complete CUAD contexts outside the exposed test split, two full public Common Paper
+cover-and-standard-terms templates, and separate exact-offset external reference
+labels. The original/exhibit completeness of CUAD contexts must be verified by a
+human before substantive legal acceptance. Common Paper templates have unfilled
+business terms; reviewers must not invent client context.
+
+The four reserved cases were selected by a fixed hash rule before fixes, were not
+run through the app, and were not used for tuning. They are held out from this
+project, not asserted unseen in model training. Reference labels establish only
+provision identification. Additional source-reading notes are explicitly provisional
+implementer-authored judgments, never independent legal gold. Reviewers see the
+blind sources and rubric first, lock judgments, and then compare references/app
+output. Consequential disagreements need a second qualified reviewer.
+
+Reproduce the packet locally with `scripts/prepare_legal_review.py` and the pinned
+archive. No qualified human reviewer was available/engaged in this session; all
+independent legal interpretation, client materiality and enforceability acceptance
+remain PENDING. No confidential documents or paid review calls were used.

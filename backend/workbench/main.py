@@ -84,6 +84,15 @@ async def lifespan(app):
         for path in (ROOT / "playbooks").glob("*.yaml"):
             if not store.get("playbooks", path.stem):
                 save_playbook(path.stem, path.read_text())
+            elif path.stem == "commercial":
+                # Offer the corrected built-in policy alongside saved/custom
+                # policies. Never rewrite a user's policy or a past snapshot.
+                latest = parse_playbook(path.read_text())
+                current = store.get("playbooks", path.stem)
+                if current["version"] != latest.version:
+                    upgrade_id = f"commercial-{latest.version}"
+                    if not store.get("playbooks", upgrade_id):
+                        save_playbook(upgrade_id, path.read_text())
         task = asyncio.create_task(retention_loop())
         try:
             yield

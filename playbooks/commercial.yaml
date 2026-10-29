@@ -1,6 +1,6 @@
 schema_version: 1
 name: Commercial contracts
-version: 1.0.0
+version: 1.0.1
 description: Illustrative buyer-side commercial positions. Rule matches are narrow
   screening results, not legal advice. Tailor required rules and jurisdiction before
   use.
@@ -133,6 +133,7 @@ rules:
   fallback_language: null
   presence:
   - convenience
+  - (?:may|can|right to)\s+terminate\b.{0,160}(?:without cause|for (?:any|no) reason|at will)
   acceptable_all:
   - - (?:either|each) party
   - - 30.{0,12}days?.{0,30}notice|30.day.{0,20}notice
@@ -176,7 +177,7 @@ rules:
     on fees paid or payable in the preceding 12 months.'
   fallback_language: null
   presence:
-  - ^(?!.*(?:indemn|cap does not apply|exception)).*liability.{0,120}(?:cap|limit|exceed)
+  - ^(?!.*(?:indemn|cap does not apply|exception)).*liability.{0,400}(?:cap|limit|exceed)
   acceptable_all:
   - - (?:capped|not exceed|limited to).{0,100}(?:the )?fees (?:paid|payable)
   - - (?:preceding|prior|previous|last) 12 months|12 months before

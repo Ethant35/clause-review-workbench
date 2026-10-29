@@ -1,0 +1,121 @@
+{
+  "author": "Ethan",
+  "version": "1.0",
+  "frozen_date": "2026-10-29",
+  "base_commit": "ff6fb8060939c9a806c201f995111f0be7b68a81",
+  "formats": [
+    "UTF-8 TXT",
+    "DOCX literal body/table text subject to current parser restrictions",
+    "searchable PDF with enforced visual gate where indicated"
+  ],
+  "rules": {
+    "commercial": {
+      "ids": [
+        "confidentiality-mutual",
+        "confidentiality-exclusions",
+        "permitted-disclosures",
+        "term-expiration",
+        "automatic-renewal",
+        "termination-convenience",
+        "termination-breach",
+        "liability-cap",
+        "liability-exceptions",
+        "indemnification",
+        "ip-ownership",
+        "payment-terms",
+        "unilateral-amendment",
+        "data-protection",
+        "subprocessors",
+        "audit-rights",
+        "governing-law",
+        "assignment"
+      ],
+      "baseline_sha256": "3031dc84735232e0c6bf415fe36e273254517dc2eb05459a8a97f79ff2ad859f"
+    },
+    "nda": {
+      "ids": [
+        "confidentiality-mutual",
+        "confidentiality-exclusions",
+        "permitted-disclosures",
+        "term-expiration",
+        "governing-law",
+        "assignment"
+      ],
+      "baseline_sha256": "39828012b951094a0383db6f230be2038706fc297c0e8ba0aaccd52f9f3d15f9"
+    }
+  },
+  "allowed_changes": "Repair demonstrated failures within existing categories; no new formats or categories, no silent withdrawal, preserve historical snapshots",
+  "software_gates": [
+    "Original bytes preserved; extraction limits enforced",
+    "Policy snapshot and exact source-linked findings",
+    "Decisions and notes persist; revisions start unresolved",
+    "Comparison separates text, policy and check changes",
+    "Useful Markdown/DOCX/JSON exports with truthful metadata",
+    "Backup/restore and v1.5.0 upgrade preserve raw historical reviews",
+    "Signed notarized stapled installer matches accepted source and public downloaded bytes; installed headless journey passes"
+  ],
+  "legal_acceptance": "PENDING independent qualified review; no qualified reviewer engaged or available in this session",
+  "held_out": {
+    "selection": "First 4 by SHA256(crw-1.5.1-reserve-v1:title) among CUADv1 entries outside previously exposed test.json; no app run or tuning",
+    "archive_sha256": "f8161d18bea4e9c05e78fa6dda61c19c846fb8087ea969c172753bc2f45b999a",
+    "titles": [
+      "CANOPETROLEUM,INC_12_13_2007-EX-10.1-Sponsorship Agreement",
+      "KIROMICBIOPHARMA,INC_05_11_2020-EX-10.23-CONSULTING AGREEMENT",
+      "PacificapEntertainmentHoldingsInc_20051115_8-KA_EX-1.01_4300894_EX-1.01_Content License Agreement",
+      "ZogenixInc_20190509_10-Q_EX-10.2_11663313_EX-10.2_Distributor Agreement"
+    ]
+  },
+  "rubric": {
+    "extraction_fidelity": {
+      "reference": "Original and exact spans; material omissions, order, tables and limitations",
+      "outcomes": [
+        "PASS",
+        "FAIL",
+        "GATED",
+        "UNTESTED"
+      ],
+      "hard_failures": [
+        "silent material omission",
+        "incorrect citation",
+        "bypassed mandatory visual check"
+      ]
+    },
+    "issue_detection": {
+      "reference": "Independent labels mapped to fixed category scope; label alignment and evidence overlap scored separately",
+      "outcomes": [
+        "located_supported",
+        "missed_in_scope",
+        "out_of_scope_label",
+        "unsupported_detection",
+        "unresolved_scope"
+      ],
+      "hard_failures": [
+        "incorrect assertion about matched text",
+        "mismatched evidence",
+        "reproducible broken configured condition"
+      ],
+      "denominators": "Per category, every case, failed imports retained; no aggregate legal-accuracy score"
+    },
+    "legal_interpretation": {
+      "reference": "Qualified reviewer blind source-based judgment before seeing app output",
+      "fields": [
+        "operative clauses",
+        "definitions",
+        "exceptions and exceptions to exceptions",
+        "separate caps",
+        "precedence and references",
+        "revision effect",
+        "client materiality",
+        "uncertainty"
+      ],
+      "outcomes": [
+        "supported",
+        "incorrect",
+        "incomplete",
+        "requires_context",
+        "not_assessed"
+      ],
+      "acceptance": "Pending; provisional implementer notes never count as independent legal gold"
+    }
+  }
+}

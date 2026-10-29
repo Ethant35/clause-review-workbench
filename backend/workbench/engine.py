@@ -268,6 +268,16 @@ def analyze(document, playbook: Playbook):
                         good.append(block)
             if rule.id == "automatic-renewal":
                 good = [b for b in good if renewal_supported(normalized(b["text"]))]
+            if rule.id == "termination-convenience":
+                # Headings, consequences of termination, or a notice clause in
+                # another sentence cannot donate a convenience right.
+                good = [b for b in good if any(
+                    matches(r"\b(?:may|can|right to)\s+terminate\b", sentence)
+                    and any_match(rule.presence, sentence)
+                    and all(any_match(group, sentence) for group in rule.acceptable_all)
+                    and not context_reason(rule.id, normalized(sentence))
+                    for sentence in regex.split(r"[.;]\s*", b["text"]) if sentence.strip()
+                )]
             if rule.id == "liability-cap":
                 cap = next((b for b in substantive if matches(r"(?:capped|not exceed|limited to).{0,100}(?:the )?fees (?:paid|payable)", b["text"])), None)
                 cap = cap if not contextual else None
