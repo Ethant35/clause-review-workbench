@@ -59,10 +59,14 @@ def test_startup_error_messages_are_safe_and_actionable(tmp_path):
     assert "private.sqlite" not in corrupt
 
 
-def test_missing_python_environment_is_actionable_and_does_not_sync(tmp_path):
+@pytest.mark.parametrize("frontend_present", [False, True])
+def test_missing_python_environment_is_actionable_and_does_not_sync(tmp_path, frontend_present):
     project = Path(__file__).resolve().parents[1]
     (tmp_path / "scripts").mkdir()
     shutil.copy2(project / "scripts" / "start.sh", tmp_path / "scripts" / "start.sh")
+    if frontend_present:
+        (tmp_path / "frontend" / "dist").mkdir(parents=True)
+        (tmp_path / "frontend" / "dist" / "index.html").write_text("Existing build")
     environment = os.environ.copy()
     environment["PATH"] = "/usr/bin:/bin"
     result = subprocess.run(
@@ -76,6 +80,12 @@ def test_missing_python_environment_is_actionable_and_does_not_sync(tmp_path):
     assert result.returncode != 0
     assert "Project Python environment is missing" in result.stderr
     assert "uv sync --frozen --python 3.12 --no-dev" in result.stderr
+    assert "docs/startup.md" in result.stderr
+    assert ("Built frontend is missing" in result.stderr) is (not frontend_present)
+    if not frontend_present:
+        assert "npm --prefix frontend ci && npm --prefix frontend run build" in result.stderr
+    assert not (tmp_path / ".venv").exists()
+    assert not (tmp_path / ".data").exists()
     assert "Traceback" not in result.stderr
 
 

@@ -1,0 +1,87 @@
+{
+  "author": "Ethan",
+  "date": "2026-10-29",
+  "scope": "Source fixes from the independent hands-on review; no new installer or release qualification",
+  "source_commit": "cc50e1c3308830ceb615d94770c8d180e36bfbc9",
+  "base_commit": "c61e9233211ce880e5ae4d13bdf3e17e5dc3ed22",
+  "status": "PASS for the bounded fixes",
+  "fixes": [
+    "Library rows show upload/revision/reprocess origin and date; duplicate filenames have a visible record reference that expands for matching prefixes.",
+    "Onboarding directs users to pending visual/source checks instead of claiming readiness; review remains blocked.",
+    "DOCX export created and modified properties use current UTC export time; Ethan author fields are preserved.",
+    "Retention displays 1 day and plural days correctly.",
+    "Startup reports missing Python and frontend prerequisites together and links full setup instructions.",
+    "Onboarding actions wrap inside narrow cards."
+  ],
+  "checks": {
+    "python": {
+      "passed": 176,
+      "subtests": 10,
+      "warnings": 6,
+      "candidate": "cf850b3e745797c97b7ecd1461bdc42e190e03fa"
+    },
+    "browser_api": {
+      "passed": 18,
+      "blocked_external_provider_checks": 2,
+      "candidate": "cf850b3e745797c97b7ecd1461bdc42e190e03fa"
+    },
+    "usability_browser": {
+      "status": "PASS",
+      "run": "artifacts/usability-frontend-2u2zwrn7",
+      "includes": "repeated reprocessing, original decisions, source-check block/confirmation and prior workflow"
+    },
+    "revision_browser": {
+      "status": "PASS",
+      "run": "artifacts/revision-e2e-uwdavcbx"
+    },
+    "frontend_readiness": {
+      "passed": 14,
+      "failed": 0,
+      "run": "artifacts/frontend-readiness-_ii0o0e_",
+      "candidate": "a197c70ce1bb405e0be23e849c7dc0b605b1308e"
+    },
+    "floor_guard": {
+      "status": "PASS",
+      "candidate": "cc50e1c3308830ceb615d94770c8d180e36bfbc9",
+      "method": "Clean temporary clone with cumulative intended diff; unrelated pre-existing duplicate files preserved"
+    }
+  },
+  "independent_review": {
+    "model": "gpt-6.1-terra",
+    "reasoning_effort": "xhigh",
+    "method": "Private headless browser, disposable stores and actual UI exports; no foreground computer use",
+    "initial_candidate": "cf850b3e745797c97b7ecd1461bdc42e190e03fa",
+    "initial_verdict": "REVISE: repeated same-minute reprocessing remained ambiguous; other four original issues passed",
+    "identity_candidate": "a197c70ce1bb405e0be23e849c7dc0b605b1308e",
+    "identity_verdict": "PASS including reload, preserved notes/decisions and mocked prefix collision; narrow action overflow identified",
+    "final_candidate": "cc50e1c3308830ceb615d94770c8d180e36bfbc9",
+    "final_verdict": "PASS: 390px and 1440px action containment, source-check block and distinct references; unchanged prior checks carried forward",
+    "reports": [
+      {
+        "path": "artifacts/terra-fixes-20261029/independent/verification-report.md",
+        "sha256": "43af57fe65f3c39ef0e58f0071b876fc8d32e92e5ac80398311f271787a8e168"
+      },
+      {
+        "path": "artifacts/terra-fixes-20261029/independent/final-verification.md",
+        "sha256": "5f7521b475f5513bf1a7fe46cf48405acec2996113601e75c4c5c1b20182e65d"
+      },
+      {
+        "path": "artifacts/terra-fixes-20261029/independent/final-layout-verification.md",
+        "sha256": "0875eaa2d4e6ca12d049c41bf159d8d083f1b0086eb582d7914a974fb2334e88"
+      },
+      {
+        "path": "artifacts/terra-fixes-20261029/independent/layout-final-results.json",
+        "sha256": "bddce509995b25c38721b60126fa126c93aeb56bfa0ae7fd894d48d59e6403c3"
+      }
+    ]
+  },
+  "initial_execution_failure": "A first launcher-test attempt started before the frontend build completed, so four launcher tests failed on missing frontend prerequisites. The full suite passed after the build completed. No test assertion or timeout was weakened.",
+  "limits": [
+    "Two provider checks remain blocked; no paid/provider requests.",
+    "No independent legal-accuracy or full accessibility validation.",
+    "No native installer rebuild, notarization or release publication; v1.5.0 assets unchanged.",
+    "Independent frontend-only missing-prerequisite simulation was not completed; original both-missing and Python-only cases passed.",
+    "Screenshots lack verified embedded personal-author metadata; reports identify Ethan and DOCX author metadata was verified."
+  ],
+  "processes": "Review servers and headless browsers stopped; no foreground browser, native dialogs or user settings used for this fix verification."
+}
