@@ -1,3 +1,21 @@
+# Version 1.5.0 ready for publication — October 28, 2026
+
+Author: Ethan. PR #9: https://github.com/Ethant35/clause-review-workbench/pull/9.
+Implementation and final source candidate:5f15a0723f1d2a890fef24ba5e568d6d06ff14f3.
+App/DMG separately Apple Accepted, stapled and locally installed under quarantine.
+Actual installed revision journey and full clean qualification passed. Final
+source archive and69bundled source/docs/license hashes match tested candidate;
+independently rebuilt frontend and bootstrap match. Evidence: evidence/revisions.
+Sealed assets:/private/tmp/crw-release-1.5.0-20261028. Public publication/download
+verification is the remaining delivery step. Existing v1.4.0 assets are preserved.
+
+Current guard is50% REMAINING or in-work reset to100%; cell26 checks45seconds.
+Latest reading39%used/61%remaining; reset_at1793774143unchanged. No paid calls,
+no Actions, no assistants. Keep the actual goal active until public downloaded
+bytes and installed workflow pass, or pause on either usage stop condition.
+
+---
+
 # Active 1.5.0 Mac delivery — October 28, 2026
 
 Author: Ethan. PR https://github.com/Ethant35/clause-review-workbench/pull/9 is open.

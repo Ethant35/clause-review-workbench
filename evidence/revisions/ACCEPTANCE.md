@@ -2,10 +2,12 @@
 
 Author: Ethan. October 28, 2026.
 
-Scope: checked source changes on `codex/revision-fidelity`, based on v1.4.0.
-This record does not qualify a new signed Mac build, notarization or public
-download. Published v1.4.0 assets are unchanged. No new legal recognition patterns
-were tuned against the external test labels.
+Scope: version 1.5.0 candidate based on v1.4.0. The signed app and DMG received
+independent Apple Accepted submissions and were stapled/validated. Local quarantined
+installation passed strict codesign, Gatekeeper, syspolicy_check, AppTranslocation,
+the original workflow and the new revision journey. Public download verification
+is still pending until the release section below records its completion.
+No new legal recognition patterns were tuned against the external test labels.
 
 ## Behavior checked
 
@@ -95,3 +97,41 @@ No paid provider calls, no GitHub Actions, no subagents, no global config change
 and no new security-scan or release-readiness claim. Source documents and generated
 JSON/fixture DOCX personal author metadata use Ethan. Synthetic screenshot personal
 author metadata was not controlled or verified.
+
+## Packaged 1.5.0 candidate
+
+Implementation/source candidate commit: 5f15a07 (full SHA recorded in Git).
+Final source archive matches all 277 tracked file contents in the tested clean
+checkout. A later evidence-only commit may add qualification without changing
+these sealed bytes. The source archive was resealed only to update the clean
+qualification harness baseline; runtime bytes and the signed app were unchanged.
+
+The archive's plain, Git-free Python suite passed 174 tests + 10 subtests. The
+adversarial harness completed its cases but could not write its Git commit metadata
+without `.git`; the failure is retained in clean-adversarial.log. The exact public
+candidate commit was then fetched into that clean directory, with zero source
+diff, and the remaining integration suites were run against those same bytes.
+
+The all-in-one clean qualification script initially used v1.1.0 as its floor
+baseline; that historic cumulative diff exceeded the command output buffer.
+The script now compares new work with the current qualified v1.4.0 release.
+No floor rule or assertion changed. This diff is 435,238 bytes and the guard passed.
+The clean script is rerun with the actual release tags in the isolated clone.
+
+The release build manifest supersedes the earlier feature-stage source-hashes.json
+for the packaged candidate. All 69 bundled source/docs/license hashes match source;
+the independently rebuilt frontend and native bootstrap match. ZIP extraction
+retained the accepted app ticket and valid deep signature. Native launch/recovery
+and bundled v1.4.0 upgrade checks passed. No old release asset was modified.
+
+App submission: 7bdf1406-9a99-4cfe-9ddd-76882e43629e.
+DMG submission: f9a012dc-0c87-4b8d-8ac3-d8f0f701a309.
+Apple returned Accepted and no issues for the app. The local installation report
+and release-hashes.json identify the sealed DMG/source/component bytes.
+
+Full clean qualification completed at commit 5f15a0723f1d2a890fef24ba5e568d6d06ff14f3.
+The actual scripts/clean_acceptance.sh passed in a fresh Git clone with released
+baseline tags. The final source archive contains the same source and harness.
+See clean-qualification.json and clean-full-e2e.json. Optional provider checks
+remained blocked; no provider request was made. Publication/public-download
+verification follows these completed local gates.
