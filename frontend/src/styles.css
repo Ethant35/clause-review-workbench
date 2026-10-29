@@ -23,7 +23,7 @@
 .getting-started li strong,.getting-started li span{display:block}
 .getting-started li strong{color:#304752;font-size:14px}
 .getting-started li span{margin-top:3px;color:#52656d;font-size:14px;line-height:1.45}
-.getting-started-actions{display:flex;align-items:center;gap:13px;margin-top:17px}
+.getting-started-actions{display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-top:17px}
 .getting-started-actions .text-button,.onboarding-replay{color:#375b60;text-decoration:underline;text-underline-offset:3px}
 .getting-started-mark{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:7px;background:#edf5f4;color:#16736e}
 .upload-box:focus-within{outline:3px solid #65b9b4;outline-offset:3px}
@@ -145,3 +145,5 @@
 
 /* Keep document lineage and dates readable in narrow library rows. */
 .doc-copy .doc-origin{display:block;line-height:1.4;overflow-wrap:anywhere}
+
+.getting-started-actions .text-button{white-space:nowrap}
