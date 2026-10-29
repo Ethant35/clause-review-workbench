@@ -34,7 +34,9 @@ cd "$clean_dir/repo"
 
 # The floor check and test suites run in the same clean clone. All suites are
 # sequential because their server processes share the run-scoped registry.
-node scripts/floor-guard.mjs --base v1.1.0
+# Compare new work with the current qualified release; older release evidence
+# was reviewed in its own release. Keep every floor rule unchanged.
+node scripts/floor-guard.mjs --base v1.4.0
 uv sync --frozen --python 3.12
 npm --prefix frontend ci
 npm --prefix frontend run build
@@ -65,7 +67,7 @@ result['results'].append({
     'status': 'PASS',
     'detail': (
         'Fresh local Git clone; uv.lock environment; npm ci and production build; '
-        'floor guard against v1.1.0; Python, real-browser, frontend-state, '
+        'floor guard against v1.4.0; Python, real-browser, frontend-state, '
         'zoom, three upgrade-baseline, and short load suites passed.'
     ),
 })
