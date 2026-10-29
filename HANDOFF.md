@@ -1,3 +1,15 @@
+# Active 1.5.0 Mac delivery — October 28, 2026
+
+Author: Ethan. PR https://github.com/Ethant35/clause-review-workbench/pull/9 is open.
+Source changes and local tests are complete. Continuing the established production
+outcome through packaged Mac validation and release; PR submission is a milestone.
+Version1.5.0 candidate is being prepared. v1.4.0 public assets remain unchanged.
+No paid calls or GitHub Actions. Stop at50% REMAINING or in-work reset to100%;
+monitorcell26 is active. Last direct reading29%used; same reset_at1793774143.
+On a trigger, stop owned processes, save evidence and pause the actual goal.
+
+---
+
 # Revision and fidelity changes verified — October 28, 2026
 
 Author: Ethan. Branch: codex/revision-fidelity, based on released v1.4.0.

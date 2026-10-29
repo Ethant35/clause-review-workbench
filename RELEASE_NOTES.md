@@ -1,5 +1,27 @@
 # Version 1.4.0 — contract interactions and saved review context
 
+
+## 1.5.0 — October 28, 2026
+
+- Upload a clean revision as a separate original; compare saved reviews, exact text
+  changes, supported clause interactions and prior decisions. New reviews never
+  inherit decisions or notes. Changed source, policy or check versions prompt
+  reconsideration, including apparently unchanged findings.
+- Keep PDF coordinates and DOCX table-cell locations. Check PDF reading order and
+  annotations before review; reject DOCX numbering or non-body content that would
+  be omitted. Reprocess older uploads into new records to use extraction revision 6.
+- Export comparison JSON with saved policy contexts, original hashes, source
+  changes, findings and earlier decisions. Historical reviews remain unchanged.
+- External CUAD test labels expose detection gaps: the mapped rules located
+  language in 22/44 cap-labeled and 11/29 convenience-termination contracts. This
+  measures limited clause detection, not legal correctness. The rule view says
+  “Configured conditions matched”; no independent lawyer validation is claimed.
+
+Qualification and limits: [revision evidence](evidence/revisions/ACCEPTANCE.md),
+[external-label evaluation](docs/legal-evaluation.md). Resolve tracked changes
+before uploading; comparing clean versions does not interpret a marked-up redline.
+
+
 Author: Ethan.
 
 - Recognize ordinary agreement expiry and written durations separately from

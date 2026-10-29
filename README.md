@@ -1,7 +1,7 @@
 # clause-review-workbench
 
-Revision comparison work is on `codex/revision-fidelity` and is not part of the
-published v1.4.0 download. See [revision comparison](docs/revision-comparison.md)
+Version 1.5.0 adds clean contract revision comparison and stronger extraction
+checks. See [revision comparison](docs/revision-comparison.md)
 for the workflow and [external-label evaluation](docs/legal-evaluation.md) for
 measured clause-detection gaps. No independent legal-quality acceptance is claimed.
 
