@@ -5,9 +5,9 @@ reference, or mixed scope changes its meaning. Such cases require human review.
 """
 import regex
 
-EXTRACTION_REVISION = 5
+EXTRACTION_REVISION = 6
 REVIEW_REVISION = 5
-LEGACY_WARNING = "Historical review: current checks use newer extraction or analysis rules. Use the retained original to create a new review; existing results and decisions are preserved."
+LEGACY_WARNING = "Historical review: not verified by current extraction or analysis checks. Use the retained original to create a new review; existing results and decisions are preserved."
 
 
 def search(pattern, text):
@@ -73,7 +73,7 @@ def review_view(review):
         }})
     warnings = list(review.get("source_warnings") or [])
     if review.get("source_visual_check", {}).get("status") == "CONFIRMED":
-        warnings.append("The reviewer confirmed that raster image regions were compared with extracted text. OCR was not performed; this confirmation is not an automated completeness check.")
+        warnings.append("The reviewer confirmed a visual source comparison. OCR was not performed; this confirmation is not an automated completeness check.")
     return {**review, "issues": issues, "source_warnings": warnings,
             "verification_status": "CURRENT_CHECKS" if current else "HISTORICAL_UNVERIFIED",
             "verification_warning": None if current else (LEGACY_WARNING if review.get("extraction_revision") != EXTRACTION_REVISION else "Historical review: not verified by current recognition and clause-interaction checks. Run a new review to apply current checks; saved results and decisions remain unchanged.")}

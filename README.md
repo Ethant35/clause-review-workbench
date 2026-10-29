@@ -1,4 +1,10 @@
 # clause-review-workbench
+
+Revision comparison work is on `codex/revision-fidelity` and is not part of the
+published v1.4.0 download. See [revision comparison](docs/revision-comparison.md)
+for the workflow and [external-label evaluation](docs/legal-evaluation.md) for
+measured clause-detection gaps. No independent legal-quality acceptance is claimed.
+
 Open-source contract analysis and playbook review
 
 Clause Review Workbench is a local browser application for commercial contract review. Upload a DOCX, text-based PDF, or UTF-8 text contract; compare it with editable playbooks; inspect exact source passages; record reviewer decisions; and export Markdown, DOCX, or JSON reports.

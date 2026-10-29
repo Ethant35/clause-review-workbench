@@ -1,0 +1,11 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "checks": [
+    "upload lineage, fresh decisions, changed cap scope, prior note and comparison export",
+    "comparison accessibility has no serious or critical automated violations",
+    "narrow layout, navigate to fresh decision, reload and preserved earlier review",
+    "late comparison cannot overwrite a newer baseline selection",
+    "missing baseline is an explicit error; revision survives; zero outbound requests"
+  ]
+}

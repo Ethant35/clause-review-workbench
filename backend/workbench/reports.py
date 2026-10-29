@@ -43,7 +43,7 @@ def export(review, document, format):
         intro += "\nSource limitations: " + " ".join(review["source_warnings"])
     visual_check = review.get("source_visual_check") or {}
     if visual_check.get("status") == "CONFIRMED":
-        intro += (f"\nManual image-to-text comparison recorded: {visual_check.get('confirmed_at')}; "
+        intro += (f"\nManual source-to-text comparison recorded: {visual_check.get('confirmed_at')}; "
                   f"extraction revision {visual_check.get('extraction_revision')}; "
                   f"image manifest SHA256 {visual_check.get('confirmed_manifest_sha256')}.")
     if review.get("verification_warning"):

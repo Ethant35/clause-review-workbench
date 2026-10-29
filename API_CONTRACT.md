@@ -55,3 +55,32 @@ UI “Confirm finding” maps to stored `accepted`; “Dismiss finding” maps t
 `rejected`; “Clear decision” maps to `unresolved`. These are decisions about a
 finding, not approval or rejection of contract terms. Repeated confirmation is
 idempotent. Source/export API enums remain backward compatible.
+
+## Contract revisions and comparisons
+
+`POST /api/documents?revision_of=<document_id>` accepts the same multipart upload
+as the ordinary upload. It creates a separate source record with an immutable
+`previous_document_id` pointer. The parent must exist through publication. No
+review, note or decision is copied. Deleting the parent does not cascade to its
+revisions. The existing document lists expose this pointer.
+
+`GET /api/reviews/{after_review_id}/comparison?baseline_review_id=<before_review_id>`
+returns a read-only version-1 comparison. Identical review IDs return 422. Missing
+records return 404. Failed original hashes, changed saved source digests or mismatched
+quoted evidence return 409. `download=true` returns the same JSON as an attachment.
+
+Fields: `before_review_id`, `after_review_id`, `before_document`, `after_document`
+(each with id/name/sha256), `same_policy`, `same_checks`, `same_extracted_text`,
+`same_original`, `before_context`, `after_context`, `warnings`, `text_changes` and `rules`.
+Context objects include saved policy snapshots and extraction/analysis revisions. Text-change kinds are
+`insert`, `delete`, `replace`; each contains exact `before` and `after` blocks.
+Rule statuses are `ADDED`, `NO_LONGER_FLAGGED`, `CHANGED`, `UNCHANGED`,
+`NOT_COMPARABLE`. Each rule contains checks, issues, prior decisions and
+`revisit_prior_decisions`. A change anywhere in the source or review context requires
+reconsideration of recorded prior decisions. No API copies decisions.
+
+New reviews include `source_sha256` and `source_text_sha256`. Legacy comparisons
+check anchors and disclose that no historical full-text digest exists. Internal
+`COMPLIANT` remains the API token for matching configured conditions; it is not
+legal approval. Extraction revision 6 introduces table/row/cell and PDF bbox metadata
+and broader visual-check gating. Existing records are preserved, not migrated in place.

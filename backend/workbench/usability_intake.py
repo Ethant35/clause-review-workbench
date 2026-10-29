@@ -34,7 +34,7 @@ def confirm_visual_check(id: str, body: VisualCheckInput):
         document = json.loads(row[0])
         current = document.get("visual_check") or {}
         if current.get("status") != "NEEDS_VISUAL_CHECK":
-            raise HTTPException(409, "This document has no pending raster image check.")
+            raise HTTPException(409, "This document has no pending visual source check.")
         if (body.original_sha256 != document.get("sha256") or
                 body.extraction_revision != EXTRACTION_REVISION or
                 document.get("extraction_revision") != EXTRACTION_REVISION or
