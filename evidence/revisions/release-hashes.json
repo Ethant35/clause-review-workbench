@@ -1,0 +1,10 @@
+{
+  "author": "Ethan",
+  "hashes": {
+    "Clause-Review-Workbench-1.5.0-arm64.dmg": "884ea4fa6b31522ad4dec94b86289610d10aba3baf15596d5fdeec301652f797",
+    "clause-review-workbench-1.5.0.tar.gz": "1e7e65e71629f0cfa84138789e3d602231dcb3d33aeaf934395a7004be544d69",
+    "pymupdf-1.28.2.tar.gz": "5e0be7908a715aa20333caddd73f1d6f01e4cd0c26e869fa2dd0b7f344da2249",
+    "mupdf-1.28.2-source.tar.gz": "44075a84e329db55b9bef5f342a70fd26d69e48ad1d33cb89d9664581c641156",
+    "SHA256SUMS.txt": "081634d73f2a1c4c1d0aa71ee95a8049506a92901d44e6be5a83adfaa0422697"
+  }
+}

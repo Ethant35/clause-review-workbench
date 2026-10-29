@@ -30,6 +30,7 @@ from .usability_intake import router as usability_intake_router
 from .playbook_settings import router as playbook_settings_router
 from .recovery import exclusive_store
 from . import diagnostics
+from .comparison import compare_reviews, text_digest
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_UPLOAD = 10 * 1024 * 1024
@@ -94,7 +95,7 @@ async def lifespan(app):
                 pass
             diagnostics.close()
 
-app = FastAPI(title="Clause Review Workbench", version="1.4.0", lifespan=lifespan, docs_url=None, redoc_url=None)
+app = FastAPI(title="Clause Review Workbench", version="1.5.0", lifespan=lifespan, docs_url=None, redoc_url=None)
 app.include_router(usability_intake_router)
 app.include_router(playbook_settings_router)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]"])
@@ -199,7 +200,9 @@ def parse_bytes(data):
         raise HTTPException(422, "Document processing exceeded limits") from exc
 
 @app.post("/api/documents", status_code=201)
-async def upload(file: UploadFile = File(...)):
+async def upload(file: UploadFile = File(...), revision_of: str | None = Query(None)):
+    if revision_of is not None:
+        require("documents", revision_of)
     data = await file.read(MAX_UPLOAD + 1)
     await file.close()
     if len(data) > MAX_UPLOAD:
@@ -212,11 +215,16 @@ async def upload(file: UploadFile = File(...)):
     name = "".join(c for c in name if c.isprintable())[:200] or "document"
     visual_check = parsed.get("visual_check", {})
     obj = dict(id=id, name=name, format=parsed.pop("format"), created_at=now(), state="needs_visual_check" if visual_check.get("status") == "NEEDS_VISUAL_CHECK" else "ready", sha256=hashlib.sha256(data).hexdigest(), **parsed)
+    if revision_of is not None:
+        obj["previous_document_id"] = revision_of
     path = store.DATA / "sources" / id
     try:
         path.write_bytes(data)
         path.chmod(0o600)
         with store.db() as c:
+            c.execute("BEGIN IMMEDIATE")
+            if revision_of is not None and not c.execute("SELECT 1 FROM documents WHERE id=?", (revision_of,)).fetchone():
+                raise HTTPException(409, "The earlier document was deleted during upload. Upload again as a new document.")
             c.execute("INSERT INTO documents VALUES(?,?,?)", (id, time.time(), json.dumps(obj)))
     except Exception:
         path.unlink(missing_ok=True)
@@ -288,7 +296,7 @@ def run_review(id: str, body: ReviewInput):
     if doc.get("extraction_revision") != EXTRACTION_REVISION:
         raise HTTPException(409, "This upload predates the current extraction checks. Download and re-upload the original before reviewing.")
     if not visual_check_current(doc):
-        raise HTTPException(409, "Compare every raster image in the original with the extracted text, then confirm the visual check before reviewing.")
+        raise HTTPException(409, "Compare the original pages, image regions and reading order with extracted text, then confirm the visual check before reviewing.")
     pb = parse_playbook(require("playbooks", body.playbook_id)["yaml"])
     try:
         issues, checks = analyze(doc, pb)
@@ -297,12 +305,37 @@ def run_review(id: str, body: ReviewInput):
     except TimeoutError as exc:
         raise HTTPException(422, "Playbook pattern exceeded its processing time limit") from exc
     review = dict(id=str(uuid.uuid4()), review_revision=REVIEW_REVISION, extraction_revision=EXTRACTION_REVISION, document_id=id, playbook_id=body.playbook_id, playbook_name=pb.name, created_at=now(), issues=issues, checks=checks, ai_status="NOT_REQUESTED", ai_error=None, playbook_snapshot=pb.model_dump(), source_warnings=list(doc.get("warnings") or []), source_visual_check=dict(doc.get("visual_check") or {}))
+    review.update(source_sha256=doc["sha256"], source_text_sha256=text_digest(doc))
     with store.db() as c:
         c.execute("INSERT INTO reviews VALUES(?,?,?)", (review["id"], id, json.dumps(review)))
     return review_view(review)
 
 @app.get("/api/reviews/{id}")
 def review(id: str): return require("reviews", id)
+
+@app.get("/api/reviews/{id}/comparison")
+def comparison(id: str, baseline_review_id: str, download: bool = False):
+    if id == baseline_review_id:
+        raise HTTPException(422, "Choose two different saved reviews.")
+    before, after = require("reviews", baseline_review_id), require("reviews", id)
+    docs = []
+    for saved in (before, after):
+        doc = require("documents", saved["document_id"])
+        verify_document_original(doc)
+        if (saved.get("source_sha256", doc["sha256"]) != doc["sha256"] or
+                saved.get("source_text_sha256", text_digest(doc)) != text_digest(doc)):
+            raise HTTPException(409, "A source no longer matches its saved review. Comparison was stopped.")
+        # Check every quoted passage, including interaction evidence, even for
+        # legacy reviews which predate saved source digests.
+        for issue in saved["issues"]:
+            anchors = [issue.get("source_anchor")] + [a for relation in issue.get("interactions", []) for a in relation.get("evidence", [])]
+            if any(a and doc["text"][a["start"]:a["end"]] != a["text"] for a in anchors):
+                raise HTTPException(409, "Saved evidence no longer matches the extracted source. Comparison was stopped.")
+        docs.append(doc)
+    result = compare_reviews(before, after, *docs)
+    if download:
+        return JSONResponse(result, headers={"Content-Disposition": 'attachment; filename="review-comparison.json"'})
+    return result
 
 @app.patch("/api/reviews/{id}/issues/{issue_id}")
 def decision(id: str, issue_id: str, body: Decision):
@@ -337,7 +370,7 @@ async def ai_review(id: str, body: AIInput):
         if doc.get("extraction_revision") != EXTRACTION_REVISION or rev.get("review_revision") != REVIEW_REVISION:
             raise HTTPException(409, "Historical extraction/review is unverified. Re-upload the original and run a new review before AI assistance.")
         if not visual_check_current(doc):
-            raise HTTPException(409, "Compare every raster image in the original with the extracted text, then confirm the visual check before AI assistance.")
+            raise HTTPException(409, "Compare the original pages, image regions and reading order with extracted text, then confirm the visual check before AI assistance.")
         attempt = {**body.model_dump(), "attempt_id": str(uuid.uuid4()), "started_at": now()}
         update_ai(id, {"ai_status": "IN_PROGRESS", "ai_error": None, "ai_audit": attempt})
         try:

@@ -1,0 +1,12 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "baseline": "03b6dbaed1fac5bc2cad833a20be0770d7bcf895",
+  "checks": [
+    "real released database and decisions preserved byte-for-byte",
+    "old extraction blocked; reprocess creates a new record",
+    "new review has fresh decisions",
+    "comparison discloses different extraction rules and legacy digest gap",
+    "original hashes unchanged; zero outbound connections"
+  ]
+}

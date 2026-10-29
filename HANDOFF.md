@@ -1,3 +1,86 @@
+# Version 1.5.0 ready for publication — October 28, 2026
+
+Author: Ethan. PR #9: https://github.com/Ethant35/clause-review-workbench/pull/9.
+Implementation and final source candidate:5f15a0723f1d2a890fef24ba5e568d6d06ff14f3.
+App/DMG separately Apple Accepted, stapled and locally installed under quarantine.
+Actual installed revision journey and full clean qualification passed. Final
+source archive and69bundled source/docs/license hashes match tested candidate;
+independently rebuilt frontend and bootstrap match. Evidence: evidence/revisions.
+Sealed assets:/private/tmp/crw-release-1.5.0-20261028. Public publication/download
+verification is the remaining delivery step. Existing v1.4.0 assets are preserved.
+
+Current guard is50% REMAINING or in-work reset to100%; cell26 checks45seconds.
+Latest reading39%used/61%remaining; reset_at1793774143unchanged. No paid calls,
+no Actions, no assistants. Keep the actual goal active until public downloaded
+bytes and installed workflow pass, or pause on either usage stop condition.
+
+---
+
+# Active 1.5.0 Mac delivery — October 28, 2026
+
+Author: Ethan. PR https://github.com/Ethant35/clause-review-workbench/pull/9 is open.
+Source changes and local tests are complete. Continuing the established production
+outcome through packaged Mac validation and release; PR submission is a milestone.
+Version1.5.0 candidate is being prepared. v1.4.0 public assets remain unchanged.
+No paid calls or GitHub Actions. Stop at50% REMAINING or in-work reset to100%;
+monitorcell26 is active. Last direct reading29%used; same reset_at1793774143.
+On a trigger, stop owned processes, save evidence and pause the actual goal.
+
+---
+
+# Revision and fidelity changes verified — October 28, 2026
+
+Author: Ethan. Branch: codex/revision-fidelity, based on released v1.4.0.
+Source changes are ready for PR review. No new native build, notarization, public
+release, independent lawyer approval or general legal-accuracy claim is made.
+Published v1.4.0 remains unchanged. Use the attached pull request for review status.
+
+Ethan explicitly resumed work. The actual goal tool returned no goal, so a new
+active goal was created for the authorized priorities; source delivery and local
+verification are now complete. No paid calls, provider tests, GitHub Actions,
+subagents, hooks or global config changes were used. Actions disabled/zero runs
+was checked before publication. Unrelated duplicates and broken main 2 ref remain.
+
+Implemented: Upload revision creates a separate original linked to the earlier
+version. The Revisions view compares saved reviews and exact before/after text,
+including supported related-clause effects. Earlier decisions and notes remain
+in place; new reviews start unresolved. Any source/policy/check change flags prior
+decisions for reconsideration. Different policies or check versions are disclosed,
+not attributed to contract edits. Hash and evidence checks protect comparison.
+Extraction revision6 adds PDF coordinates and DOCX table-cell locations, gates
+PDF layout/annotation uncertainty, and rejects DOCX content that would be omitted.
+Old uploads require reprocessing into a separate record; historical rows are preserved.
+
+Verification:174 Python tests +10 subtests (six dependency warnings); browser/API18
+pass,2provider checks blocked; corpus12/12,interactions98/98,adversarial83/83;
+frontend14/14,truezoom9/9; new revision browser, actualv1.4.0 migration and legacy
+v1.0.0 migration pass. Focused final source-confirmation wording:36tests pass.
+Intended-diff floor guard passed in an isolated tracked-files checkout. Initial
+failures and repair reasons are recorded in evidence/revisions/ACCEPTANCE.md.
+
+Independent-label evidence: all102CUAD test contracts,408category observations;
+no recognition-rule tuning. Cap detection22/44, convenience termination11/29.
+External annotations are independent; the evaluator is implementation-authored.
+No independent lawyer validated risk, exception reasoning or revision effects.
+See docs/legal-evaluation.md and evidence/revisions/cuad-evaluation.json for all
+counts, exact label provenance, limitations and the unexecuted legal-review protocol.
+
+Updated guard: STOP at50% usage REMAINING (50% consumed), or an observed in-work
+reset to100% remaining. This supersedes5% in the tool objective and allolder notes.
+Startup6%used; latest observed26%used,reset_at1793774143unchanged. Monitorcell4 was
+replaced bycell26 for the50%guard; shut it down at closure. All test processes have
+cleanup handlers and isolated registries; final shutdown is verified in chat.
+No automatic continuation is authorized beyond this delivery.
+
+Evidence: evidence/revisions/ACCEPTANCE.md and adjacent curated results. Detailed
+local evidence artifacts/revisions-20261028; last revision browser screenshots
+artifacts/revision-e2e-i939jurt; actualv1.4 migration artifacts/revision-upgrade-zjiimnej.
+Clean diff checkout /private/tmp/crw-revision-review-1sub25ql is disposable, not a
+managed worktree. No private contracts are in the PR; test text is synthetic and
+CUAD records contain public titles, offsets and metrics, not contract text.
+
+---
+
 # Version 1.4.0 complete — October 27, 2026
 
 Author: Ethan.

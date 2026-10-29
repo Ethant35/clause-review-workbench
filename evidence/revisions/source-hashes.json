@@ -1,0 +1,17 @@
+{
+  "author": "Ethan",
+  "published_release_unchanged": "v1.4.0",
+  "source_checks": {
+    "backend/workbench/main.py": "3c3f5e0f043c305154864bc7a2df8687139774207bd6e29e9531b473b2f7d242",
+    "backend/workbench/parsing.py": "f952ca274bf2b56cad613d82a151ff90a1dd8049c9b831ec398d21c28c8adbcd",
+    "backend/workbench/safety.py": "b84aab40a2a28b6fddcc2ef458147d3f996565de1d5dbb53b483dc722fbe7fd3",
+    "backend/workbench/comparison.py": "2fb105033b2a7552cb813ce3a71cb577541f6634af8777750f6e46e777850cdc",
+    "backend/workbench/reports.py": "4761fcc53eb2b1e82c260c346b8163a078fe93d87583445f6e976e65e85cec6f",
+    "backend/workbench/usability_intake.py": "1b7e5f869f1e228f1b52a16f24538d574f4fe97ff3de06938a50f88d42cc245b",
+    "frontend/src/App.tsx": "8cd5d22ced32c78d39b9a947842785928b80f2460a7a766bb4b7bf18dbb06e26",
+    "frontend/src/RevisionComparison.tsx": "ced2d24f265472ee901c0c4f8a8b4b8f8449f26723bdf57d36f37bc6d7f667db",
+    "frontend/src/styles.css": "963431898e8381c6392389899e05a29fb317dd67e6f6d71cd8e7ce42d54a9a61",
+    "scripts/evaluate_cuad.py": "e6901f4850c5848234b9e6ea60addf42aa0ec35982e272e885be8f58f4d352a9"
+  },
+  "screenshots": "Synthetic browser screenshots have no controlled or verified personal author metadata."
+}

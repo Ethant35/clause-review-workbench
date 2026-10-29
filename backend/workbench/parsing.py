@@ -38,6 +38,7 @@ def extract(data: bytes):
     warnings = []
     visual_check = {"status": "NOT_REQUIRED", "manifest_sha256": None}
     image_manifest = []
+    block_metadata = []
     if data.startswith(b"%PDF-"):
         fmt = "pdf"
         try:
@@ -96,13 +97,18 @@ def extract(data: bytes):
                     page_blocks = [block for block in page.get_text("blocks", sort=True) if block[6] == 0 and block[4].strip()]
                     has_annotations = has_annotations or bool(list(page.annots() or [])) or bool(list(page.widgets() or []))
                     if not has_side_by_side_blocks and not layout_check_limited:
-                        found, comparisons, limited = _inspect_pdf_layout(page_blocks, layout_pair_budget)
+                        # MuPDF can combine separate columns into one block.
+                        # Check line geometry as well, without decoding images.
+                        layout = page.get_text("dict", flags=pymupdf.TEXTFLAGS_DICT & ~pymupdf.TEXT_PRESERVE_IMAGES)
+                        lines = [line["bbox"] for item in layout["blocks"] if item["type"] == 0 for line in item["lines"]]
+                        found, comparisons, limited = _inspect_pdf_layout(lines, layout_pair_budget)
                         has_side_by_side_blocks = has_side_by_side_blocks or found
                         layout_pair_budget -= comparisons
                         layout_check_limited = limited
                     for block in page_blocks:
                         if block[6] == 0 and block[4].strip():
                             page_rows.append((block[4].rstrip("\n"), page.number + 1, "paragraph", f"Page {page.number + 1}, block {len(page_rows) + 1}"))
+                            block_metadata.append({"bbox_points": [round(float(v), 3) for v in block[:4]]})
                     rows.extend(page_rows)
                     if not page_rows:
                         empty_pages.append(page.number + 1)
@@ -125,6 +131,12 @@ def extract(data: bytes):
                     warnings.append("PDF contains side-by-side text blocks. Extracted order may differ from visual reading order; verify sections and clauses in the original.")
                 if layout_check_limited:
                     warnings.append("PDF layout checks reached their processing limit. Verify visual reading order in the original.")
+                if has_annotations or has_side_by_side_blocks or layout_check_limited:
+                    manifest = {"images": image_manifest, "annotations_or_forms": has_annotations,
+                                "side_by_side": has_side_by_side_blocks, "layout_check_limited": layout_check_limited,
+                                "text_layout": block_metadata}
+                    canonical = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+                    visual_check = {"status": "NEEDS_VISUAL_CHECK", "manifest_sha256": hashlib.sha256(canonical).hexdigest()}
         except ParseError:
             raise
         except Exception as exc:
@@ -146,6 +158,17 @@ def extract(data: bytes):
                         fromstring(z.read(name))  # reject DTD/entity attacks before python-docx
                 xml = fromstring(z.read("word/document.xml"))
                 ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+                # Body-only extraction must not silently omit operative text.
+                for name in names:
+                    if name.startswith(("word/header", "word/footer")) and name.endswith(".xml"):
+                        part = fromstring(z.read(name))
+                        if any((e.text or "").strip() for e in part.iter(ns + "t")) or any(
+                            e.tag in {ns + t for t in ("drawing", "pict", "object", "fldChar", "fldSimple", "altChunk", "sym")}
+                            for e in part.iter()
+                        ):
+                            raise ParseError("DOCX headers or footers contain content that body extraction would omit. Supply a text-based PDF with all terms visible.")
+                if any(e.tag in {ns + "sym", ns + "subDoc"} for e in xml.iter()):
+                    raise ParseError("DOCX symbols or linked subdocuments cannot be extracted faithfully. Supply a text-based PDF.")
                 if any(e.tag in {ns + x for x in ("ins", "del", "moveFrom", "moveTo", "moveFromRangeStart", "moveToRangeStart")} for e in xml.iter()):
                     raise ParseError("Tracked changes and moved-text revisions are unsupported. Resolve revisions before upload.")
                 if any(e.tag in {ns + "txbxContent", ns + "altChunk"} for e in xml.iter()):
@@ -230,10 +253,35 @@ def extract(data: bytes):
             from docx.text.paragraph import Paragraph
             for i, elem in enumerate(doc.element.body.iter(ns + "p"), 1):
                 p = Paragraph(elem, doc)
+                # Automatic numbering is not present in Paragraph.text. Do not
+                # invent section labels or silently lose cross-reference targets.
+                num = elem.find(ns + "pPr/" + ns + "numPr")
+                style = p.style
+                visited = set()
+                while num is None and style is not None and style.style_id not in visited:
+                    visited.add(style.style_id)
+                    num = style.element.find(ns + "pPr/" + ns + "numPr")
+                    style = style.base_style
+                if num is not None:
+                    num_id = num.find(ns + "numId")
+                    if num_id is None or num_id.get(ns + "val") != "0":
+                        raise ParseError("DOCX automatic numbering is unsupported because section labels would be lost. Supply a text-based PDF or convert numbering to literal text.")
                 if p.text.strip():
                     kind = "heading" if p.style and p.style.name.startswith(("Heading", "Title")) else "paragraph"
-                    rows.append((p.text, None, kind, f"Paragraph {i}"))
-            warnings.append("DOCX anchors use body paragraph order, including tables. Headers and footers are not analyzed; verify the original for additional terms.")
+                    location = f"Paragraph {i}"
+                    metadata = {}
+                    cell = next((a for a in elem.iterancestors() if a.tag == ns + "tc"), None)
+                    if cell is not None:
+                        row = cell.getparent()
+                        table = row.getparent()
+                        table_number = list(doc.element.body.iter(ns + "tbl")).index(table) + 1
+                        row_number = list(table.iterchildren(ns + "tr")).index(row) + 1
+                        cell_number = list(row.iterchildren(ns + "tc")).index(cell) + 1
+                        metadata = {"table": table_number, "row": row_number, "cell": cell_number}
+                        location += f" · Table {table_number}, row {row_number}, cell {cell_number}"
+                    rows.append((p.text, None, kind, location))
+                    block_metadata.append(metadata)
+            warnings.append("DOCX anchors use body paragraph order, including table cells. Cell order does not establish how headings or merged cells qualify terms; compare the original table.")
             if has_comments:
                 warnings.append("DOCX comments are not analyzed. Verify the original for additional terms or review context.")
         except ParseError:
@@ -261,5 +309,7 @@ def extract(data: bytes):
     offset = 0
     for i, (text, page, kind, location) in enumerate(rows, 1):
         blocks.append(dict(id=f"b{i}", text=text, start=offset, end=offset + len(text), page=page, kind=kind, location=location))
+        if block_metadata:
+            blocks[-1].update(block_metadata[i - 1])
         offset += len(text) + 2
     return dict(extraction_revision=EXTRACTION_REVISION, format=fmt, text="\n\n".join(x[0] for x in rows), blocks=blocks, warnings=warnings, visual_check=visual_check, image_manifest=image_manifest)

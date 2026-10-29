@@ -1,0 +1,7 @@
+Author: Ethan
+Result: PASS
+36 passed; 6 dependency warnings; 5.92 seconds
+Raw local evidence: artifacts/revisions-20261028/final-source-wording.log
+Raw SHA256: aa68cf0a59dabb1274ff096a6c10149cf3bdab416ddc7d128cd789d964275199
+Warnings: PyMuPDF SWIG type metadata deprecations; Starlette httpx TestClient deprecation.
+The raw warning output remains unchanged locally. This is a curated result summary.

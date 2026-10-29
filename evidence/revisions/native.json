@@ -1,0 +1,17 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "checks": [
+    "relocated app starts with only system PATH; no Python/uv/Node setup",
+    "bundled frontend is served",
+    "upload, actual review, original source, saved finding decision and export",
+    "launcher exit stops its own server",
+    "returning launch preserves original review and decision",
+    "bundled offline doctor, backup, new-destination restore and source verification"
+  ],
+  "work_directory": "/Users/ethantarnarider/Documents/ChatGPT/Open source/clause-review-workbench/artifacts/bundle-journey-kf27urgi",
+  "limits": [
+    "Local automated test, not an unfamiliar-user study",
+    "Does not establish Apple notarization or downloaded Gatekeeper acceptance"
+  ]
+}

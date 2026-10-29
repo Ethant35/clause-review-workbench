@@ -121,3 +121,24 @@
 .playbook-modal .settings-form{max-height:calc(94vh - 250px)}
 @media(max-width:790px){.getting-started ol{grid-template-columns:repeat(2,minmax(0,1fr))}.visual-check-panel{flex-direction:column}.visual-check-actions{justify-content:flex-start}}
 @media(max-width:560px){.getting-started ol{grid-template-columns:1fr}.settings-form{grid-template-columns:1fr}.settings-form>label{grid-column:1/-1!important}.visual-check-actions{width:100%}.visual-check-actions .button{flex:1}.reviewer-actions .decision-button{flex:1}.head-actions{flex-wrap:wrap}.head-actions .button{flex:1 1 130px;min-width:0}}
+
+/* Revision comparison */
+.page-head { flex-wrap: wrap; gap: 12px; }
+.head-actions { flex-wrap: wrap; }
+.tabbar { min-width: 0; max-width: 100%; overflow-x: auto; }
+.revision-panel { padding: 24px; min-width: 0; }
+.revision-panel .muted { color: #4b5961; }
+.revision-selectors, .revision-actions { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; margin: 16px 0; }
+.revision-selectors label { display: grid; gap: 6px; flex: 1 1 230px; min-width: 0; }
+.revision-selectors select { width: 100%; padding: 10px; border: 1px solid #73828b; border-radius: 6px; background: white; color: #20353f; }
+.revision-notes { padding-left: 20px; line-height: 1.6; color: #4b5961; }
+.revision-rule, .revision-text { border: 1px solid #b7c3ca; border-radius: 6px; padding: 12px; margin: 12px 0; overflow-wrap: anywhere; }
+.revision-panel summary { cursor: pointer; font-weight: 600; line-height: 1.6; }
+.revision-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.revision-columns h5 { font-size: 14px; margin: 12px 0; }
+.revision-columns p { line-height: 1.6; }
+.revision-columns blockquote { white-space: pre-wrap; overflow-wrap: anywhere; margin: 12px 0; padding: 12px; background: #f2f5f7; border-left: 3px solid #748b99; line-height: 1.6; }
+.revision-columns small { display: block; color: #485f6d; margin-bottom: 8px; }
+.prior-decisions { background: #fff5dd; padding: 12px; color: #554115; }
+.revision-toggle { display: flex; gap: 8px; align-items: center; }
+@media (max-width: 850px) { .revision-columns { grid-template-columns: 1fr; } .revision-panel { padding: 14px; } }

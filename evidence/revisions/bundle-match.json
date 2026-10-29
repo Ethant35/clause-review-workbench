@@ -1,0 +1,12 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "version": "1.5.0",
+  "source_files": 69,
+  "frontend_assets": [
+    "index.html",
+    "assets/index-Cpu0OGJd.js",
+    "assets/index-CCtZfiJW.css"
+  ],
+  "bootstrap_match": true
+}

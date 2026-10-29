@@ -1,0 +1,21 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "commit": "5f15a0723f1d2a890fef24ba5e568d6d06ff14f3",
+  "raw_log": "/private/tmp/crw-clean-source-1.5.0-20261028/clause-review-workbench-1.5.0/artifacts/clean-acceptance-current-baseline.log",
+  "raw_log_sha256": "9ed346b122f47fef8f998a867efa06860cda8ba1c09eee506a6bd7b60a771d1f",
+  "checks": [
+    "actual scripts/clean_acceptance.sh passed in fresh clone",
+    "floor guard against released v1.4.0",
+    "frozen uv install, npm ci and production build",
+    "174 Python tests plus 10 subtests",
+    "core browser/API 18 pass; both provider tests blocked",
+    "corpus 12/12, adversarial 83/83, interactions 98/98",
+    "frontend readiness, state races and real browser zoom",
+    "real v1.0.0, v1.0.1 and v1.1.0 upgrades",
+    "bounded 15-second load test; 3200 requests"
+  ],
+  "limitations": [
+    "No paid calls, legal validation, long-duration reliability or live provider success claimed"
+  ]
+}

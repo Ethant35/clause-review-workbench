@@ -1,0 +1,7 @@
+Author: Ethan
+Result: PASS
+174 passed; 10 subtests passed; 6 dependency warnings; 20.89 seconds
+Raw local evidence: artifacts/revisions-20261028/pytest-accepted.log
+Raw SHA256: d696c57890aeadca75a9cd31d99f3ef2524f04a69839b6d48a865a172f5aa65e
+Warnings: PyMuPDF SWIG type metadata deprecations; Starlette httpx TestClient deprecation.
+The raw warning output remains unchanged locally. This is a curated result summary.

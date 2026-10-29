@@ -17,8 +17,9 @@ history are stored locally for your next visit.
 
 The app remains a review aid for one trusted local user. It does not provide
 hosted access, OCR, automatic extraction-completeness verification, or validated
-general legal judgment. Image-bearing PDFs require a manual comparison of every
-listed image region against the extracted text before analysis. Do not confirm
+general legal judgment. PDFs with images, annotations, forms or uncertain reading order require manual
+source comparison before analysis. DOCX automatic numbering and content-bearing
+headers/footers require a complete text-based PDF or literal-text copy. Do not confirm
 when an image contains terms missing from the text. Supply a complete text copy.
 
 ## Saved data and updates
