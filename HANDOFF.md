@@ -1,3 +1,33 @@
+# Terra review fixes verified — October 29, 2026
+
+Author: Ethan. Branch: codex/terra-review-fixes.
+Source candidate: cc50e1c3308830ceb615d94770c8d180e36bfbc9.
+The user authorized fixes, independent Terra verification, then PR creation and merge.
+The five observed issues are fixed: library identity, source-check readiness text,
+DOCX export timestamps, singular retention wording, and missing-setup diagnostics.
+Independent review also found repeated same-minute reprocessing ambiguity and a
+390 px action overflow; both were repaired and rechecked. Original documents,
+saved reviews, notes and decisions remain intact. Legal-analysis rules are unchanged.
+
+Verification: 176 Python tests + 10 subtests, six dependency warnings; browser/API
+18 pass and two provider checks blocked; usability and revision browser checks pass;
+frontend readiness 14/14; intended-diff floor guard clean. Terra's final bounded
+verdict is PASS. Details and exact candidate mapping: evidence/terra-fixes/verification.json.
+Full local reports/screenshots: artifacts/terra-fixes-20261029/independent.
+Initial failures and the intermediate REVISE verdict are retained there.
+
+All computer use for these fixes stayed headless/background. No paid calls,
+GitHub Actions, global configuration changes or production goal changes. All owned
+test/reviewer servers are stopped. Both usage-based stops were explicitly disabled
+by Ethan on October 29; do not revive the historical guards below.
+
+This is a source PR, not a new packaged release. v1.5.0 installers and immutable
+release tag remain unchanged. The source environment is restored locally (.venv
+and frontend build); the isolated public app remains a separate older build.
+Unrelated duplicate files, the broken main 2 ref and shared skill symlink remain.
+
+---
+
 # Version 1.5.0 complete — October 28, 2026
 
 Author: Ethan.
