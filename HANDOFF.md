@@ -1,83 +1,54 @@
-# Version 1.5.0 ready for publication — October 28, 2026
+# Version 1.5.0 complete — October 28, 2026
 
-Author: Ethan. PR #9: https://github.com/Ethant35/clause-review-workbench/pull/9.
-Implementation and final source candidate:5f15a0723f1d2a890fef24ba5e568d6d06ff14f3.
-App/DMG separately Apple Accepted, stapled and locally installed under quarantine.
-Actual installed revision journey and full clean qualification passed. Final
-source archive and69bundled source/docs/license hashes match tested candidate;
-independently rebuilt frontend and bootstrap match. Evidence: evidence/revisions.
-Sealed assets:/private/tmp/crw-release-1.5.0-20261028. Public publication/download
-verification is the remaining delivery step. Existing v1.4.0 assets are preserved.
+Author: Ethan.
 
-Current guard is50% REMAINING or in-work reset to100%; cell26 checks45seconds.
-Latest reading39%used/61%remaining; reset_at1793774143unchanged. No paid calls,
-no Actions, no assistants. Keep the actual goal active until public downloaded
-bytes and installed workflow pass, or pause on either usage stop condition.
+Release: https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.5.0
+Merged PR: https://github.com/Ethant35/clause-review-workbench/pull/9
+Immutable release tag: 3fc975abb5df6fff63794357b7ae1e58dc4a7af1.
+Tested implementation/source candidate: 5f15a0723f1d2a890fef24ba5e568d6d06ff14f3.
+Later evidence commits do not modify sealed assets or the release tag.
 
----
+The app now compares clean contract revisions and saved reviews, shows exact
+before/after text and supported related-clause effects, and flags prior decisions
+for reconsideration after source, policy or check changes. Original documents,
+notes and decisions remain in their original review. New reviews start unresolved.
+Different check versions or policies are disclosed rather than attributed to edits.
 
-# Active 1.5.0 Mac delivery — October 28, 2026
+Extraction revision 6 retains PDF coordinates and DOCX table-cell locations,
+gates uncertain PDF layout/annotations and rejects unsupported DOCX content that
+would be omitted. Old documents must be reprocessed into separate records; stored
+historical reviews remain unchanged. No OCR or general redline parsing claim.
 
-Author: Ethan. PR https://github.com/Ethant35/clause-review-workbench/pull/9 is open.
-Source changes and local tests are complete. Continuing the established production
-outcome through packaged Mac validation and release; PR submission is a milestone.
-Version1.5.0 candidate is being prepared. v1.4.0 public assets remain unchanged.
-No paid calls or GitHub Actions. Stop at50% REMAINING or in-work reset to100%;
-monitorcell26 is active. Last direct reading29%used; same reset_at1793774143.
-On a trigger, stop owned processes, save evidence and pause the actual goal.
+Independent-label evaluation covered all 102 CUAD test contracts and 408 category
+observations with no recognizer tuning. It exposed material gaps: caps 22/44 and
+convenience termination 11/29 located. External labels are independent, but the
+adapter is implementation-authored. No independent lawyer has validated risk,
+exception reasoning or revision effects. The human-review protocol is prepared,
+not executed. See docs/legal-evaluation.md and evidence/revisions/cuad-evaluation.json.
 
----
+Verification: 174 Python tests plus 10 subtests; browser/API 18 pass with both
+provider tests blocked; corpus 12/12, interactions 98/98, adversarial 83/83;
+frontend 14/14, zoom 9/9; revision browser, real v1.4 migration and legacy upgrade
+checks pass. Full clean qualification passed. All 277 source archive files and
+69 bundled source/docs/license hashes match the tested candidate; rebuilt frontend
+and bootstrap match. Failures and repairs are retained in the acceptance record.
 
-# Revision and fidelity changes verified — October 28, 2026
+App and DMG received Apple Accepted, were stapled, and passed local and public
+quarantined installation. All five public downloads match sealed hashes and GitHub
+digests. Gatekeeper, syspolicy_check, AppTranslocation, installed revision workflow
+and shutdown passed. Evidence: evidence/revisions/ACCEPTANCE.md and adjacent JSON.
+Detailed local evidence: artifacts/revisions-20261028; public installed artifacts:
+/private/tmp/crw-public-install-1.5.0-20261028. Sealed assets:
+/private/tmp/crw-release-1.5.0-20261028. Prior releases remain unchanged.
 
-Author: Ethan. Branch: codex/revision-fidelity, based on released v1.4.0.
-Source changes are ready for PR review. No new native build, notarization, public
-release, independent lawyer approval or general legal-accuracy claim is made.
-Published v1.4.0 remains unchanged. Use the attached pull request for review status.
-
-Ethan explicitly resumed work. The actual goal tool returned no goal, so a new
-active goal was created for the authorized priorities; source delivery and local
-verification are now complete. No paid calls, provider tests, GitHub Actions,
-subagents, hooks or global config changes were used. Actions disabled/zero runs
-was checked before publication. Unrelated duplicates and broken main 2 ref remain.
-
-Implemented: Upload revision creates a separate original linked to the earlier
-version. The Revisions view compares saved reviews and exact before/after text,
-including supported related-clause effects. Earlier decisions and notes remain
-in place; new reviews start unresolved. Any source/policy/check change flags prior
-decisions for reconsideration. Different policies or check versions are disclosed,
-not attributed to contract edits. Hash and evidence checks protect comparison.
-Extraction revision6 adds PDF coordinates and DOCX table-cell locations, gates
-PDF layout/annotation uncertainty, and rejects DOCX content that would be omitted.
-Old uploads require reprocessing into a separate record; historical rows are preserved.
-
-Verification:174 Python tests +10 subtests (six dependency warnings); browser/API18
-pass,2provider checks blocked; corpus12/12,interactions98/98,adversarial83/83;
-frontend14/14,truezoom9/9; new revision browser, actualv1.4.0 migration and legacy
-v1.0.0 migration pass. Focused final source-confirmation wording:36tests pass.
-Intended-diff floor guard passed in an isolated tracked-files checkout. Initial
-failures and repair reasons are recorded in evidence/revisions/ACCEPTANCE.md.
-
-Independent-label evidence: all102CUAD test contracts,408category observations;
-no recognition-rule tuning. Cap detection22/44, convenience termination11/29.
-External annotations are independent; the evaluator is implementation-authored.
-No independent lawyer validated risk, exception reasoning or revision effects.
-See docs/legal-evaluation.md and evidence/revisions/cuad-evaluation.json for all
-counts, exact label provenance, limitations and the unexecuted legal-review protocol.
-
-Updated guard: STOP at50% usage REMAINING (50% consumed), or an observed in-work
-reset to100% remaining. This supersedes5% in the tool objective and allolder notes.
-Startup6%used; latest observed26%used,reset_at1793774143unchanged. Monitorcell4 was
-replaced bycell26 for the50%guard; shut it down at closure. All test processes have
-cleanup handlers and isolated registries; final shutdown is verified in chat.
-No automatic continuation is authorized beyond this delivery.
-
-Evidence: evidence/revisions/ACCEPTANCE.md and adjacent curated results. Detailed
-local evidence artifacts/revisions-20261028; last revision browser screenshots
-artifacts/revision-e2e-i939jurt; actualv1.4 migration artifacts/revision-upgrade-zjiimnej.
-Clean diff checkout /private/tmp/crw-revision-review-1sub25ql is disposable, not a
-managed worktree. No private contracts are in the PR; test text is synthetic and
-CUAD records contain public titles, offsets and metrics, not contract text.
+No paid calls, Actions runs, new assistants, global configuration changes or new
+security-scan claims. Actions are disabled. No owned app/server processes remained;
+the process registry is empty. Final qualification usage: 42% used / 58% remaining,
+reset_at 1793774143 unchanged. The updated stop condition is 50% REMAINING or an
+observed reset to 100%, superseding older thresholds and the original goal text.
+The delivery is complete; stop the monitor and complete the actual goal at closure.
+No automatic continuation is authorized. Existing duplicate files, broken main 2
+ref and shared skill symlink remain untouched.
 
 ---
 

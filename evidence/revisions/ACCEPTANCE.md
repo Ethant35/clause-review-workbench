@@ -5,8 +5,8 @@ Author: Ethan. October 28, 2026.
 Scope: version 1.5.0 candidate based on v1.4.0. The signed app and DMG received
 independent Apple Accepted submissions and were stapled/validated. Local quarantined
 installation passed strict codesign, Gatekeeper, syspolicy_check, AppTranslocation,
-the original workflow and the new revision journey. Public download verification
-is still pending until the release section below records its completion.
+the original workflow and the new revision journey. Public download and installed
+verification also passed, as recorded in the release section below.
 No new legal recognition patterns were tuned against the external test labels.
 
 ## Behavior checked
@@ -94,7 +94,7 @@ effects. The prepared independent legal-review protocol has not been executed.
 Software test success must not be represented as legal validation.
 
 No paid provider calls, no GitHub Actions, no subagents, no global config changes,
-and no new security-scan or release-readiness claim. Source documents and generated
+and no new security-scan claim. Release qualification is recorded below. Source documents and generated
 JSON/fixture DOCX personal author metadata use Ethan. Synthetic screenshot personal
 author metadata was not controlled or verified.
 
@@ -135,3 +135,38 @@ baseline tags. The final source archive contains the same source and harness.
 See clean-qualification.json and clean-full-e2e.json. Optional provider checks
 remained blocked; no provider request was made. Publication/public-download
 verification follows these completed local gates.
+
+## Public release qualification
+
+Version 1.5.0 is published at
+https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.5.0.
+PR #9 merged. The immutable tag points to
+3fc975abb5df6fff63794357b7ae1e58dc4a7af1. This later evidence-only update does not
+change the sealed assets or tag.
+
+All five public assets were downloaded without authentication. Their byte sizes
+and SHA256 values match the sealed local files and GitHub asset digests; every
+entry in SHA256SUMS.txt was independently checked. See public-download.json.
+The public DMG SHA256 is
+884ea4fa6b31522ad4dec94b86289610d10aba3baf15596d5fdeec301652f797.
+
+The downloaded DMG and copied app retained quarantine. Stapled tickets, strict
+signatures, Gatekeeper and syspolicy_check passed. LaunchServices started the app
+through AppTranslocation with isolated test data. The actual installed browser
+journey passed sample upload, source navigation, decision, export and reload, then
+revision upload, comparison export, fresh decisions and unchanged earlier decisions.
+The final Revisions screenshot was visually inspected. Native exit closed the
+server and port. See public-installed.json and public-installed-browser.json.
+Detailed files remain under /private/tmp/crw-public-install-1.5.0-20261028.
+
+The source implementation and evidence commits use Ethan as author; the native
+personal copyright and JSON report author fields were checked. GitHub's merge
+commit retains its factual account/platform attribution. Screenshot personal
+metadata was not controlled or verified.
+
+GitHub Actions remained disabled with zero runs. No paid provider call was made.
+At final qualification, the allowance was 42% used / 58% remaining, with unchanged
+reset time 1793774143. The updated 50%-remaining stop guard did not trigger.
+No owned app/server process remained and the test process registry was empty.
+This release does not establish independent lawyer validation, OCR support,
+VoiceOver acceptance, unfamiliar-user acceptance or other-platform qualification.

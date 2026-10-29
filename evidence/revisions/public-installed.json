@@ -1,0 +1,16 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "checks": [
+    "DMG and copied quarantined app pass ticket, signature and Gatekeeper checks",
+    "LaunchServices starts quarantined app through AppTranslocation with isolated data",
+    "Actual installed app sample, source, decision, export and reload pass",
+    "Native exit closes its server and port"
+  ],
+  "dmg_sha256": "884ea4fa6b31522ad4dec94b86289610d10aba3baf15596d5fdeec301652f797",
+  "version": "1.5.0",
+  "translocated_command": "/private/var/folders/j_/l874vytd19j5hkhl05ymffbc0000gn/T/AppTranslocation/66AB398A-A484-47F5-983B-21184AA14359/d/Clause Review Workbench.app/Contents/MacOS/Workbench",
+  "limits": [
+    "Automated developer journey; no unfamiliar-user or VoiceOver claim"
+  ]
+}

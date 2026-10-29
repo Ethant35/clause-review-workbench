@@ -1,0 +1,49 @@
+{
+  "author": "Ethan",
+  "status": "PASS",
+  "release": "https://github.com/Ethant35/clause-review-workbench/releases/tag/v1.5.0",
+  "tag_commit": "3fc975abb5df6fff63794357b7ae1e58dc4a7af1",
+  "assets": [
+    {
+      "name": "Clause-Review-Workbench-1.5.0-arm64.dmg",
+      "url": "https://github.com/Ethant35/clause-review-workbench/releases/download/v1.5.0/Clause-Review-Workbench-1.5.0-arm64.dmg",
+      "sha256": "884ea4fa6b31522ad4dec94b86289610d10aba3baf15596d5fdeec301652f797",
+      "github_digest": "sha256:884ea4fa6b31522ad4dec94b86289610d10aba3baf15596d5fdeec301652f797",
+      "size": 88661330,
+      "authenticated": false
+    },
+    {
+      "name": "clause-review-workbench-1.5.0.tar.gz",
+      "url": "https://github.com/Ethant35/clause-review-workbench/releases/download/v1.5.0/clause-review-workbench-1.5.0.tar.gz",
+      "sha256": "1e7e65e71629f0cfa84138789e3d602231dcb3d33aeaf934395a7004be544d69",
+      "github_digest": "sha256:1e7e65e71629f0cfa84138789e3d602231dcb3d33aeaf934395a7004be544d69",
+      "size": 5321403,
+      "authenticated": false
+    },
+    {
+      "name": "mupdf-1.28.2-source.tar.gz",
+      "url": "https://github.com/Ethant35/clause-review-workbench/releases/download/v1.5.0/mupdf-1.28.2-source.tar.gz",
+      "sha256": "44075a84e329db55b9bef5f342a70fd26d69e48ad1d33cb89d9664581c641156",
+      "github_digest": "sha256:44075a84e329db55b9bef5f342a70fd26d69e48ad1d33cb89d9664581c641156",
+      "size": 68898646,
+      "authenticated": false
+    },
+    {
+      "name": "pymupdf-1.28.2.tar.gz",
+      "url": "https://github.com/Ethant35/clause-review-workbench/releases/download/v1.5.0/pymupdf-1.28.2.tar.gz",
+      "sha256": "5e0be7908a715aa20333caddd73f1d6f01e4cd0c26e869fa2dd0b7f344da2249",
+      "github_digest": "sha256:5e0be7908a715aa20333caddd73f1d6f01e4cd0c26e869fa2dd0b7f344da2249",
+      "size": 87903557,
+      "authenticated": false
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "url": "https://github.com/Ethant35/clause-review-workbench/releases/download/v1.5.0/SHA256SUMS.txt",
+      "sha256": "081634d73f2a1c4c1d0aa71ee95a8049506a92901d44e6be5a83adfaa0422697",
+      "github_digest": "sha256:081634d73f2a1c4c1d0aa71ee95a8049506a92901d44e6be5a83adfaa0422697",
+      "size": 390,
+      "authenticated": false
+    }
+  ],
+  "checksums_verified": true
+}
