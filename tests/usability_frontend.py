@@ -117,6 +117,9 @@ def main():
                 assert newer["id"] != old_document_id
                 assert client.get(f"/api/documents/{old_document_id}/reviews").raise_for_status().json()
                 assert client.get(f"/api/documents/{newer['id']}/reviews").raise_for_status().json() == []
+                expect(page.locator(f'.doc-row[data-document-id="{newer["id"]}"] .doc-origin')).to_contain_text("Reprocessed")
+                expect(page.locator(f'.doc-row[data-document-id="{old_document_id}"] .doc-origin')).to_contain_text("Uploaded")
+                expect(page.locator(f'.doc-row[data-document-id="{newer["id"]}"] time')).to_have_attribute("datetime", newer["created_at"])
                 page.locator(f'.doc-row[data-document-id="{old_document_id}"]').click()
                 expect(page.locator(".issue-card").first.locator(".issue-status")).to_have_text("Confirmed")
 
@@ -147,6 +150,10 @@ def main():
                     "name": "synthetic-logo-pdf.pdf", "mimeType": "application/pdf", "buffer": small_logo_pdf()
                 })
                 expect(page.get_by_role("heading", level=2, name="synthetic-logo-pdf.pdf")).to_be_visible(timeout=15000)
+                page.get_by_role("button", name="Getting started", exact=True).click()
+                expect(page.get_by_role("heading", name="Check the original before review", exact=True)).to_be_visible()
+                expect(page.get_by_role("heading", name="Your contract is ready", exact=True)).to_have_count(0)
+                expect(page.get_by_role("button", name="Run local review", exact=True)).to_be_disabled()
                 expect(page.get_by_role("heading", name="Compare this PDF with the extracted text")).to_be_visible()
                 expect(page.get_by_text("Images are not read or OCR’d.", exact=False)).to_be_visible()
                 expect(page.get_by_role("img", name="Page 1 image locations")).to_be_visible()
@@ -160,6 +167,7 @@ def main():
                 assert pending["image_manifest"][0]["bbox"]
                 page.get_by_role("button", name="I checked all pages; no text is missing").click()
                 expect(page.get_by_text("Visual comparison recorded.", exact=False)).to_be_visible()
+                expect(page.get_by_role("heading", name="Your contract is ready", exact=True)).to_be_visible()
                 expect(page.get_by_role("button", name="Run review", exact=True)).to_be_enabled()
                 page.get_by_role("button", name="Run review", exact=True).click()
                 expect(page.get_by_text("Review complete.", exact=True)).to_be_visible(timeout=20000)

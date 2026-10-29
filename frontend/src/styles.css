@@ -142,3 +142,6 @@
 .prior-decisions { background: #fff5dd; padding: 12px; color: #554115; }
 .revision-toggle { display: flex; gap: 8px; align-items: center; }
 @media (max-width: 850px) { .revision-columns { grid-template-columns: 1fr; } .revision-panel { padding: 14px; } }
+
+/* Keep document lineage and dates readable in narrow library rows. */
+.doc-copy .doc-origin{display:block;line-height:1.4;overflow-wrap:anywhere}

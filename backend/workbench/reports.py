@@ -1,4 +1,5 @@
 from io import BytesIO
+from datetime import datetime, timezone
 import html
 import json
 from docx import Document
@@ -59,6 +60,9 @@ def export(review, document, format):
     doc = Document()
     doc.core_properties.author = "Ethan"
     doc.core_properties.last_modified_by = "Ethan"
+    exported_at = datetime.now(timezone.utc)
+    doc.core_properties.created = exported_at
+    doc.core_properties.modified = exported_at
     doc.core_properties.title = title
     doc.core_properties.subject = "Source-linked commercial contract review"
     doc.styles["Normal"].font.name = "Calibri"
