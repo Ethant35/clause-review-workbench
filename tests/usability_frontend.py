@@ -120,6 +120,15 @@ def main():
                 expect(page.locator(f'.doc-row[data-document-id="{newer["id"]}"] .doc-origin')).to_contain_text("Reprocessed")
                 expect(page.locator(f'.doc-row[data-document-id="{old_document_id}"] .doc-origin')).to_contain_text("Uploaded")
                 expect(page.locator(f'.doc-row[data-document-id="{newer["id"]}"] time')).to_have_attribute("datetime", newer["created_at"])
+                # Repeated extractions can share a filename and displayed minute.
+                # They still need distinct visible references so a reviewer can
+                # return to the right record without opening each one.
+                first_reference = page.locator(f'.doc-row[data-document-id="{newer["id"]}"] .doc-reference').inner_text()
+                page.get_by_role("button", name="Reprocess original").click()
+                expect(page.locator(".doc-row")).to_have_count(3)
+                repeated = page.locator(".doc-row.selected .doc-reference")
+                expect(repeated).to_be_visible()
+                assert repeated.inner_text() != first_reference
                 page.locator(f'.doc-row[data-document-id="{old_document_id}"]').click()
                 expect(page.locator(".issue-card").first.locator(".issue-status")).to_have_text("Confirmed")
 

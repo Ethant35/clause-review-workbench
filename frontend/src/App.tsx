@@ -55,6 +55,11 @@ function dateLabel(value: string) {
   const date = new Date(value);
   return Number.isNaN(date.valueOf()) ? value : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 }
+function documentReference(id: string, documents: Doc[]) {
+  let length = 8;
+  while (length < id.length && documents.some(doc => doc.id !== id && doc.id.startsWith(id.slice(0, length)))) length++;
+  return id.slice(0, length);
+}
 function formatBytes(value: number) { return value < 1024 * 1024 ? `${Math.round(value / 1024)} KB` : `${(value / (1024 * 1024)).toFixed(1)} MB`; }
 function initialIssueId(issues: Issue[]) {
   const priority: Record<Issue['severity'], number> = { high: 0, medium: 1, low: 2 };
@@ -352,7 +357,7 @@ function App() {
         </label>
         <div className="library-label"><span>YOUR DOCUMENTS</span><span>{hasMoreDocuments ? `${documents.length} loaded` : `${documents.length} total`}</span></div>
         <div className="doc-list">{documents.length ? documents.map((doc) => <button key={doc.id} data-document-id={doc.id} className={`doc-row ${selectedDoc === doc.id ? 'selected' : ''}`} onClick={() => setSelectedDoc(doc.id)}>
-          <span className={`file-icon ${doc.format}`}><FileText size={18} /></span><span className="doc-copy"><strong title={doc.name}>{doc.name}</strong><small><span className="state-mark" /> {doc.state === 'needs_visual_check' ? 'Visual check needed' : 'Ready'} <i>·</i> {doc.format.toUpperCase()}</small><small className="doc-origin">{doc.source_document_id ? 'Reprocessed' : doc.previous_document_id ? 'Revision' : 'Uploaded'} · <time dateTime={doc.created_at}>{dateLabel(doc.created_at)}</time></small></span><ChevronDown className="doc-chevron" size={15} />
+          <span className={`file-icon ${doc.format}`}><FileText size={18} /></span><span className="doc-copy"><strong title={doc.name}>{doc.name}</strong><small><span className="state-mark" /> {doc.state === 'needs_visual_check' ? 'Visual check needed' : 'Ready'} <i>·</i> {doc.format.toUpperCase()}</small><small className="doc-origin">{doc.source_document_id ? 'Reprocessed' : doc.previous_document_id ? 'Revision' : 'Uploaded'} · <time dateTime={doc.created_at}>{dateLabel(doc.created_at)}</time></small>{documents.some(other => other.id !== doc.id && other.name === doc.name) && <small className="doc-reference" title={doc.id}>Record {documentReference(doc.id, documents)}</small>}</span><ChevronDown className="doc-chevron" size={15} />
         </button>) : <div className="empty-library"><FolderOpen size={23} /><strong>No documents yet</strong><span>Upload a contract to begin a private review.</span></div>}</div>
         {hasMoreDocuments && <button className="load-more" onClick={() => void loadMoreDocuments()} disabled={!!busy}>{busy === 'documents-more' ? 'Loading documents…' : 'Load more documents'}</button>}
         <div className="sidebar-bottom"><div className="local-card"><ShieldCheck size={17} /><div><strong>Private workspace</strong><span>Documents stay on this device unless you choose AI assistance.</span></div></div><div className="retention-note">Local retention: {health ? (health.retention_days > 0 ? `${health.retention_days} ${health.retention_days === 1 ? 'day' : 'days'}` : "Until you delete") : '—'}</div></div>
